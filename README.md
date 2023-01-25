@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+# Bob integration
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Requirements
 
-## Available Scripts
+1. Node version ^16.17.1
+2. VSCode.
 
-In the project directory, you can run:
+## Start project
 
-### `npm start`
+1. Run
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+   ```shell
+       $ npm install
+   ```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+2. Running server with wherever the next command:
+   ```shell
+       $ npm start
+   ```
 
-### `npm test`
+The project is running on http://127.0.0.1:3000
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Dev Guide
 
-### `npm run build`
+### Branch prefixes
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+How to name your supporting branch prefixes?
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- Feature branches? [feature/]
+- Release branches? [release/]
+- Hotfix branches? [hotfix/]
+- Support branches? [support/]
+- Enhancement branches? [enhancement/]
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Example:
+`$ git checkout -b feature/my-awesome-feature`
 
-### `npm run eject`
+Reference: [Git Flow](https://github.com/vivebamba/wiki/blob/revision/content/guidelines/git-flow.md)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### Testing
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The project counts with unit and integration tests scripts run by jest and cypress,
+respectively. If you want to do TDD, we recommend you to run interactive commands, so
+you will test your code immediately after changes are made.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+1. Running test
+   ```shell
+       $ npm run test
+   ```
+2. Run e2e testing tool in interactive mode
+   ```shell
+       $ npm run cy:open
+   ```
+3. Run e2e testing tool in command line
+   ```shell
+       $ npm run cy:run
+   ```
+   > Important: Before running e2e tests, make sure you are running the frontend
+   > application in port 3000
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### Linting
 
-## Learn More
+eslint will return errors and provide feedback of any line in the code that breaks the
+linting rules that the project has been configured with. What rules those are? You can check them
+in `.eslintrc.js` file.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+1. Running lint
+   ```shell
+       $ npm run lint
+   ```
+2. Running lint fix
+   ```shell
+       $ npm run lint:fix
+   ```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Code formatting
 
-### Code Splitting
+prettier will handle the code formatting using provided configuration rules.
+Make sure you configure your IDE or text editor so prettier runs on code
+formatting tasks.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Git hooks
 
-### Analyzing the Bundle Size
+Husky is the tool that allows running commands in reaction of the execution of git tasks.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+#### Pre-commit
 
-### Making a Progressive Web App
+Runs lint-staged command that executes the lint tool on the code and tries to fix all linting detected errors.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+#### Pre-push
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Run cy:run command that executes cypress test detected integration errors
