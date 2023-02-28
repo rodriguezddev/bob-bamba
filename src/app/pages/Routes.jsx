@@ -14,12 +14,16 @@ import Partners from './partners'
 import AdminUsers from './adminUsers'
 import CreateAdminUser from './adminUsers/createAdminUser'
 import Products from './products'
-import CreateProducts from './products/createProducts/CreateProducts'
+import CreateProducts from './products/createProducts'
+import CarrierServices from './carriers/carrierServices'
+import CreateCarrierServices from './carriers/carrierServices/createCarrierServices'
+import Carriers from './carriers/carriers'
+import CreateCarriers from './carriers/carriers/createCarriers'
 
 const Routes = () => {
   const dispatch = useDispatch()
   const { isLoading } = useSelector((state) => state.loading)
-  const { isError, message } = useSelector((state) => state.error)
+  const { codeError, isError, message } = useSelector((state) => state.error)
 
   const handleCloseError = () => {
     dispatch(handleHideError())
@@ -32,6 +36,7 @@ const Routes = () => {
           alertTitle='Error'
           alertContentText={message}
           alertTextButton='Cerrar'
+          codeError={codeError}
           errorText
           isOpen={isError}
           setIsOpen={handleCloseError}
@@ -50,6 +55,13 @@ const Routes = () => {
           <Route path='/admin-users/create' element={<CreateAdminUser />} />
           <Route path='/products' element={<Products />} />
           <Route path='/products/create' element={<CreateProducts />} />
+          <Route path='/carrier-services' element={<CarrierServices />} />
+          <Route
+            path='/carrier-services/create'
+            element={<CreateCarrierServices />}
+          />
+          <Route path='/carriers' element={<Carriers />} />
+          <Route path='/carriers/create' element={<CreateCarriers />} />
         </Route>
       </ReactRoutes>
     </>

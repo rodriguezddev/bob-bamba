@@ -91,6 +91,7 @@ const ProductContainer = ({ assignedProducts }) => {
                   key={value?.sku}
                   sx={{
                     margin: '.5rem 0',
+                    maxWidth: '27rem',
                   }}
                 >
                   <ListItemButton onClick={() => handlePartner(value)}>
@@ -150,8 +151,9 @@ const ProductContainer = ({ assignedProducts }) => {
               <Card
                 key={selectedProduct.sku}
                 sx={{
-                  margin: '.5rem 0',
                   cursor: 'pointer',
+                  margin: '.5rem 0',
+                  maxWidth: '27rem',
                 }}
               >
                 <CardContent>

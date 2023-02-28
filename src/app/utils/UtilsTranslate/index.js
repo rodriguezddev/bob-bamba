@@ -1,3 +1,5 @@
+import { errorsConstants } from '../../slices/constants/errorsConstants'
+
 export const getTypePartner = (type) => {
   const typePartner = {
     AGGREGATOR: 'Agregador',
@@ -32,4 +34,25 @@ export const getPeriodProducts = (period) => {
   }
 
   return statusPeriod[period] || '-'
+}
+
+export const handleErrorMessage = (errors) => {
+  if (!errors) return null
+
+  const errorMessage = Object.values(errors).map(
+    (error) => errorsConstants[error] || error,
+  )
+
+  return errorMessage.join(' ')
+}
+
+export const getTextErrorUploadFile = (error) => errorsConstants[error] || error
+
+export const getTextActionUploadFile = (action) => {
+  const actionText = {
+    CANCELED: 'Baja',
+    REGISTRATION: 'Alta',
+  }
+
+  return actionText[action] || action
 }

@@ -1,13 +1,19 @@
 /// <reference types="cypress" />
 
 describe('List users view', () => {
-  it('display list users success', () => {
+  beforeEach(() => {
+    cy.clearLocalStorage()
     cy.login('admin@vivebamba.com', 'Password')
+  })
+
+  it('display list users success', () => {
     cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')
     cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.intercept('/admin/api/v1/users').as('getUsers')
+    cy.wait('@getUsers')
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(1)').should(
       'contain',
-      'Nombre del colaborador',
+      'Nombre',
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(2)').should(
       'contain',
@@ -32,8 +38,10 @@ describe('List users view', () => {
   })
 
   it('use filters', () => {
-    cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')
     cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')
+    cy.intercept('/admin/api/v1/users').as('getUsers')
+    cy.wait('@getUsers')
     cy.get('[data-testid="FilterAltIcon"] > path').click()
     cy.get('#email').type('prueba2@gmail.com')
     cy.get('[data-testid="button-filter-search"]').click()
@@ -44,10 +52,13 @@ describe('List users view', () => {
   })
 
   it('check pagination', () => {
-    cy.get('[data-testid="button-filter-clean"]').click()
+    cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')
+    cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.intercept('/admin/api/v1/users').as('getUsers')
+    cy.wait('@getUsers')
+    cy.get('[aria-label="first page"]').should('be.disabled')
     cy.get('[data-testid="LastPageIcon"]').click()
     cy.get('[aria-label="last page"]').should('be.disabled')
     cy.get('[aria-label="first page"]').click()
-    cy.get('[aria-label="first page"]').should('be.disabled')
   })
 })

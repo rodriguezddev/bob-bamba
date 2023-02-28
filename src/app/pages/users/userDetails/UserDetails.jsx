@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import {
-  Box, Card, CardContent, Grid,
+  Box, Card, CardContent, Grid, MenuItem,
 } from '@mui/material'
+import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import { formatDate } from '../../../utils/utilsFormat'
-import { handleSubscriptions } from '../../../utils/utilsHandleSubscriptions'
+import {
+  handleSubscriptionsCanceled,
+  handleSubscriptionsNumbers,
+  orderSubscriptions,
+} from '../../../utils/utilsHandleSubscriptions'
 import {
   getPeriodProducts,
   getStatusProducts,
@@ -22,39 +27,23 @@ import { getUser } from '../../../slices/user/userSlice'
 import { MainInput, SelectInput } from '../../../components/inputs'
 import theme from '../../../theme'
 import ActivationDetailsCard from './components/ActivationDetailsCard'
+import RecoveryMessageForm from './components/RecoveryMessageForm'
+import { resetRecoveryMessage } from '../../../slices/recoveryMessage/recoveryMessageSlice'
 
 const UserDetails = () => {
   const dispatch = useDispatch()
   const { id } = useParams()
   const { user } = useSelector((state) => state.user)
+  const { message } = useSelector((state) => state.recoveryMessage)
   const { canceledSubscription } = useSelector((state) => state.subscriptions)
   const [subscriptions, setSubscriptions] = useState([])
+  const [subscriptionsNumbers, setSubscriptionsNumbers] = useState('')
   const [subscriptionsId, setSubscriptionsId] = useState('')
   const [isOpenPdfViewer, setIsOpenPdfViewer] = useState(false)
   const [pdfViewerFile, setPdfViewerFile] = useState('')
   const [showAlert, setShowAlert] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
-
-  useEffect(() => {
-    dispatch(getUser(id))
-  }, [])
-
-  useEffect(() => {
-    if (user) {
-      setSubscriptions(user.subscriptions)
-    }
-  }, [user])
-
-  useEffect(() => {
-    if (Object.entries(canceledSubscription).length !== 0) {
-      setSubscriptions(handleSubscriptions(canceledSubscription, subscriptions))
-    }
-
-    if (canceledSubscription?.isSuccess) {
-      setShowSuccessAlert(canceledSubscription?.isSuccess)
-      dispatch(resetSubscription())
-    }
-  }, [canceledSubscription])
+  const [showFormMessage, setShowFormMessage] = useState(false)
 
   const handlePdfViewerFile = (file) => {
     setPdfViewerFile(file)
@@ -71,6 +60,51 @@ const UserDetails = () => {
     setShowAlert(false)
   }
 
+  const handleShowFormMessage = () => {
+    setShowFormMessage(!showFormMessage)
+  }
+
+  const handleRecoveryMessageSuccess = () => {
+    dispatch(resetRecoveryMessage())
+  }
+
+  useEffect(() => {
+    dispatch(getUser(id))
+  }, [])
+
+  useEffect(() => {
+    if (user && Object.entries(user)?.length !== 0) {
+      setSubscriptions(orderSubscriptions(user.subscriptions))
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (Object.entries(canceledSubscription).length !== 0) {
+      setSubscriptions(
+        orderSubscriptions(
+          handleSubscriptionsCanceled(subscriptions, canceledSubscription),
+        ),
+      )
+    }
+
+    if (canceledSubscription?.isSuccess) {
+      setShowSuccessAlert(canceledSubscription?.isSuccess)
+      dispatch(resetSubscription())
+    }
+  }, [canceledSubscription])
+
+  useEffect(() => {
+    if (message.isSuccess) {
+      handleShowFormMessage()
+    }
+  }, [message.isSuccess])
+
+  useEffect(() => {
+    if (subscriptions) {
+      setSubscriptionsNumbers(handleSubscriptionsNumbers(subscriptions))
+    }
+  }, [subscriptions])
+
   return (
     <Box sx={{ width: '100%', marginBottom: '2rem' }}>
       <Grid>
@@ -79,6 +113,18 @@ const UserDetails = () => {
         <Grid marginTop='.25rem'>
           <Avatar gender={user.gender} height='9.4rem' width='9.5rem' />
         </Grid>
+        {user.cellphone && (
+          <Box mt={5}>
+            <MainButton
+              height='3rem'
+              onClick={handleShowFormMessage}
+              width='20rem'
+            >
+              Mensaje de recuperación&nbsp;
+              <WhatsAppIcon />
+            </MainButton>
+          </Box>
+        )}
       </Grid>
       <form>
         <Grid container marginY='2rem' spacing='2rem'>
@@ -205,11 +251,29 @@ const UserDetails = () => {
                 onChange={() => {}}
                 value={user.gender || '-'}
               >
-                <option value='-'>Seleccionar</option>
-                <option value='M'>Masculino</option>
-                <option value='F'>Femenino</option>
-                <option value='O'>Otro</option>
+                <MenuItem value='-'>Seleccionar</MenuItem>
+                <MenuItem value='M'>Masculino</MenuItem>
+                <MenuItem value='F'>Femenino</MenuItem>
+                <MenuItem value='O'>Otro</MenuItem>
               </SelectInput>
+            </Grid>
+          </Grid>
+          <Grid item lg={4} md={6} xs={12}>
+            <GeneralTitle
+              fontSize='.75rem'
+              lineHeight='1rem'
+              text='Teléfono*'
+            />
+            <Grid marginTop='.5rem'>
+              <MainInput
+                disabled
+                height='3rem'
+                hiddenIcon
+                placeholder=''
+                radius='.5rem'
+                value={user.cellphone || '-'}
+                width='18rem'
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -225,7 +289,7 @@ const UserDetails = () => {
             <GeneralTitle
               fontSize='1rem'
               fontWeight='200'
-              text={`${subscriptions?.length} suscripciones activas`}
+              text={`${subscriptionsNumbers} suscripciones activas`}
             />
           </Grid>
           {subscriptions?.map((subscriptionItem, index) => (
@@ -308,7 +372,7 @@ const UserDetails = () => {
                     spacing={2}
                     sx={{ marginBottom: '1rem', marginTop: '.5rem' }}
                   >
-                    {subscriptionItem.products.map((product) => (
+                    {subscriptionItem?.products.map((product) => (
                       <Grid item key={product.id} xs={4}>
                         <Card
                           sx={{
@@ -336,7 +400,7 @@ const UserDetails = () => {
       {showAlert && (
         <Alert
           actionButton={setSubscription}
-          alertContentText='¿Seguro que quiere cancelar esta suscripcion?'
+          alertContentText='¿Seguro que quiere cancelar esta suscripción?'
           alertTextButton='Cerrar'
           alertTitle='Se cancelará la suscripción'
           primaryButtonTextAlert='Cancelar'
@@ -351,6 +415,22 @@ const UserDetails = () => {
           alertTitle='¡Suscripción cancelada!'
           isOpen={showSuccessAlert}
           setIsOpen={setShowSuccessAlert}
+        />
+      )}
+      {message.isSuccess && (
+        <Alert
+          alertTextButton='Cerrar'
+          alertTitle='¡Mensaje enviado!'
+          alertContentText={`Se envío a ${user?.name} ${user.lastname}`}
+          isOpen={message.isSuccess}
+          setIsOpen={handleRecoveryMessageSuccess}
+        />
+      )}
+      {showFormMessage && (
+        <RecoveryMessageForm
+          handleShowForm={handleShowFormMessage}
+          open={showFormMessage}
+          user={user}
         />
       )}
     </Box>

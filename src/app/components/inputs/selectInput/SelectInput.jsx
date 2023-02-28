@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Box, NativeSelect } from '@mui/material'
+import { Box, Select } from '@mui/material'
 import CustomSelect from './styles'
 import theme from '../../../theme'
 
@@ -9,9 +9,9 @@ const SelectInput = (props) => {
 
   return (
     <Box>
-      <NativeSelect {...props} input={<CustomSelect />}>
+      <Select {...props} displayEmpty input={<CustomSelect />}>
         {children}
-      </NativeSelect>
+      </Select>
     </Box>
   )
 }
@@ -21,6 +21,7 @@ SelectInput.propTypes = {
   children: PropTypes.node.isRequired,
   fontSize: PropTypes.string,
   height: PropTypes.string,
+  multiple: PropTypes.bool,
   onChange: PropTypes.func.isRequired,
   width: PropTypes.string,
 }
@@ -29,6 +30,7 @@ SelectInput.defaultProps = {
   border_color: theme.palette.common.greyLight,
   fontSize: '1rem',
   height: '3.75rem',
+  multiple: false,
   width: '17.94rem',
 }
 

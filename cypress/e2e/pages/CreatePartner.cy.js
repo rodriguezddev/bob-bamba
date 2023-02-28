@@ -52,7 +52,8 @@ describe('create partner view', () => {
       'not.have.value',
       'El código es requerido',
     )
-    cy.get('#partnerType').select('AGGREGATOR')
+    cy.get('#partnerType').click()
+    cy.get('[data-value="AGGREGATOR"]').click()
     cy.get('[data-testid="error-message-partnerType"]').should(
       'not.have.value',
       'El tipo de partner es requerido',
@@ -62,7 +63,8 @@ describe('create partner view', () => {
       'not.have.value',
       'El nombre de la compañía es requerido',
     )
-    cy.get('#countryCode').select('MX')
+    cy.get('#countryCode').click()
+    cy.get('[data-value="MX"]').click()
     cy.get('[data-testid="error-message-country"]').should(
       'not.have.value',
       'El país es requerido',

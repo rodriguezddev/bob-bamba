@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { DialogContent } from '@mui/material'
+import { DialogContent, Typography } from '@mui/material'
 import { MainButton } from '../../buttons'
 import {
   CustomDialog,
@@ -15,6 +15,7 @@ const Alert = ({
   alertTitle,
   alertContentText,
   alertTextButton,
+  codeError,
   errorText,
   isOpen,
   isShowPrimaryButton,
@@ -29,6 +30,7 @@ const Alert = ({
     <CustomDialog
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
+      fullWidth
       onClose={handleClose}
       open={isOpen}
     >
@@ -39,6 +41,11 @@ const Alert = ({
         <CustomDialogContentText id='alert-dialog-description'>
           {alertContentText}
         </CustomDialogContentText>
+        {codeError && (
+          <Typography variant='body2' mt={2}>
+            {`Código: ${codeError}`}
+          </Typography>
+        )}
       </DialogContent>
       <CustomDialogActions>
         <MainButton
@@ -70,6 +77,7 @@ Alert.propTypes = {
     PropTypes.node,
   ]),
   alertTextButton: PropTypes.string.isRequired,
+  codeError: PropTypes.number,
   errorText: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
   isShowPrimaryButton: PropTypes.bool,
@@ -80,6 +88,7 @@ Alert.propTypes = {
 Alert.defaultProps = {
   actionButton: null,
   alertContentText: '',
+  codeError: null,
   errorText: false,
   isShowPrimaryButton: false,
   primaryButtonTextAlert: 'Eliminar',

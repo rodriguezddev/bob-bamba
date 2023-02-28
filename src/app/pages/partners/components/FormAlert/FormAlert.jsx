@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 import { DialogContent, Grid, Typography } from '@mui/material'
 import { MainButton } from '../../../../components/buttons'
 import {
-  CustomDialog,
-  CustomDialogTitle,
-  CustomDialogContentText,
-  CustomDialogActions,
+  CustomFormDialog,
+  CustomFormDialogTitle,
+  CustomFormDialogContentText,
+  CustomFormDialogActions,
 } from './styles'
 import theme from '../../../../theme'
 import { MainInput } from '../../../../components/inputs'
@@ -40,25 +40,25 @@ const FormAlert = ({
   }
 
   return (
-    <CustomDialog
+    <CustomFormDialog
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
       maxWidth='xl'
       onClose={handleClose}
       open={isOpen}
     >
-      <CustomDialogTitle id='alert-dialog-title' error={errorText ? 1 : 0}>
+      <CustomFormDialogTitle id='alert-dialog-title' error={errorText ? 1 : 0}>
         {alertTitle}
-      </CustomDialogTitle>
+      </CustomFormDialogTitle>
       <DialogContent sx={{ padding: '2rem' }}>
-        <CustomDialogContentText
+        <CustomFormDialogContentText
           id='alert-dialog-description'
           sx={{
             textAlign: 'center',
           }}
         >
           {alertContentText}
-        </CustomDialogContentText>
+        </CustomFormDialogContentText>
       </DialogContent>
       <Grid container direction='row' justifyContent='center'>
         <Grid item>
@@ -103,7 +103,7 @@ const FormAlert = ({
           />
         </Grid>
       </Grid>
-      <CustomDialogActions>
+      <CustomFormDialogActions>
         <MainButton
           background={
             isShowPrimaryButton ? theme.palette.background.blueLight : ''
@@ -121,8 +121,8 @@ const FormAlert = ({
             {primaryButtonTextAlert}
           </MainButton>
         )}
-      </CustomDialogActions>
-    </CustomDialog>
+      </CustomFormDialogActions>
+    </CustomFormDialog>
   )
 }
 

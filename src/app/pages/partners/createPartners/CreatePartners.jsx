@@ -2,7 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Controller, useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { Box, Grid, Typography } from '@mui/material'
+import {
+  Box, Grid, Typography, MenuItem,
+} from '@mui/material'
 import { BackButton, MainButton } from '../../../components/buttons'
 import { MainInput, SelectInput } from '../../../components/inputs'
 import { GeneralTitle } from '../../../components/texts'
@@ -171,10 +173,10 @@ const CreatePartners = () => {
                   onChange={onChange}
                   value={value}
                 >
-                  <option value=''>Seleccionar</option>
-                  <option value='AGGREGATOR'>Agregador</option>
-                  <option value='DISTRIBUTOR'>Distribuidor</option>
-                  <option value='SPONSOR'>Sponsor</option>
+                  <MenuItem value=''>Seleccionar</MenuItem>
+                  <MenuItem value='AGGREGATOR'>Agregador</MenuItem>
+                  <MenuItem value='DISTRIBUTOR'>Distribuidor</MenuItem>
+                  <MenuItem value='SPONSOR'>Sponsor</MenuItem>
                 </SelectInput>
                 <Typography
                   color='error.main'
@@ -254,11 +256,11 @@ const CreatePartners = () => {
                   onChange={onChange}
                   value={value}
                 >
-                  <option value=''>Seleccionar</option>
+                  <MenuItem value=''>Seleccionar</MenuItem>
                   {countryConstants.map((country) => (
-                    <option key={country.code} value={country.code}>
+                    <MenuItem key={country.code} value={country.code}>
                       {country.name}
-                    </option>
+                    </MenuItem>
                   ))}
                 </SelectInput>
                 <Typography

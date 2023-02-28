@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { ThemeProvider } from '@mui/material'
 import FieldFilter from './FieldFilter'
 import theme from '../../../theme'
@@ -40,8 +40,10 @@ describe('FieldFilter component', () => {
       </ThemeProvider>,
     )
 
+    const button = screen.getAllByRole('button')
+    fireEvent.mouseDown(button[0])
     const input = screen.getByTestId('select-filter-value-test')
 
-    expect(input).toHaveValue('test')
+    expect(input).toHaveTextContent('Agregador')
   })
 })

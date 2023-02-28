@@ -60,8 +60,9 @@ describe('MainFilter component', () => {
     fireEvent.click(screen.getByText(/Buscar/i))
     fireEvent.click(screen.getByText(/Limpiar/i))
 
+    fireEvent.mouseDown(screen.getAllByRole('button')[0])
     const option = screen.getByTestId('select-filter-value-test')
 
-    expect(option).toHaveValue('test')
+    expect(option).toHaveTextContent('Agregador')
   })
 })

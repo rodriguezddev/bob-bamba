@@ -5,6 +5,8 @@ describe('List users view', () => {
     cy.login('admin@vivebamba.com', 'Password')
     cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')
     cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.intercept('/admin/api/v1/users').as('getUsers')
+    cy.wait('@getUsers')
     cy.get(
       ':nth-child(1) > :nth-child(6) > .MuiGrid-container > .MuiGrid-root > .MuiButtonBase-root',
     )
@@ -42,7 +44,19 @@ describe('List users view', () => {
     cy.get('[data-testid="back-button"]').click()
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(1)').should(
       'contain',
-      'Nombre del colaborador',
+      'Nombre',
     )
+  })
+
+  it('show recovery message modal', () => {
+    cy.get('[data-testid="VisibilityIcon"] > path').first().click()
+    cy.get('.MuiBox-root > .MuiButtonBase-root').click()
+    cy.get('[data-testid="recoveryMessageForm-title"]').should(
+      'contain',
+      'Mensaje de recuperación',
+    )
+    cy.get(
+      '.MuiGrid-spacing-xs-2 > :nth-child(1) > .MuiButtonBase-root',
+    ).click()
   })
 })

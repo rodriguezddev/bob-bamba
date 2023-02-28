@@ -2,7 +2,7 @@ export const columns = [
   {
     align: 'center',
     id: 'name',
-    label: 'Nombre del colaborador',
+    label: 'Nombre',
   },
   {
     align: 'center',

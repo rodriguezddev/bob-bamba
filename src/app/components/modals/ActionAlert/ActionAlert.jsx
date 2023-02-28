@@ -1,24 +1,22 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
 import { DialogContent } from '@mui/material'
 import { MainButton } from '../../buttons'
 import {
-  CustomDialog,
-  CustomDialogTitle,
-  CustomDialogContentText,
-  CustomDialogActions,
+  CustomActionDialog,
+  CustomActionDialogTitle,
+  CustomActionDialogContentText,
+  CustomActionDialogActions,
 } from './styles'
 import theme from '../../../theme'
-import { assignProducts } from '../../../slices/partner/partnerSlice'
 
 const ActionAlert = ({
   actionAlertTitle,
   actionAlertContentText,
   actionAlertTextButton,
-  assignedProducts,
-  assigner,
+  onClick,
   children,
   errorText,
   isOpen,
@@ -27,44 +25,39 @@ const ActionAlert = ({
   setActionsIsOpen,
 }) => {
   const { isLoading } = useSelector((state) => state.loading)
-  const dispatch = useDispatch()
   const handleClose = () => {
     setActionsIsOpen(false)
   }
 
-  const setProductAssigned = () => {
-    const body = {
-      partnerId: assigner.id,
-      product: {
-        products: assignedProducts,
-      },
-    }
-    dispatch(assignProducts(body))
-  }
-
   return (
-    <CustomDialog
+    <CustomActionDialog
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
       maxWidth='xl'
       onClose={handleClose}
       open={isOpen}
     >
-      <CustomDialogTitle error={errorText ? 1 : 0} id='alert-dialog-title'>
+      <CustomActionDialogTitle
+        error={errorText ? 1 : 0}
+        id='alert-dialog-title'
+        sx={{
+          textAlign: 'center',
+        }}
+      >
         {actionAlertTitle}
-      </CustomDialogTitle>
+      </CustomActionDialogTitle>
       <DialogContent sx={{ padding: '2rem' }}>
-        <CustomDialogContentText
+        <CustomActionDialogContentText
           id='alert-dialog-description'
           sx={{
             textAlign: 'center',
           }}
         >
           {actionAlertContentText}
-        </CustomDialogContentText>
+        </CustomActionDialogContentText>
         {children}
       </DialogContent>
-      <CustomDialogActions>
+      <CustomActionDialogActions>
         <MainButton
           background={
             isShowPrimaryButton ? theme.palette.background.blueLight : ''
@@ -75,12 +68,12 @@ const ActionAlert = ({
           {actionAlertTextButton}
         </MainButton>
         {isShowPrimaryButton && (
-          <MainButton disabled={isLoading} onClick={() => setProductAssigned()}>
+          <MainButton disabled={isLoading} onClick={() => onClick()}>
             {primaryButtonTextAlert}
           </MainButton>
         )}
-      </CustomDialogActions>
-    </CustomDialog>
+      </CustomActionDialogActions>
+    </CustomActionDialog>
   )
 }
 
@@ -92,19 +85,11 @@ ActionAlert.propTypes = {
     PropTypes.node,
   ]).isRequired,
   actionAlertTextButton: PropTypes.string.isRequired,
-  assigner: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-    .isRequired,
-  assignedProducts: PropTypes.arrayOf(
-    PropTypes.shape({
-      currency_code: PropTypes.string,
-      price: PropTypes.string,
-      sku: PropTypes.string,
-    }),
-  ).isRequired,
   children: PropTypes.node.isRequired,
   errorText: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
   isShowPrimaryButton: PropTypes.bool,
+  onClick: PropTypes.func.isRequired,
   primaryButtonTextAlert: PropTypes.string,
   setActionsIsOpen: PropTypes.func.isRequired,
 }

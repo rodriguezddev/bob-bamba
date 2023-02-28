@@ -22,7 +22,6 @@ export const schema = {
   },
   email: {
     prop: 'email',
-    required: true,
     type: (email) => {
       const { value, message } = getEmailPattern()
       if (!value.test(email)) {
@@ -42,10 +41,8 @@ export const schema = {
     required: true,
     type: Date,
   },
-  'Movimiento\nALTA / BAJA': {
-    oneOf: ['Alta', 'ALTA', 'Baja', 'BAJA'],
-    prop: 'action',
-    required: true,
+  Celular: {
+    prop: 'phone',
     type: String,
   },
   RFC: {
@@ -57,5 +54,15 @@ export const schema = {
     prop: 'curp',
     required: true,
     type: String,
+  },
+  'Movimiento\nALTA / BAJA': {
+    oneOf: ['Alta', 'ALTA', 'Baja', 'BAJA'],
+    prop: 'action',
+    required: true,
+    type: String,
+  },
+  'Fecha de Movimiento\ndd/mm/aaaa': {
+    prop: 'movementDate',
+    type: Date,
   },
 }

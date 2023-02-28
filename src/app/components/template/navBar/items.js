@@ -24,6 +24,11 @@ const items = [
     icon: 'product',
     title: 'Productos',
   },
+  {
+    href: '/carrier-services',
+    icon: 'carrierServices',
+    title: 'Carriers',
+  },
 ]
 
 export default items

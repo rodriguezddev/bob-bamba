@@ -16,7 +16,7 @@ describe('Create product view', () => {
   })
 
   it('Show errors validations form', () => {
-    cy.get('.MuiBox-root > .MuiButtonBase-root').click()
+    cy.get('[data-testid="create-product-button"]').click()
     cy.get('[data-testid="error-message-name-product"]').should(
       'contain',
       'El nombre del producto es requerido',
@@ -33,10 +33,6 @@ describe('Create product view', () => {
       'contain',
       'El periodo de expiración es requerido',
     )
-    cy.get('[data-testid="error-message-carrier-service-product"]').should(
-      'contain',
-      'El producto de la aseguradora es requerido',
-    )
   })
 
   it('Remove errors form', () => {
@@ -50,27 +46,50 @@ describe('Create product view', () => {
       'not.have.value',
       'El apellido es requerido',
     )
-    cy.get('#expiration-period-product').select('ANNUAL')
+    cy.get('#expiration-period-product').click()
+    cy.get('[data-value="ANNUAL"]').click()
     cy.get('[data-testid="error-message-expiration-period-product"]').should(
       'not.have.value',
       'El tipo de expiración es requerido',
     )
-    cy.get('#expiration-unit-product').select('1')
+    cy.get('#expiration-unit-product').click()
+    cy.get('[data-value="1"]').click()
     cy.get('[data-testid="error-message-expiration-unit-product"]').should(
       'not.have.value',
       'El periodo de expiración es requerido',
     )
-    cy.get('#carrier-service-product').select(
-      'cb58d91f-be3d-4f0f-91b7-1877a19e2270',
-    )
-    cy.get('[data-testid="error-message-carrier-service-product"]').should(
-      'not.have.value',
-      'El producto de la aseguradora es requerido',
-    )
-    cy.get('#category-product').select('504b73dc-1073-492f-b9ee-975fa8c31f62')
+    cy.get('#category-product').click()
+    cy.get('[data-value="504b73dc-1073-492f-b9ee-975fa8c31f62"]').click()
     cy.get('[data-testid="error-message-category-product"]').should(
       'not.have.value',
-      'La categoria es requerida',
+      'La categoría es requerida',
+    )
+  })
+
+  it('show error empty carrier', () => {
+    cy.get('[data-testid="create-product-button"]').click()
+    cy.get('[data-testid="error-message-carrier-services"]').should(
+      'contain',
+      'Debe asignar carrier services',
+    )
+  })
+
+  it('show dialog carrier services', () => {
+    cy.login('admin@vivebamba.com', 'Password')
+    cy.get('[data-testid="drawer-item-Productos"]').should(
+      'contain',
+      'Productos',
+    )
+    cy.get('[data-testid="drawer-item-Productos"]').first().click()
+    cy.get('[data-testid="button-create-product"]').click()
+    cy.get('[data-testid="title-create-product"]').should(
+      'contain',
+      'Crear producto',
+    )
+    cy.get(':nth-child(4) > .MuiBox-root > .MuiButtonBase-root').click()
+    cy.get('#alert-dialog-description').should(
+      'contain',
+      'Elige uno o mas carrier services para asignar a producto',
     )
   })
 })

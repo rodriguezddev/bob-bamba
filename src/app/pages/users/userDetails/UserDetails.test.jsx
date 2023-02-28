@@ -7,8 +7,8 @@ import { act } from 'react-dom/test-utils'
 import store from '../../../store'
 import theme from '../../../theme'
 import httpService from '../../../services/api_services/HttpService'
-import '@testing-library/jest-dom/extend-expect'
 import UserDetails from './UserDetails'
+import '@testing-library/jest-dom/extend-expect'
 
 test('renders user view', async () => {
   const responseMock = {
@@ -72,9 +72,9 @@ test('renders user view', async () => {
     )
   })
 
-  const buttons = screen.getAllByRole('button')
+  const text = screen.getByText('Detalles del usuario')
 
-  expect(buttons).toHaveLength(3)
+  expect(text).toBeInTheDocument()
 })
 
 test('should show subscriptions details', async () => {

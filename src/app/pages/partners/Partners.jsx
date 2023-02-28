@@ -7,22 +7,27 @@ import {
 } from '@mui/material'
 import { CSVLink } from 'react-csv'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import ActionAlert from '../../components/modals/ActionAlert/ActionAlert'
-import { Alert } from '../../components/modals'
+import { ActionAlert, Alert } from '../../components/modals'
 import { GeneralTitle } from '../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
 import { columns } from './components/columns'
 import {
+  assignProducts,
   getPartners,
   handleSubscriptionIsSuccess,
   resetsAssignProductsIsSuccess,
 } from '../../slices/partner/partnerSlice'
-import { getTypePartner } from '../../utils/UtilsTranslate'
+import {
+  getTextErrorUploadFile,
+  getTextActionUploadFile,
+  getTypePartner,
+} from '../../utils/UtilsTranslate'
 import { MainButton } from '../../components/buttons'
 import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
 import ProductContainer from './components/ProductContainer'
 import UploadIconPartner from './components/UploadIconPartner/UploadIconPartner'
+import { formatDate } from '../../utils/utilsFormat'
 
 const Partners = () => {
   const [page, setPage] = useState(0)
@@ -60,20 +65,44 @@ const Partners = () => {
   }
 
   const handleAlertSuccess = () => {
+    if (resultSubscriptionFile?.total_successfully_processed === 0) {
+      dispatch(handleSubscriptionIsSuccess())
+      return
+    }
+
     navigate('/users')
     dispatch(handleSubscriptionIsSuccess())
   }
 
-  const handleUnprocessedUsers = (array) => array.map((item) => {
-    const {
-      id,
-      email_verified_at: emailVerified,
-      deleted_at: deletedAt,
-      metadata,
-      ...rest
-    } = item.user
-    return { ...rest, product: item.sku, action: item.action }
+  const handleUnprocessedUsers = (usersErrors) => usersErrors.map((item) => {
+    const { action, sku, user } = item
+
+    return {
+      name: user?.name,
+      lastName: user?.lastname,
+      secondLastname: user?.second_lastname,
+      email: user?.email,
+      cellphone: user?.cellphone,
+      gender: user?.gender,
+      birthdate: formatDate(user?.birthdate),
+      rfc: user?.tax_id,
+      curp: user?.personal_id,
+      sku,
+      action: getTextActionUploadFile(action),
+      error: getTextErrorUploadFile(item.error),
+    }
   })
+
+  const handleProductAssigned = () => {
+    const body = {
+      partnerId: partnerActionAlert.id,
+      product: {
+        products: assignedProducts,
+      },
+    }
+
+    dispatch(assignProducts(body))
+  }
 
   useEffect(() => {
     if (partners && partners.products?.isSuccess) {
@@ -158,10 +187,9 @@ const Partners = () => {
           actionAlertContentText='Elige uno o mas productos para asignar a este partner'
           actionAlertTextButton='Cerrar'
           actionAlertTitle={`Asignar productos a ${partnerActionAlert.name}`}
-          assignedProducts={assignedProducts}
-          assigner={partnerActionAlert}
           isOpen={showActionAlert}
           isShowPrimaryButton
+          onClick={handleProductAssigned}
           primaryButtonTextAlert='Asignar'
           setActionsIsOpen={setShowActionAlert}
         >
@@ -185,18 +213,17 @@ const Partners = () => {
           alertContentText={(
             <>
               <Typography component='span' variant='subtitle1'>
-                Archivos procesados:
-                {' '}
+                <b>Total de registros:&nbsp;</b>
                 {resultSubscriptionFile?.total_processed}
               </Typography>
               <br />
+              <Typography component='span' variant='subtitle1'>
+                <b>Cargados con éxito:&nbsp;</b>
+                {resultSubscriptionFile?.total_successfully_processed}
+              </Typography>
+              <br />
               <Typography color='error' component='span' variant='subtitle1'>
-                Archivos
-                {' '}
-                <b>NO</b>
-                {' '}
-                procesados:
-                {' '}
+                <b>Con error:&nbsp;</b>
                 {resultSubscriptionFile?.total_unprocessed}
               </Typography>
               <br />
@@ -208,7 +235,7 @@ const Partners = () => {
                   )}
                   filename='user-upload-unprocessed.csv'
                 >
-                  Descarga los no procesado
+                  Ver detalle de errores
                 </CSVLink>
               )}
             </>

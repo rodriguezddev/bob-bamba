@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
 import { ThemeProvider } from '@mui/material'
 import SelectFilter from './SelectFilter'
 import theme from '../../../theme'
@@ -21,8 +21,8 @@ describe('SelectFilterInput component', () => {
       </ThemeProvider>,
     )
 
+    fireEvent.mouseDown(screen.getByRole('button'))
     const input = screen.getByTestId('select-filter-value-AGGREGATOR')
-
-    expect(input).toHaveValue('AGGREGATOR')
+    expect(input).toHaveTextContent('Agregador')
   })
 })

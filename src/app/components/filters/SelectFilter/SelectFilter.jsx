@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Grid } from '@mui/material'
+import { Grid, MenuItem } from '@mui/material'
 import { SelectInput } from '../../inputs'
 
 const SelectFilter = ({ field, onChange, value }) => (
@@ -11,15 +11,15 @@ const SelectFilter = ({ field, onChange, value }) => (
       onChange={onChange}
       value={value}
     >
-      <option value=''>Seleccionar</option>
+      <MenuItem value=''>Seleccionar</MenuItem>
       {field.selectDetails.map((select) => (
-        <option
+        <MenuItem
           data-testid={`select-filter-value-${select.value}`}
           key={select.value}
           value={select.value}
         >
           {select.name}
-        </option>
+        </MenuItem>
       ))}
     </SelectInput>
   </Grid>

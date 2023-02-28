@@ -52,7 +52,7 @@ const ActivationDetailsCard = ({
             fontSize='1rem'
             lineHeight='1rem'
             marginRight='.5rem'
-            text='Siguente renovación:'
+            text='Siguiente renovación:'
             xs={5}
           />
           <GeneralTitle

@@ -2,6 +2,7 @@ import errorReducer, { handleHideError, handleSetError } from './errorSlice'
 
 describe('authSlice redux', () => {
   const initialState = {
+    codeError: null,
     isError: false,
     message: '',
   }
@@ -16,15 +17,22 @@ describe('authSlice redux', () => {
 
   it('should handle set error state', () => {
     const state = {
+      codeError: 1,
       isError: true,
-      message: 'error',
+      message: 'Error test',
     }
 
-    expect(errorReducer(initialState, handleSetError('error'))).toEqual(state)
+    const payload = {
+      code: 1,
+      errors: { detail: 'Error test' },
+    }
+
+    expect(errorReducer(initialState, handleSetError(payload))).toEqual(state)
   })
 
   it('should handle hide error state', () => {
     const state = {
+      codeError: null,
       isError: false,
       message: '',
     }

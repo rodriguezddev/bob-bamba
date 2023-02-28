@@ -6,7 +6,7 @@ import {
 } from '@mui/material'
 import { styled } from '@mui/system'
 
-export const CustomDialog = styled(Dialog)(() => ({
+export const CustomFormDialog = styled(Dialog)(() => ({
   textAlign: 'start',
   padding: '3.93rem 5.37rem',
   '& .MuiPaper-root ': {
@@ -14,16 +14,18 @@ export const CustomDialog = styled(Dialog)(() => ({
   },
 }))
 
-export const CustomDialogTitle = styled(DialogTitle)(({ theme, error }) => ({
-  color: `${error && theme.palette.error.main}`,
-  fontStyle: 'normal',
-  fontWeight: 600,
-  fontSize: '3rem',
-  lineHeight: '2.5rem',
-  padding: '3rem 3rem 1rem',
-}))
+export const CustomFormDialogTitle = styled(DialogTitle)(
+  ({ theme, error }) => ({
+    color: `${error && theme.palette.error.main}`,
+    fontStyle: 'normal',
+    fontWeight: 600,
+    fontSize: '3rem',
+    lineHeight: '2.5rem',
+    padding: '3rem 3rem 1rem',
+  }),
+)
 
-export const CustomDialogContentText = styled(DialogContentText)(
+export const CustomFormDialogContentText = styled(DialogContentText)(
   ({ theme }) => ({
     color: `${theme.palette.primary.main}`,
     fontSize: '1.12rem',
@@ -32,7 +34,7 @@ export const CustomDialogContentText = styled(DialogContentText)(
   }),
 )
 
-export const CustomDialogActions = styled(DialogActions)(() => ({
+export const CustomFormDialogActions = styled(DialogActions)(() => ({
   justifyContent: 'center',
   padding: '2rem',
 }))

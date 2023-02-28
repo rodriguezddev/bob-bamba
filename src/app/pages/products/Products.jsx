@@ -35,7 +35,7 @@ const Products = () => {
     dispatch(getProducts(path))
   }
 
-  const handleCreateUserAdmin = () => {
+  const handleCreateProduct = () => {
     navigate('/products/create')
   }
 
@@ -66,7 +66,7 @@ const Products = () => {
           data-testid='button-create-product'
           fontSize='1rem'
           height='3.75rem'
-          onClick={handleCreateUserAdmin}
+          onClick={handleCreateProduct}
           radius='0.62rem'
           width='18rem'
         >
