@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-describe('List users view', () => {
+describe('users details view', () => {
   it('display user view success', () => {
     cy.login('admin@vivebamba.com', 'Password')
     cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')

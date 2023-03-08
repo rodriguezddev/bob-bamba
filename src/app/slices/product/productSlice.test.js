@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import productReducer, {
   createProduct,
   getProducts,
+  getProductsNotActive,
   productSlice,
 } from './productSlice'
 import httpService from '../../services/api_services/HttpService'
@@ -18,6 +19,9 @@ describe('ProductSlice redux', () => {
         meta: {},
       },
       product: {},
+      productsNotActive: {
+        data: [],
+      },
     })
   })
 
@@ -130,8 +134,10 @@ describe('ProductSlice redux', () => {
         meta: {},
       },
     }
+
     const thunk = getProducts()
     await thunk(dispatch, () => state, undefined)
+
     const { calls } = dispatch.mock
 
     expect(calls).toHaveLength(2)
@@ -192,5 +198,70 @@ describe('ProductSlice redux', () => {
     const { product } = await store.getState()
 
     expect(product).toEqual(state)
+  })
+
+  it('should return product state', async () => {
+    const responseMock = {
+      data: [
+        {
+          id: '271f85ba-68c5-4aab-b0f7-96efea0bd5dc',
+          sku: 'SEGURO-VIDA-30K',
+          name: 'Seguro por Fallecimiento que paga hasta $30,000',
+          is_recurrent: false,
+          expiration_unit: 6,
+          expiration_period: 'MONTHLY',
+          status: 'ACTIVE',
+          prices: [
+            {
+              partner: 'Bamba',
+              price: 13,
+              currency_code: 'MXN',
+            },
+            {
+              partner: 'Claro Pay',
+              price: 75,
+              currency_code: 'MXN',
+            },
+          ],
+          categories: ['assistance', 'insurance'],
+          description: [],
+          brief: 'En caso de que fallezcas, tu familia recibe $30,000 mxn',
+          terms: 'https://www.vivebamba.com/terminos-condiciones',
+        },
+      ],
+      code: 0,
+    }
+
+    jest.spyOn(httpService, 'get').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: productSlice.reducer })
+    await store.dispatch(getProductsNotActive())
+
+    const { productsNotActive } = await store.getState()
+
+    expect(productsNotActive).toEqual(responseMock)
+  })
+
+  it('should get products thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      products: {
+        data: [],
+        meta: {},
+      },
+      product: {},
+      productsNotActive: {
+        data: [],
+      },
+    }
+
+    const thunk = getProductsNotActive()
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('list/productsNotActive/pending')
+    expect(calls[1][0].type).toEqual('list/productsNotActive/rejected')
   })
 })

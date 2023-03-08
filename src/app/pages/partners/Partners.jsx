@@ -7,6 +7,7 @@ import {
 } from '@mui/material'
 import { CSVLink } from 'react-csv'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import UploadFileIcon from '@mui/icons-material/UploadFile'
 import { ActionAlert, Alert } from '../../components/modals'
 import { GeneralTitle } from '../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
@@ -16,6 +17,7 @@ import {
   getPartners,
   handleSubscriptionIsSuccess,
   resetsAssignProductsIsSuccess,
+  resetUsersBatch,
 } from '../../slices/partner/partnerSlice'
 import {
   getTextErrorUploadFile,
@@ -28,14 +30,16 @@ import { filters } from './components/filters'
 import ProductContainer from './components/ProductContainer'
 import UploadIconPartner from './components/UploadIconPartner/UploadIconPartner'
 import { formatDate } from '../../utils/utilsFormat'
+import UploadUserBatch from './components/UploadUserBatch/UploadUserBatch'
 
 const Partners = () => {
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { partners } = useSelector((state) => state.partner)
-  const { resultSubscriptionFile } = useSelector((state) => state.partner)
+  const { partners, resultSubscriptionFile, usersBatch } = useSelector(
+    (state) => state.partner,
+  )
   const [partnerActionAlert, setPartnerActionAlert] = useState({})
   const [assignedProducts, setAssignedProducts] = useState([])
   const [showActionAlert, setShowActionAlert] = useState(false)
@@ -104,6 +108,10 @@ const Partners = () => {
     dispatch(assignProducts(body))
   }
 
+  const handleSuccessUsersBatchAlert = () => {
+    dispatch(resetUsersBatch())
+  }
+
   useEffect(() => {
     if (partners && partners.products?.isSuccess) {
       setShowActionAlert(false)
@@ -162,14 +170,20 @@ const Partners = () => {
                 container
                 direction='row'
                 justifyContent='center'
-                spacing={4}
+                spacing={1}
               >
                 <Grid item onClick={() => handlePartner(partner)}>
                   <Tooltip title='Asignar productos'>
-                    <IconButton color='primary'>
+                    <IconButton color='primary' sx={{ padding: 0 }}>
                       <PlaylistAddCircleIcon />
                     </IconButton>
                   </Tooltip>
+                </Grid>
+                <Grid item>
+                  <UploadUserBatch
+                    icon={<UploadFileIcon />}
+                    partner={partner}
+                  />
                 </Grid>
                 <Grid item>
                   <UploadIconPartner
@@ -203,9 +217,51 @@ const Partners = () => {
         <Alert
           alertContentText='Los productos se asignaron con éxito'
           alertTextButton='Cerrar'
-          alertTitle='Asignación exitosa!'
+          alertTitle='¡Asignación exitosa!'
           isOpen={showSuccessAlert}
           setIsOpen={setShowSuccessAlert}
+        />
+      )}
+      {usersBatch?.isSuccess && (
+        <Alert
+          alertContentText={(
+            <>
+              {usersBatch?.errors?.length !== 0 ? (
+                <>
+                  <Typography
+                    color='error'
+                    component='span'
+                    variant='subtitle1'
+                  >
+                    <b>Total de errores:&nbsp;</b>
+                    {usersBatch?.errors?.length}
+                  </Typography>
+                  <br />
+                  <br />
+                  <CSVLink
+                    data={usersBatch?.errors}
+                    filename='user-upload-errors.csv'
+                  >
+                    Ver detalle de errores
+                  </CSVLink>
+                </>
+              ) : (
+                <Typography component='span' variant='subtitle1'>
+                  <b>Total de filas procesadas:&nbsp;</b>
+                  {usersBatch?.rowsProcessed}
+                </Typography>
+              )}
+              <br />
+            </>
+          )}
+          alertTextButton='Cerrar'
+          alertTitle={`¡${
+            usersBatch?.errors?.length
+              ? 'El archivo contiene errores'
+              : 'Creación exitosa'
+          }!`}
+          isOpen={usersBatch?.isSuccess}
+          setIsOpen={handleSuccessUsersBatchAlert}
         />
       )}
       {resultSubscriptionFile?.isSuccess && (
@@ -228,7 +284,7 @@ const Partners = () => {
               </Typography>
               <br />
               <br />
-              {resultSubscriptionFile.unprocessed_users.length !== 0 && (
+              {resultSubscriptionFile?.unprocessed_users?.length !== 0 && (
                 <CSVLink
                   data={handleUnprocessedUsers(
                     resultSubscriptionFile?.unprocessed_users,

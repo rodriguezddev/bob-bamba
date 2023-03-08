@@ -6,10 +6,10 @@ import { CSVLink } from 'react-csv'
 import { schema } from './schema'
 import UploadIcon from '../../../../components/buttons/uploadIcon/UploadIcon'
 import { Alert } from '../../../../components/modals'
-import { createSubscriptionBatch } from '../../../../slices/partner/partnerSlice'
+import { createUserBatch } from '../../../../slices/partner/partnerSlice'
 import { usersWithoutEmailAndCellphone } from '../../../../utils/utilsUploadFile'
 
-const UploadIconPartner = ({ partner, icon }) => {
+const UploadUserBatch = ({ partner, icon }) => {
   const inputRef = useRef(null)
   const dispatch = useDispatch()
   const [errorsExcel, setErrors] = useState([])
@@ -50,9 +50,7 @@ const UploadIconPartner = ({ partner, icon }) => {
             return
           }
 
-          dispatch(
-            createSubscriptionBatch({ data: dataForm, partner: partner.name }),
-          )
+          dispatch(createUserBatch({ data: dataForm, partner: partner.name }))
         })
         .finally(() => {
           inputRef.current.value = null
@@ -72,7 +70,7 @@ const UploadIconPartner = ({ partner, icon }) => {
         color='primary'
         onChange={handleChange}
         ref={inputRef}
-        toolTipInfo='Carga de usuarios con suscripción'
+        toolTipInfo='Carga de usuarios con archivo'
       >
         {icon}
       </UploadIcon>
@@ -98,7 +96,7 @@ const UploadIconPartner = ({ partner, icon }) => {
   )
 }
 
-UploadIconPartner.propTypes = {
+UploadUserBatch.propTypes = {
   icon: PropTypes.element.isRequired,
   partner: PropTypes.shape({
     id: PropTypes.string,
@@ -106,4 +104,4 @@ UploadIconPartner.propTypes = {
   }).isRequired,
 }
 
-export default UploadIconPartner
+export default UploadUserBatch

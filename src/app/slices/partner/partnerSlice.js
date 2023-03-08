@@ -12,6 +12,11 @@ const initialState = {
   resultSubscriptionFile: {
     isSuccess: false,
   },
+  usersBatch: {
+    errors: [],
+    isSuccess: false,
+    rowsProcessed: 0,
+  },
 }
 
 export const getPartners = createAsyncThunk(
@@ -86,6 +91,26 @@ export const createSubscriptionBatch = createAsyncThunk(
   },
 )
 
+export const createUserBatch = createAsyncThunk(
+  'partner/userBatch',
+  async (params, thunkAPI) => {
+    const { data } = params
+    try {
+      const response = await httpService.post(
+        `${apiConstants.ADMIN_URL}/users/batch-create`,
+        data,
+        true,
+      )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const partnerSlice = createSlice({
   name: 'partner',
   initialState,
@@ -101,6 +126,12 @@ export const partnerSlice = createSlice({
     },
     handleSubscriptionIsSuccess: (state) => {
       state.resultSubscriptionFile.isSuccess = false
+    },
+    resetUsersBatch: (state) => {
+      state.usersBatch = {
+        process: 0,
+        isSuccess: false,
+      }
     },
   },
   extraReducers: (builder) => {
@@ -124,6 +155,13 @@ export const partnerSlice = createSlice({
         isSuccess: true,
       }
     })
+    builder.addCase(createUserBatch.fulfilled, (state, action) => {
+      state.usersBatch = {
+        errors: action.payload.data.errors,
+        isSuccess: true,
+        rowsProcessed: action.payload.data.total_rows,
+      }
+    })
   },
 })
 
@@ -134,6 +172,7 @@ export const {
   resetPartner,
   resetsAssignProductsIsSuccess,
   resetResultSubscriptionFile,
+  resetUsersBatch,
 } = partnerSlice.actions
 
 export default partnerSlice.reducer

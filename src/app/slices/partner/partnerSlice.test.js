@@ -3,11 +3,13 @@ import partnerReducer, {
   assignProducts,
   createPartner,
   createSubscriptionBatch,
+  createUserBatch,
   getPartners,
   handleSubscriptionIsSuccess,
   partnerSlice,
   resetPartner,
   resetResultSubscriptionFile,
+  resetUsersBatch,
 } from './partnerSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -26,6 +28,11 @@ describe('PartnerSlice redux', () => {
       partner: {},
       resultSubscriptionFile: {
         isSuccess: false,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
       },
     })
   })
@@ -187,7 +194,7 @@ describe('PartnerSlice redux', () => {
     expect(partners).toEqual(statePartner)
   })
 
-  it('should  createPartner thunk request', async () => {
+  it('should createPartner thunk request', async () => {
     const dispatch = jest.fn()
     const state = {
       partners: {
@@ -362,7 +369,7 @@ describe('PartnerSlice redux', () => {
     expect(partners.products).toEqual(state)
   })
 
-  it('should  assignProducts thunk request', async () => {
+  it('should assignProducts thunk request', async () => {
     const dispatch = jest.fn()
     const state = {
       partners: {
@@ -455,7 +462,7 @@ describe('PartnerSlice redux', () => {
     expect(resultSubscriptionFile).toEqual(stateResultUploadFile)
   })
 
-  it('should  createSubscriptionBatch thunk request', async () => {
+  it('should createSubscriptionBatch thunk request', async () => {
     const dispatch = jest.fn()
     const state = {
       partners: {
@@ -506,5 +513,96 @@ describe('PartnerSlice redux', () => {
     const actualState = partnerReducer(state, handleSubscriptionIsSuccess())
 
     expect(actualState.resultSubscriptionFile.isSuccess).toEqual(false)
+  })
+
+  it('should return usersBatch', async () => {
+    const stateUsersBatch = {
+      rowsProcessed: 3,
+      isSuccess: true,
+      errors: [
+        [
+          'There was an error on row 2. El campo celular ya existe para este partner',
+        ],
+        [
+          'There was an error on row 2. El campo email ya existe para este partner',
+        ],
+        [
+          'There was an error on row 3. El campo celular ya existe para este partner',
+        ],
+      ],
+    }
+
+    const responseMock = {
+      code: 0,
+      data: {
+        total_rows: 3,
+        errors: [
+          [
+            'There was an error on row 2. El campo celular ya existe para este partner',
+          ],
+          [
+            'There was an error on row 2. El campo email ya existe para este partner',
+          ],
+          [
+            'There was an error on row 3. El campo celular ya existe para este partner',
+          ],
+        ],
+      },
+    }
+
+    jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: partnerSlice.reducer })
+    await store.dispatch(createUserBatch({ partner: 'Bamba' }))
+
+    const { usersBatch } = await store.getState()
+
+    expect(usersBatch).toEqual(stateUsersBatch)
+  })
+
+  it('should handle resetUsersBatch', () => {
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      resultSubscriptionFile: {
+        isSuccess: true,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+    }
+    const actualState = partnerReducer(state, resetUsersBatch())
+
+    expect(actualState.usersBatch.isSuccess).toEqual(false)
+  })
+
+  it('should createUserBatch thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+    }
+    const thunk = createUserBatch()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/userBatch/pending')
+    expect(calls[1][0].type).toEqual('partner/userBatch/rejected')
   })
 })

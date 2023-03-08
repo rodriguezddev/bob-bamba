@@ -1,64 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import {
-  Box, Card, CardContent, Grid, MenuItem,
-} from '@mui/material'
+import { Box, Grid, MenuItem } from '@mui/material'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
-import { formatDate } from '../../../utils/utilsFormat'
-import {
-  handleSubscriptionsCanceled,
-  handleSubscriptionsNumbers,
-  orderSubscriptions,
-} from '../../../utils/utilsHandleSubscriptions'
-import {
-  getPeriodProducts,
-  getStatusProducts,
-} from '../../../utils/UtilsTranslate'
-import {
-  cancelSubscription,
-  resetSubscription,
-} from '../../../slices/subscriptions/subscriptionsSlice'
-import { Alert, PdfViewer } from '../../../components/modals'
 import { Avatar } from '../../../components/avatar'
 import { BackButton, MainButton } from '../../../components/buttons'
 import { GeneralTitle } from '../../../components/texts'
 import { getUser } from '../../../slices/user/userSlice'
 import { MainInput, SelectInput } from '../../../components/inputs'
-import theme from '../../../theme'
-import ActivationDetailsCard from './components/ActivationDetailsCard'
+import ProductsNotActive from './components/ProductsNotActive'
+import Subscriptions from './components/Subscriptions'
 import RecoveryMessageForm from './components/RecoveryMessageForm'
 import { resetRecoveryMessage } from '../../../slices/recoveryMessage/recoveryMessageSlice'
+import { Alert } from '../../../components/modals'
 
 const UserDetails = () => {
   const dispatch = useDispatch()
   const { id } = useParams()
-  const { user } = useSelector((state) => state.user)
   const { message } = useSelector((state) => state.recoveryMessage)
-  const { canceledSubscription } = useSelector((state) => state.subscriptions)
-  const [subscriptions, setSubscriptions] = useState([])
-  const [subscriptionsNumbers, setSubscriptionsNumbers] = useState('')
-  const [subscriptionsId, setSubscriptionsId] = useState('')
-  const [isOpenPdfViewer, setIsOpenPdfViewer] = useState(false)
-  const [pdfViewerFile, setPdfViewerFile] = useState('')
-  const [showAlert, setShowAlert] = useState(false)
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const { user } = useSelector((state) => state.user)
   const [showFormMessage, setShowFormMessage] = useState(false)
 
-  const handlePdfViewerFile = (file) => {
-    setPdfViewerFile(file)
-    setIsOpenPdfViewer(true)
-  }
-
-  const handleCancelSubscription = (subscriptionId) => {
-    setSubscriptionsId(subscriptionId)
-    setShowAlert(true)
-  }
-
-  const setSubscription = () => {
-    dispatch(cancelSubscription(subscriptionsId))
-    setShowAlert(false)
-  }
+  useEffect(() => {
+    dispatch(getUser(id))
+  }, [])
 
   const handleShowFormMessage = () => {
     setShowFormMessage(!showFormMessage)
@@ -69,41 +34,10 @@ const UserDetails = () => {
   }
 
   useEffect(() => {
-    dispatch(getUser(id))
-  }, [])
-
-  useEffect(() => {
-    if (user && Object.entries(user)?.length !== 0) {
-      setSubscriptions(orderSubscriptions(user.subscriptions))
-    }
-  }, [user])
-
-  useEffect(() => {
-    if (Object.entries(canceledSubscription).length !== 0) {
-      setSubscriptions(
-        orderSubscriptions(
-          handleSubscriptionsCanceled(subscriptions, canceledSubscription),
-        ),
-      )
-    }
-
-    if (canceledSubscription?.isSuccess) {
-      setShowSuccessAlert(canceledSubscription?.isSuccess)
-      dispatch(resetSubscription())
-    }
-  }, [canceledSubscription])
-
-  useEffect(() => {
     if (message.isSuccess) {
       handleShowFormMessage()
     }
   }, [message.isSuccess])
-
-  useEffect(() => {
-    if (subscriptions) {
-      setSubscriptionsNumbers(handleSubscriptionsNumbers(subscriptions))
-    }
-  }, [subscriptions])
 
   return (
     <Box sx={{ width: '100%', marginBottom: '2rem' }}>
@@ -278,143 +212,22 @@ const UserDetails = () => {
           </Grid>
         </Grid>
       </form>
-      {subscriptions?.length !== 0 && (
-        <Grid marginTop='5rem'>
-          <Grid container direction='column'>
-            <GeneralTitle
-              data-testid='subscriptions-title'
-              lineHeight='.5rem'
-              text='Suscripciones'
-            />
-            <GeneralTitle
-              fontSize='1rem'
-              fontWeight='200'
-              text={`${subscriptionsNumbers} suscripciones activas`}
-            />
-          </Grid>
-          {subscriptions?.map((subscriptionItem, index) => (
-            <Card
-              key={subscriptionItem.id}
-              sx={{
-                margin: '2.5rem 0',
-                bgcolor: theme.palette.background.blueLight,
-              }}
-            >
-              <CardContent sx={{ padding: '2rem' }}>
-                <Grid
-                  alignItems='center'
-                  container
-                  direction='row'
-                  justifyContent='space-between'
-                  marginBottom='2.5rem'
-                >
-                  <GeneralTitle
-                    fontSize='1.25rem'
-                    lineHeight='1rem'
-                    marginRight='.5rem'
-                    text={`Suscripción #${index + 1}`}
-                    xs={4}
-                  />
-                  <GeneralTitle
-                    fontSize='1.25rem'
-                    lineHeight='1rem'
-                    marginRight='.5rem'
-                    text={`Estatus: ${getStatusProducts(
-                      subscriptionItem.status,
-                    )}`}
-                    xs={4}
-                  />
-                  <Grid item xs={3}>
-                    <Grid container justifyContent='flex-end'>
-                      <Grid item px={1}>
-                        <MainButton
-                          background={theme.palette.background.blueLight}
-                          data-testid={`button-to-show-certificate-id-${
-                            index + 1
-                          }`}
-                          onClick={() => handlePdfViewerFile(
-                            subscriptionItem.certificate_file,
-                          )}
-                          type='secondary'
-                        >
-                          Ver certificado
-                        </MainButton>
-                      </Grid>
-                      <Grid item px={1}>
-                        <MainButton
-                          data-testid={`button-to-cancel-subscription-id-${
-                            index + 1
-                          }`}
-                          disabled={subscriptionItem.status !== 'ACTIVE'}
-                          onClick={() => handleCancelSubscription(subscriptionItem.id)}
-                        >
-                          Cancelar
-                        </MainButton>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <ActivationDetailsCard
-                  activationDate={formatDate(subscriptionItem.activated_at)}
-                  activationType={getPeriodProducts(
-                    subscriptionItem.renew_period,
-                  )}
-                  nextActivation={formatDate(subscriptionItem.next_renewal_at)}
-                />
-                <Grid marginTop='2.5rem'>
-                  <GeneralTitle
-                    fontSize='1rem'
-                    lineHeight='2rem'
-                    text='Productos contratados'
-                  />
-                  <Grid
-                    container
-                    spacing={2}
-                    sx={{ marginBottom: '1rem', marginTop: '.5rem' }}
-                  >
-                    {subscriptionItem?.products.map((product) => (
-                      <Grid item key={product.id} xs={4}>
-                        <Card
-                          sx={{
-                            height: '100%',
-                          }}
-                        >
-                          <CardContent>{product.name}</CardContent>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Grid>
-              </CardContent>
-            </Card>
-          ))}
-        </Grid>
-      )}
-      <PdfViewer
-        file={pdfViewerFile}
-        isOpen={isOpenPdfViewer}
-        pdfViewerTitle='Certificado'
-        pdfViewerButtonText='Cerrar'
-        setIsOpen={setIsOpenPdfViewer}
-      />
-      {showAlert && (
+      <Subscriptions user={user} />
+      <ProductsNotActive userId={id} />
+      {message.isSuccess && (
         <Alert
-          actionButton={setSubscription}
-          alertContentText='¿Seguro que quiere cancelar esta suscripción?'
           alertTextButton='Cerrar'
-          alertTitle='Se cancelará la suscripción'
-          primaryButtonTextAlert='Cancelar'
-          isOpen={showAlert}
-          isShowPrimaryButton
-          setIsOpen={setShowAlert}
+          alertTitle='¡Mensaje enviado!'
+          alertContentText={`Se envío a ${user?.name} ${user.lastname}`}
+          isOpen={message.isSuccess}
+          setIsOpen={handleRecoveryMessageSuccess}
         />
       )}
-      {showSuccessAlert && (
-        <Alert
-          alertTextButton='Cerrar'
-          alertTitle='¡Suscripción cancelada!'
-          isOpen={showSuccessAlert}
-          setIsOpen={setShowSuccessAlert}
+      {showFormMessage && (
+        <RecoveryMessageForm
+          handleShowForm={handleShowFormMessage}
+          open={showFormMessage}
+          user={user}
         />
       )}
       {message.isSuccess && (

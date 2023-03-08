@@ -7,7 +7,12 @@ const UploadIcon = forwardRef(
     accept, color, children, onChange, toolTipInfo,
   }, ref) => (
     <Tooltip title={toolTipInfo}>
-      <IconButton aria-label='upload file' color={color} component='label'>
+      <IconButton
+        aria-label='upload file'
+        color={color}
+        component='label'
+        sx={{ padding: 0 }}
+      >
         {children}
         <input
           accept={accept}

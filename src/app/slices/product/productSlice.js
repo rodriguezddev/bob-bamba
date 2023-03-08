@@ -8,6 +8,9 @@ const initialState = {
     meta: {},
   },
   product: {},
+  productsNotActive: {
+    data: [],
+  },
 }
 
 export const getProducts = createAsyncThunk(
@@ -17,6 +20,23 @@ export const getProducts = createAsyncThunk(
       const response = params
         ? await httpService.get(`${apiConstants.ADMIN_URL}/products${params}`)
         : await httpService.get(`${apiConstants.ADMIN_URL}/products`)
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const getProductsNotActive = createAsyncThunk(
+  'list/productsNotActive',
+  async (userId, thunkAPI) => {
+    try {
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/products/not-active/${userId}`,
+      )
 
       return response
     } catch (error) {
@@ -56,6 +76,9 @@ export const productSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getProducts.fulfilled, (state, action) => {
       state.products = action.payload
+    })
+    builder.addCase(getProductsNotActive.fulfilled, (state, action) => {
+      state.productsNotActive = action.payload
     })
     builder.addCase(createProduct.fulfilled, (state, action) => {
       state.products = {

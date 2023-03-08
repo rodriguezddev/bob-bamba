@@ -67,4 +67,32 @@ describe('test functions utils translate', () => {
       textActionCanceled,
     )
   })
+
+  it('get period subscription 1 year', () => {
+    const period = 'ANNUAL'
+    const every = 1
+
+    expect(utilsTranslate.getPeriodSubscriptions(period, every)).toBe('1 Año')
+  })
+
+  it('get period subscription 6 months', () => {
+    const period = 'MONTHLY'
+    const every = 6
+
+    expect(utilsTranslate.getPeriodSubscriptions(period, every)).toBe('6 Meses')
+  })
+
+  it('get period subscription every undefined', () => {
+    const period = 'MONTHLY'
+    const every = undefined
+
+    expect(utilsTranslate.getPeriodSubscriptions(period, every)).toBe('0 Mes')
+  })
+
+  it('get period subscription period undefined', () => {
+    const period = undefined
+    const every = undefined
+
+    expect(utilsTranslate.getPeriodSubscriptions(period, every)).toBe('-')
+  })
 })

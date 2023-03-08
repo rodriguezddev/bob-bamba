@@ -36,6 +36,17 @@ export const getPeriodProducts = (period) => {
   return statusPeriod[period] || '-'
 }
 
+export const getPeriodSubscriptions = (period, every = 0) => {
+  const statusPeriod = {
+    DAY: `${every} Día${every > 1 ? 'es' : ''}`,
+    WEEKLY: `${every} Semana${every > 1 ? 'es' : ''}`,
+    MONTHLY: `${every} Mes${every > 1 ? 'es' : ''}`,
+    ANNUAL: `${every} Año${every > 1 ? 's' : ''}`,
+  }
+
+  return statusPeriod[period] || '-'
+}
+
 export const handleErrorMessage = (errors) => {
   if (!errors) return null
 

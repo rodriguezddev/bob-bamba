@@ -33,7 +33,7 @@ export const subscriptionsSlice = createSlice({
   initialState,
   reducers: {
     resetSubscription(state) {
-      state.canceledSubscription.isSuccess = false
+      state.canceledSubscription = {}
     },
   },
 
