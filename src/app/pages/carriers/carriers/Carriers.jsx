@@ -84,8 +84,8 @@ const Carriers = () => {
       >
         {carriers?.data?.map((carrier) => (
           <TableRow key={carrier?.id}>
-            <TableCell align='center'>{carrier?.name}</TableCell>
-            <TableCell align='center'>{carrier?.code}</TableCell>
+            <TableCell align='left'>{carrier?.name}</TableCell>
+            <TableCell align='left'>{carrier?.code}</TableCell>
             <TableCell align='center'>
               {carrier?.is_enabled ? 'Si' : 'No'}
             </TableCell>

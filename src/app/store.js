@@ -14,6 +14,7 @@ import adminReducer from './slices/adminUsers/adminSlice'
 import authReducer from './slices/auth/authSlice'
 import categoryReducer from './slices/category/categorySlice'
 import carrierReducer from './slices/carriers/carrierSlice'
+import campaignsReducer from './slices/campaigns/campaignsSlice'
 import errorReducer from './slices/error/errorSlice'
 import loadingReducer from './slices/loading/loadingSlice'
 import partnerReducer from './slices/partner/partnerSlice'
@@ -28,6 +29,7 @@ const reducers = combineReducers({
   auth: authReducer,
   category: categoryReducer,
   carrier: carrierReducer,
+  campaign: campaignsReducer,
   error: errorReducer,
   loading: loadingReducer,
   partner: partnerReducer,

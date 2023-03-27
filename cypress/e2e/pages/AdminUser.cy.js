@@ -27,6 +27,7 @@ describe('List admin users view', () => {
       'contain',
       'Bamba Admin',
     )
+    cy.get('[data-testid="button-filter-clean"]').click()
   })
 
   it('check pagination', () => {

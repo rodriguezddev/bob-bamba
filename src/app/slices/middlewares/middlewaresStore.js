@@ -6,11 +6,15 @@ import { handleLoading, handleNotLoading } from '../loading/loadingSlice'
 
 export const storeQueryLogger = ({ dispatch }) => (next) => (action) => {
   if (isRejectedWithValue(action)) {
+    const sentryErrorMessage = new Error(
+      `${action?.payload?.status} ${action?.type}`,
+    )
+
     if (action?.payload?.status === 401) {
       dispatch(reset())
     }
 
-    logError(action?.message, action?.payload)
+    logError(sentryErrorMessage, action?.payload)
 
     dispatch(handleNotLoading())
     dispatch(handleSetError(action?.payload))

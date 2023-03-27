@@ -84,7 +84,7 @@ const Users = () => {
                 </Box>
               </Box>
             </TableCell>
-            <TableCell align='center'>{user.email}</TableCell>
+            <TableCell align='left'>{user.email}</TableCell>
             <TableCell align='center'>{user.tax_id ?? '-'}</TableCell>
             <TableCell align='center'>{user.personal_id ?? '-'}</TableCell>
             <TableCell align='center'>{user.birthdate}</TableCell>
@@ -98,7 +98,10 @@ const Users = () => {
               >
                 <Grid item onClick={() => handleUserDetails(user.id)}>
                   <Tooltip title='Ver detalles'>
-                    <IconButton color='primary'>
+                    <IconButton
+                      color='primary'
+                      data-testid={`icon-button-${user.tax_id}`}
+                    >
                       <VisibilityIcon />
                     </IconButton>
                   </Tooltip>

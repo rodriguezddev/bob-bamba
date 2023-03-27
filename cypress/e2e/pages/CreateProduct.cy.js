@@ -44,7 +44,7 @@ describe('Create product view', () => {
     cy.get('#sku-product').type('producto-a')
     cy.get('[data-testid="error-message-product"]').should(
       'not.have.value',
-      'El apellido es requerido',
+      'El sku es requerido',
     )
     cy.get('#expiration-period-product').click()
     cy.get('[data-value="ANNUAL"]').click()

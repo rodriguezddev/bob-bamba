@@ -86,15 +86,13 @@ const CarrierServices = () => {
       >
         {carrierServices?.data?.map((carrierService) => (
           <TableRow key={carrierService?.id}>
-            <TableCell align='center'>{carrierService?.name}</TableCell>
-            <TableCell align='center'>{carrierService?.sku}</TableCell>
+            <TableCell align='left'>{carrierService?.name}</TableCell>
+            <TableCell align='left'>{carrierService?.sku}</TableCell>
             <TableCell align='center'>
               {carrierService?.carrier?.name}
             </TableCell>
-            <TableCell align='center'>
-              {carrierService?.cost_per_year}
-            </TableCell>
-            <TableCell align='center'>
+            <TableCell align='right'>{carrierService?.cost_per_year}</TableCell>
+            <TableCell align='right'>
               {carrierService?.cost_per_month}
             </TableCell>
             <TableCell align='center'>

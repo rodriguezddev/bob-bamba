@@ -86,13 +86,13 @@ const Products = () => {
       >
         {products?.data?.map((product) => (
           <TableRow key={product?.id}>
-            <TableCell align='center'>{product?.name}</TableCell>
-            <TableCell align='center'>{product?.sku}</TableCell>
+            <TableCell align='left'>{product?.name}</TableCell>
+            <TableCell align='left'>{product?.sku}</TableCell>
             <TableCell align='center'>
               {product?.is_recurrent ? 'Sí' : 'No'}
             </TableCell>
-            <TableCell align='center'>{product?.expiration_unit}</TableCell>
-            <TableCell align='center'>
+            <TableCell align='right'>{product?.expiration_unit}</TableCell>
+            <TableCell align='left'>
               {getPeriodProducts(product?.expiration_period)}
             </TableCell>
             <TableCell align='center'>
@@ -142,7 +142,7 @@ const Products = () => {
                 '-'
               )}
             </TableCell>
-            <TableCell align='center'>{product?.brief}</TableCell>
+            <TableCell align='left'>{product?.brief}</TableCell>
             <TableCell align='center'>
               {product?.terms && (
                 <Link href={product?.terms} target='_blank' rel='noreferrer'>

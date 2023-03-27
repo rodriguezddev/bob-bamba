@@ -12,13 +12,21 @@ import {
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import FormAlert from './FormAlert/FormAlert'
 import { Pagination } from '../../../components/tables'
-import { getProducts } from '../../../slices/product/productSlice'
-import { handleActiveProducts } from '../../../utils/utilsHandleActiveProducts'
+import {
+  getProducts,
+  getProductsByPartners,
+} from '../../../slices/product/productSlice'
+import {
+  handleActiveProducts,
+  handleAvailableProducts,
+  handleDispatchProducts,
+  handleProductsFormat,
+} from '../../../utils/utilsActiveProducts'
 
-const ProductContainer = ({ assignedProducts }) => {
+const ProductContainer = ({ assignedProducts, partner }) => {
   const dispatch = useDispatch()
-  const [page, setPage] = useState(0)
-  const { products } = useSelector((state) => state.product)
+  const [pageProducts, setPageProducts] = useState(0)
+  const { products, productsByPartners } = useSelector((state) => state.product)
   const [productsAvailable, setProductsAvailable] = useState([])
   const [product, setProduct] = useState({})
   const [selectedProducts, setSelectedProducts] = useState([])
@@ -26,17 +34,45 @@ const ProductContainer = ({ assignedProducts }) => {
 
   useEffect(() => {
     dispatch(getProducts())
+    dispatch(getProductsByPartners({ partner }))
   }, [])
 
   useEffect(() => {
     if (products) {
-      setProductsAvailable(handleActiveProducts(products, selectedProducts))
+      setProductsAvailable(handleAvailableProducts(products, selectedProducts))
     }
   }, [products])
 
+  useEffect(() => {
+    const formattedProducts = handleProductsFormat(productsByPartners, partner)
+
+    handleDispatchProducts(productsByPartners, partner)
+
+    setProductsAvailable(
+      handleAvailableProducts(
+        products,
+        handleActiveProducts(
+          selectedProducts,
+          formattedProducts,
+          productsByPartners,
+        ),
+      ),
+    )
+
+    setSelectedProducts(
+      handleActiveProducts(
+        selectedProducts,
+        formattedProducts,
+        productsByPartners,
+      ),
+    )
+
+    assignedProducts(selectedProducts)
+  }, [productsByPartners])
+
   const onPageChange = async (event, newPage) => {
     await dispatch(getProducts(`?page=${newPage + 1}`))
-    setPage(newPage)
+    setPageProducts(newPage)
   }
 
   const handleSelectedProducts = (value) => {
@@ -44,6 +80,7 @@ const ProductContainer = ({ assignedProducts }) => {
       (item) => item.sku !== value.sku,
     )
     const productCandidates = [...selectedProducts, value]
+
     setSelectedProducts(productCandidates)
     setProductsAvailable(filteredProduct)
     assignedProducts(productCandidates)
@@ -58,6 +95,7 @@ const ProductContainer = ({ assignedProducts }) => {
 
     setProductsAvailable(returnedProducts)
     setSelectedProducts(unSelectedProduct)
+    assignedProducts(unSelectedProduct)
   }
 
   const handlePartner = (value) => {
@@ -86,32 +124,52 @@ const ProductContainer = ({ assignedProducts }) => {
                 height: '30rem',
               }}
             >
-              {productsAvailable.map((value) => (
-                <Card
-                  key={value?.sku}
-                  sx={{
-                    margin: '.5rem 0',
-                    maxWidth: '27rem',
-                  }}
+              {productsAvailable.length === 0 ? (
+                <Grid
+                  alignItems='center'
+                  container
+                  direction='row'
+                  height='25rem'
+                  justifyContent='center'
                 >
-                  <ListItemButton onClick={() => handlePartner(value)}>
-                    <CardContent>
-                      <Typography
-                        sx={{
-                          margin: '.5rem',
-                        }}
-                      >
-                        {value.sku}
-                      </Typography>
-                    </CardContent>
-                  </ListItemButton>
-                </Card>
-              ))}
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                    }}
+                  >
+                    Ya están asignados los productos de esta pagina, ve a la
+                    siguiente
+                  </Typography>
+                </Grid>
+              ) : (
+                productsAvailable.map((value) => (
+                  <Card
+                    data-testid={`card-${value?.sku}`}
+                    key={value?.sku}
+                    sx={{
+                      margin: '.5rem 0',
+                      maxWidth: '27rem',
+                    }}
+                  >
+                    <ListItemButton onClick={() => handlePartner(value)}>
+                      <CardContent>
+                        <Typography
+                          sx={{
+                            margin: '.5rem',
+                          }}
+                        >
+                          {value.sku}
+                        </Typography>
+                      </CardContent>
+                    </ListItemButton>
+                  </Card>
+                ))
+              )}
             </Box>
             <Pagination
               count={products?.meta?.total ?? 0}
               onPageChange={onPageChange}
-              page={page}
+              page={pageProducts}
               SelectProps={{
                 native: true,
               }}
@@ -121,71 +179,71 @@ const ProductContainer = ({ assignedProducts }) => {
           </Grid>
         </Grid>
 
-        <Grid
-          item
-          xs={6}
-          sx={{
-            overflowY: 'auto',
-            padding: '1rem',
-            height: '30rem',
-          }}
-        >
-          {selectedProducts.length === 0 ? (
-            <Grid
-              alignItems='center'
-              container
-              direction='row'
-              height='25rem'
-              justifyContent='center'
-            >
-              <Typography
-                sx={{
-                  textAlign: 'center',
-                }}
+        <Grid item xs={6}>
+          <Box
+            sx={{
+              height: '30rem',
+              overflowY: 'auto',
+              padding: '1rem',
+            }}
+          >
+            {selectedProducts.length === 0 ? (
+              <Grid
+                alignItems='center'
+                container
+                direction='row'
+                height='25rem'
+                justifyContent='center'
               >
-                Aquí se mostraran los productos seleccionados
-              </Typography>
-            </Grid>
-          ) : (
-            selectedProducts.map((selectedProduct) => (
-              <Card
-                key={selectedProduct.sku}
-                sx={{
-                  cursor: 'pointer',
-                  margin: '.5rem 0',
-                  maxWidth: '27rem',
-                }}
-              >
-                <CardContent>
-                  <Grid
-                    container
-                    direction='row'
-                    justifyContent='space-between'
-                  >
-                    <Grid item xs={8}>
-                      <Typography
-                        sx={{
-                          margin: '.5rem',
-                        }}
-                      >
-                        {selectedProduct.sku}
-                        -
-                        {selectedProduct.price}
-                        {selectedProduct.currency_code}
-                      </Typography>
-                    </Grid>
+                <Typography
+                  sx={{
+                    textAlign: 'center',
+                  }}
+                >
+                  Aquí se mostraran los productos seleccionados
+                </Typography>
+              </Grid>
+            ) : (
+              selectedProducts.map((selectedProduct) => (
+                <Card
+                  key={selectedProduct.sku}
+                  sx={{
+                    cursor: 'pointer',
+                    margin: '.5rem 0',
+                    maxWidth: '27rem',
+                  }}
+                >
+                  <CardContent>
                     <Grid
-                      data-testid='remove-product-button'
-                      sx={{ cursor: 'pointer' }}
-                      onClick={() => handleUnSelectedProduct(selectedProduct)}
+                      container
+                      direction='row'
+                      justifyContent='space-between'
                     >
-                      <HighlightOffIcon />
+                      <Grid item xs={8}>
+                        <Typography
+                          sx={{
+                            margin: '.5rem',
+                          }}
+                        >
+                          {selectedProduct.sku}
+                          -
+                          {selectedProduct.price}
+                          {selectedProduct.currency_code}
+                        </Typography>
+                      </Grid>
+                      <Grid
+                        data-testid='remove-product-button'
+                        sx={{ cursor: 'pointer' }}
+                        onClick={() => handleUnSelectedProduct(selectedProduct)}
+                      >
+                        <HighlightOffIcon />
+                      </Grid>
                     </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            ))
-          )}
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </Box>
         </Grid>
       </Grid>
       {showActionAlert && (
@@ -209,6 +267,7 @@ const ProductContainer = ({ assignedProducts }) => {
 
 ProductContainer.propTypes = {
   assignedProducts: PropTypes.func.isRequired,
+  partner: PropTypes.string.isRequired,
 }
 
 export default ProductContainer

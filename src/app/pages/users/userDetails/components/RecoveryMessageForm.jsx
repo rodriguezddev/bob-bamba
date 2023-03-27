@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Controller, useForm } from 'react-hook-form'
 import { useDispatch, useSelector } from 'react-redux'
@@ -12,26 +12,51 @@ import {
 } from '@mui/material'
 import { MainButton } from '../../../../components/buttons'
 import { GeneralTitle } from '../../../../components/texts'
-import { MainInput, SelectInput } from '../../../../components/inputs'
+import { SelectInput } from '../../../../components/inputs'
 import theme from '../../../../theme'
 import {
   getTemplates,
+  getWhatsAppAccounts,
+  resetTemplates,
   sendRecoveryMessage,
 } from '../../../../slices/recoveryMessage/recoveryMessageSlice'
+import { handleTextClipping } from '../../../../utils/UtilsTranslate'
 
 const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
-  const { control, handleSubmit } = useForm()
+  const {
+    control, handleSubmit, watch, reset,
+  } = useForm()
   const { isLoading } = useSelector((state) => state.loading)
-  const { templates } = useSelector((state) => state.recoveryMessage)
+  const { templates, whatsAppAccounts } = useSelector(
+    (state) => state.recoveryMessage,
+  )
+  const [templateMessage, setTemplateMessage] = useState('')
   const dispatch = useDispatch()
+  const accountType = watch('account') || ''
 
   useEffect(() => {
-    dispatch(getTemplates())
+    dispatch(getWhatsAppAccounts())
   }, [])
+
+  useEffect(() => {
+    if (accountType) {
+      dispatch(getTemplates(accountType))
+    }
+
+    dispatch(resetTemplates)
+
+    setTemplateMessage('')
+
+    reset((formValues) => ({
+      ...formValues,
+      infoTemplate: '',
+    }))
+  }, [accountType])
 
   const onSubmit = (dataForm) => {
     const [template, language] = dataForm.infoTemplate.split(' ')
     const values = {
+      account_name: dataForm.account,
       template,
       language,
       number: user.cellphone,
@@ -48,7 +73,8 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
       sx={{ zIndex: 1200 }}
     >
       <DialogTitle align='center' data-testid='recoveryMessageForm-title'>
-        Mensaje de recuperación
+        Mensaje de recuperación para&nbsp;
+        {user?.cellphone}
       </DialogTitle>
       <DialogContent>
         <Grid
@@ -58,17 +84,44 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
           justifyContent='center'
         >
           <Grid item lg={4} mb={2} md={6} xs={12}>
-            <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Teléfono' />
-            <Grid container flexDirection='column' marginTop='.5rem'>
-              <MainInput
-                disabled
-                height='3rem'
-                hiddenIcon
-                id='infoTemplate'
-                placeholder=''
-                value={user?.cellphone}
-              />
-            </Grid>
+            <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Cuenta' />
+            <Controller
+              control={control}
+              defaultValue=''
+              name='account'
+              rules={{
+                required: 'La cuenta es requerida',
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error: errorInput },
+              }) => (
+                <Grid container flexDirection='column' marginTop='.5rem'>
+                  <SelectInput
+                    error={!!errorInput}
+                    height='3rem'
+                    id='account'
+                    onChange={onChange}
+                    value={value}
+                  >
+                    <MenuItem value=''>Seleccionar</MenuItem>
+                    {Object.entries(whatsAppAccounts).map(([key, account]) => (
+                      <MenuItem key={key} value={key}>
+                        {account}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
+                  <Typography
+                    color='error.main'
+                    data-testid='error-message-expiration-period-product'
+                    mt={1}
+                    variant='caption'
+                  >
+                    {errorInput?.message}
+                  </Typography>
+                </Grid>
+              )}
+            />
           </Grid>
           <Grid item lg={4} md={6} xs={12}>
             <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Template' />
@@ -85,16 +138,25 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
               }) => (
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <SelectInput
+                    disabled={accountType === '' || templates.length === 0}
                     error={!!errorInput}
                     height='3rem'
                     id='infoTemplate'
                     onChange={onChange}
                     value={value}
                   >
-                    <MenuItem value=''>Seleccionar</MenuItem>
-                    {Object.entries(templates).map(([key, item]) => (
-                      <MenuItem key={key} value={`${key} ${item.language}`}>
-                        {item.text}
+                    <MenuItem value=''>
+                      {templates.length !== 0
+                        ? 'Seleccionar'
+                        : 'No cuenta con templates registrados'}
+                    </MenuItem>
+                    {Object.entries(templates).map(([key, template]) => (
+                      <MenuItem
+                        key={key}
+                        onClick={() => setTemplateMessage(template.text)}
+                        value={`${key} ${template.language}`}
+                      >
+                        {handleTextClipping(template.text, 40)}
                       </MenuItem>
                     ))}
                   </SelectInput>
@@ -110,6 +172,16 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
               )}
             />
           </Grid>
+          {templateMessage ?? (
+            <Grid container flexDirection='column' marginTop='.5rem'>
+              <GeneralTitle
+                fontSize='.75rem'
+                lineHeight='1rem'
+                text='Mensaje'
+              />
+              <Grid item>{templateMessage}</Grid>
+            </Grid>
+          )}
           <Grid
             alignItems='center'
             container
@@ -121,6 +193,7 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
             <Grid item>
               <MainButton
                 background={theme.palette.background.blueLight}
+                data-testid='cancel-recovery-message-button'
                 onClick={handleShowForm}
                 type='secondary'
               >

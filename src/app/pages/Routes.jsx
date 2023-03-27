@@ -19,6 +19,8 @@ import CarrierServices from './carriers/carrierServices'
 import CreateCarrierServices from './carriers/carrierServices/createCarrierServices'
 import Carriers from './carriers/carriers'
 import CreateCarriers from './carriers/carriers/createCarriers'
+import Campaigns from './campaigns'
+import CreateCampaigns from './campaigns/createCampaigns'
 
 const Routes = () => {
   const dispatch = useDispatch()
@@ -62,6 +64,8 @@ const Routes = () => {
           />
           <Route path='/carriers' element={<Carriers />} />
           <Route path='/carriers/create' element={<CreateCarriers />} />
+          <Route path='/campaigns' element={<Campaigns />} />
+          <Route path='/campaigns/create' element={<CreateCampaigns />} />
         </Route>
       </ReactRoutes>
     </>

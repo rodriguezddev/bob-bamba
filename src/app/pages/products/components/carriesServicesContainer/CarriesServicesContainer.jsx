@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { Pagination } from '../../../../components/tables'
-import { handleActiveProducts } from '../../../../utils/utilsHandleActiveProducts'
+import { handleAvailableProducts } from '../../../../utils/utilsActiveProducts'
 import { getCarrierServices } from '../../../../slices/carriers/carrierSlice'
 
 const CarriesServicesContainer = ({ assignedCarriesServices, carriers }) => {
@@ -28,7 +28,7 @@ const CarriesServicesContainer = ({ assignedCarriesServices, carriers }) => {
   useEffect(() => {
     if (carrierServices) {
       setCarrieServicesAvailable(
-        handleActiveProducts(carrierServices, selectedCarriesServices),
+        handleAvailableProducts(carrierServices, selectedCarriesServices),
       )
     }
   }, [carrierServices])

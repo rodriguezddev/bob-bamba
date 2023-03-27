@@ -1,13 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { DialogContent, Typography } from '@mui/material'
+import { Box, DialogContent, Typography } from '@mui/material'
 import { MainButton } from '../../buttons'
-import {
-  CustomDialog,
-  CustomDialogTitle,
-  CustomDialogContentText,
-  CustomDialogActions,
-} from './styles'
+import { CustomDialog, CustomDialogTitle, CustomDialogActions } from './styles'
 import theme from '../../../theme'
 
 const Alert = ({
@@ -21,6 +16,7 @@ const Alert = ({
   isShowPrimaryButton,
   setIsOpen,
   primaryButtonTextAlert,
+  width,
 }) => {
   const handleClose = () => {
     setIsOpen(false)
@@ -33,14 +29,17 @@ const Alert = ({
       fullWidth
       onClose={handleClose}
       open={isOpen}
+      width={width}
     >
-      <CustomDialogTitle id='alert-dialog-title' error={errorText ? 1 : 0}>
+      <CustomDialogTitle
+        data-testid={`title-alert-${alertTitle}`}
+        error={errorText ? 1 : 0}
+        id='alert-dialog-title'
+      >
         {alertTitle}
       </CustomDialogTitle>
       <DialogContent>
-        <CustomDialogContentText id='alert-dialog-description'>
-          {alertContentText}
-        </CustomDialogContentText>
+        <Box>{alertContentText}</Box>
         {codeError && (
           <Typography variant='body2' mt={2}>
             {`Código: ${codeError}`}
@@ -83,6 +82,7 @@ Alert.propTypes = {
   isShowPrimaryButton: PropTypes.bool,
   setIsOpen: PropTypes.func.isRequired,
   primaryButtonTextAlert: PropTypes.string,
+  width: PropTypes.string,
 }
 
 Alert.defaultProps = {
@@ -92,6 +92,7 @@ Alert.defaultProps = {
   errorText: false,
   isShowPrimaryButton: false,
   primaryButtonTextAlert: 'Eliminar',
+  width: '38rem',
 }
 
 export default Alert

@@ -95,4 +95,11 @@ describe('test functions utils translate', () => {
 
     expect(utilsTranslate.getPeriodSubscriptions(period, every)).toBe('-')
   })
+
+  it('get cropped text', () => {
+    const text = '¡Hola! Hoy es un gran día. 🎉 Igual que tú has cambiado, nuestro número de atención también'
+    const croppedText = utilsTranslate.handleTextClipping(text, 27)
+
+    expect(croppedText).toEqual('¡Hola! Hoy es un gran día.')
+  })
 })

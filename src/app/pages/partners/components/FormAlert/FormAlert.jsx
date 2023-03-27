@@ -32,6 +32,7 @@ const FormAlert = ({
       currency_code: 'MXN',
       price: dataForm.price,
     })
+
     setIsOpen(false)
   }
 

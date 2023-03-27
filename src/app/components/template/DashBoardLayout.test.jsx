@@ -22,6 +22,6 @@ describe('Dashboard template', () => {
 
     const content = screen.getAllByRole('button')
 
-    expect(content).toHaveLength(8)
+    expect(content).toHaveLength(9)
   })
 })

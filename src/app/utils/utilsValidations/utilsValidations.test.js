@@ -164,7 +164,7 @@ describe('Test function in utils', () => {
   it('should valid sku', () => {
     expect(
       new RegExp(utilsValidations.getSkuProduct(dummyTFunction).value).test(
-        'bamba-vida',
+        'bamba-seguro-00',
       ),
     ).toBe(true)
   })
@@ -172,7 +172,7 @@ describe('Test function in utils', () => {
   it('should not valid sku', () => {
     expect(
       new RegExp(utilsValidations.getSkuProduct(dummyTFunction).value).test(
-        'bambavida',
+        'bambaseguro',
       ),
     ).toBe(false)
   })

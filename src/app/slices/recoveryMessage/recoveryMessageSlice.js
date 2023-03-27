@@ -3,19 +3,37 @@ import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
 
 const initialState = {
-  templates: {},
   message: {
     data: {},
     isSuccess: false,
   },
+  templates: {},
+  whatsAppAccounts: {},
 }
 
-export const getTemplates = createAsyncThunk(
-  'recoveryMessage/template',
+export const getWhatsAppAccounts = createAsyncThunk(
+  'recoveryMessage/whatsAppAccounts',
   async (thunkAPI) => {
     try {
       const response = httpService.get(
-        `${apiConstants.ADMIN_URL}/message/templates`,
+        `${apiConstants.ADMIN_URL}/message/whatsapp-accounts`,
+      )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const getTemplates = createAsyncThunk(
+  'recoveryMessage/template',
+  async (params, thunkAPI) => {
+    try {
+      const response = httpService.get(
+        `${apiConstants.ADMIN_URL}/message/templates?account_name=${params}`,
       )
 
       return response
@@ -52,6 +70,9 @@ export const recoveryMessageSlice = createSlice({
     resetRecoveryMessage: (state) => {
       state.message = initialState.message
     },
+    resetTemplates: (state) => {
+      state.templates = initialState.templates
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getTemplates.fulfilled, (state, action) => {
@@ -60,11 +81,14 @@ export const recoveryMessageSlice = createSlice({
     builder.addCase(sendRecoveryMessage.fulfilled, (state) => {
       state.message.isSuccess = true
     })
+    builder.addCase(getWhatsAppAccounts.fulfilled, (state, action) => {
+      state.whatsAppAccounts = action?.payload?.data
+    })
   },
 })
 
 export const recoveryMessage = (state) => state.recoveryMessage
 
-export const { resetRecoveryMessage } = recoveryMessageSlice.actions
+export const { resetRecoveryMessage, resetTemplates } = recoveryMessageSlice.actions
 
 export default recoveryMessageSlice.reducer

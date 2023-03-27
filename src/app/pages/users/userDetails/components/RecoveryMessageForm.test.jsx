@@ -14,18 +14,15 @@ describe('RecoveryMessageForm component', () => {
       handleShowForm: jest.fn(),
       open: true,
       user: {
-        cellphone: '55555555',
+        cellphone: '55555556',
       },
     }
 
     const responseMock = {
       code: 0,
       data: {
-        use_options_message: {
-          text: 'Estas son las opciones que tienes para hacer uso del agente:',
-          language: 'es_MX',
-          number_parameters: 0,
-        },
+        bamba_attendance: 'Asistencia Bamba',
+        bamba_asesor: 'Asesor Bamba',
       },
     }
 
@@ -41,7 +38,7 @@ describe('RecoveryMessageForm component', () => {
       )
     })
 
-    const text = screen.getByText('Mensaje de recuperación')
+    const text = screen.getByText('Mensaje de recuperación para 55555556')
 
     expect(text).toBeInTheDocument()
   })

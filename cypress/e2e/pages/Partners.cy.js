@@ -50,9 +50,7 @@ describe('Partner view', () => {
       'contain',
       'Productos disponibles',
     )
-    cy.get(
-      '.MuiGrid-root > .MuiBox-root > :nth-child(1) > .MuiButtonBase-root',
-    ).click()
+    cy.get('[data-testid="card-bamba-test"] > .MuiButtonBase-root').click()
     cy.get(
       ':nth-child(5) > .MuiDialog-container > .MuiPaper-root > #alert-dialog-title',
     ).should('contain', 'Precio del producto')
@@ -82,14 +80,6 @@ describe('Partner view', () => {
     )
   })
 
-  it('should show unselected products', () => {
-    cy.get('[data-testid="remove-product-button"]').click()
-    cy.get('.MuiGrid-root > .MuiTypography-root').should(
-      'contain',
-      'Aquí se mostraran los productos seleccionados',
-    )
-  })
-
   it('should close modal', () => {
     cy.get(
       '.MuiDialogActions-root > .css-1g0p17o-MuiButtonBase-root-MuiButton-root',
@@ -112,5 +102,18 @@ describe('Partner view', () => {
     cy.get('[aria-label="last page"]').should('be.disabled')
     cy.get('[aria-label="first page"]').click()
     cy.get('[aria-label="first page"]').should('be.disabled')
+  })
+
+  it('show products', () => {
+    cy.login('admin@vivebamba.com', 'Password')
+    cy.get('[data-testid="drawer-item-Partners"]').first().click()
+    cy.get(
+      '[data-testid="icon-button-Aliada"] > [data-testid="VisibilityIcon"] > path',
+    ).click()
+    cy.get('[data-testid="details-button-seguro de mayores"]').click()
+    cy.get('[data-testid="title-alert-seguro de mayores"]').should(
+      'contain',
+      'seguro de mayores',
+    )
   })
 })

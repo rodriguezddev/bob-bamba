@@ -132,7 +132,7 @@ const CreateCarrierServices = () => {
               defaultValue=''
               name='sku'
               rules={{
-                maxLength: 12,
+                maxLength: 15,
                 minLength: 8,
                 required: 'El SKU es requerido',
                 pattern: getSkuProduct(),
@@ -151,7 +151,7 @@ const CreateCarrierServices = () => {
                     radius='.5rem'
                     onChange={onChange}
                     type='text'
-                    value={value}
+                    value={value.toUpperCase()}
                     width='18rem'
                   />
                   <Typography
@@ -168,7 +168,7 @@ const CreateCarrierServices = () => {
                       data-testid='error-message-sku-carrierService'
                       variant='caption'
                     >
-                      El sku debe contener entre 8 y 12 caracteres
+                      El sku debe contener entre 8 y 15 caracteres
                     </Typography>
                   )}
                 </Grid>

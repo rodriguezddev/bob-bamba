@@ -36,6 +36,7 @@ const ActionAlert = ({
       maxWidth='xl'
       onClose={handleClose}
       open={isOpen}
+      sx={{ zIndex: '1200' }}
     >
       <CustomActionDialogTitle
         error={errorText ? 1 : 0}

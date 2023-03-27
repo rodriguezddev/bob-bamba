@@ -8,6 +8,7 @@ import {
 import { CSVLink } from 'react-csv'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import UploadFileIcon from '@mui/icons-material/UploadFile'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 import { ActionAlert, Alert } from '../../components/modals'
 import { GeneralTitle } from '../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
@@ -31,6 +32,7 @@ import ProductContainer from './components/ProductContainer'
 import UploadIconPartner from './components/UploadIconPartner/UploadIconPartner'
 import { formatDate } from '../../utils/utilsFormat'
 import UploadUserBatch from './components/UploadUserBatch/UploadUserBatch'
+import ProductsByPartnerContainer from './components/ProductsByPartnerContainer/ProductsByPartnerContainer'
 
 const Partners = () => {
   const [page, setPage] = useState(0)
@@ -41,9 +43,12 @@ const Partners = () => {
     (state) => state.partner,
   )
   const [partnerActionAlert, setPartnerActionAlert] = useState({})
+  const [partnerInfo, setPartnerInfo] = useState({})
   const [assignedProducts, setAssignedProducts] = useState([])
-  const [showActionAlert, setShowActionAlert] = useState(false)
+  const [isShowAssignProductsAlert, setIsShowAssignProductsAlert] = useState(false)
+  const [isShowProducts, setIsShowProducts] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const [isShowAssignedConfirmationAlert, setIsShowAssignedConfirmationAlert] = useState(false)
 
   useEffect(() => {
     dispatch(getPartners())
@@ -63,9 +68,22 @@ const Partners = () => {
     navigate('/partners/create')
   }
 
+  const handleAssignedConfirmationAlert = () => {
+    setIsShowAssignedConfirmationAlert(!isShowAssignedConfirmationAlert)
+  }
+
+  const handleShowActionAlert = () => {
+    setIsShowAssignProductsAlert(!isShowAssignProductsAlert)
+  }
+
   const handlePartner = (partnerId) => {
     setPartnerActionAlert(partnerId)
-    setShowActionAlert(true)
+    handleShowActionAlert()
+  }
+
+  const handleProductsAssigned = (partner) => {
+    setPartnerInfo(partner)
+    setIsShowProducts(true)
   }
 
   const handleAlertSuccess = () => {
@@ -106,6 +124,7 @@ const Partners = () => {
     }
 
     dispatch(assignProducts(body))
+    handleAssignedConfirmationAlert()
   }
 
   const handleSuccessUsersBatchAlert = () => {
@@ -114,7 +133,7 @@ const Partners = () => {
 
   useEffect(() => {
     if (partners && partners.products?.isSuccess) {
-      setShowActionAlert(false)
+      handleShowActionAlert()
       setShowSuccessAlert(partners.products?.isSuccess)
       dispatch(resetsAssignProductsIsSuccess())
     }
@@ -149,9 +168,9 @@ const Partners = () => {
       >
         {partners?.data?.map((partner) => (
           <TableRow key={partner.id}>
-            <TableCell align='center'>{partner.name}</TableCell>
-            <TableCell align='center'>{partner.code}</TableCell>
-            <TableCell align='center'>{getTypePartner(partner.type)}</TableCell>
+            <TableCell align='left'>{partner.name}</TableCell>
+            <TableCell align='left'>{partner.code}</TableCell>
+            <TableCell align='left'>{getTypePartner(partner.type)}</TableCell>
             <TableCell align='left'>
               <Typography noWrap paragraph variant='caption'>
                 {`Nombre: ${partner.company?.name}`}
@@ -193,25 +212,69 @@ const Partners = () => {
                 </Grid>
               </Grid>
             </TableCell>
+            <TableCell align='left'>
+              <Grid
+                alignItems='center'
+                container
+                direction='row'
+                justifyContent='center'
+                spacing={1}
+              >
+                <Grid item onClick={() => handleProductsAssigned(partner)}>
+                  <Tooltip title='Ver productos'>
+                    <IconButton
+                      color='primary'
+                      data-testid={`icon-button-${partner.name}`}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+              </Grid>
+            </TableCell>
           </TableRow>
         ))}
       </GeneralTable>
-      {showActionAlert && (
+      {isShowAssignProductsAlert && (
         <ActionAlert
           actionAlertContentText='Elige uno o mas productos para asignar a este partner'
           actionAlertTextButton='Cerrar'
           actionAlertTitle={`Asignar productos a ${partnerActionAlert.name}`}
-          isOpen={showActionAlert}
+          isOpen={isShowAssignProductsAlert}
           isShowPrimaryButton
-          onClick={handleProductAssigned}
+          onClick={handleAssignedConfirmationAlert}
           primaryButtonTextAlert='Asignar'
-          setActionsIsOpen={setShowActionAlert}
+          setActionsIsOpen={setIsShowAssignProductsAlert}
         >
           <ProductContainer
             assignedProducts={setAssignedProducts}
             partner={partnerActionAlert.name}
           />
         </ActionAlert>
+      )}
+      {isShowProducts && (
+        <ActionAlert
+          actionAlertContentText=''
+          actionAlertTextButton='Cerrar'
+          actionAlertTitle={`Productos asignados a ${partnerInfo?.name}`}
+          isOpen={isShowProducts}
+          onClick={handleProductAssigned}
+          setActionsIsOpen={setIsShowProducts}
+        >
+          <ProductsByPartnerContainer partner={partnerInfo} />
+        </ActionAlert>
+      )}
+      {isShowAssignedConfirmationAlert && (
+        <Alert
+          alertContentText='¿Estás seguro de asignar estos productos?'
+          actionButton={handleProductAssigned}
+          alertTextButton='Cancelar'
+          alertTitle='Confirmar'
+          isOpen={isShowAssignedConfirmationAlert}
+          isShowPrimaryButton
+          primaryButtonTextAlert='Aceptar'
+          setIsOpen={setIsShowAssignedConfirmationAlert}
+        />
       )}
       {showSuccessAlert && (
         <Alert

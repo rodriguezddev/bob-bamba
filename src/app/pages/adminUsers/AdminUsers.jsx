@@ -105,7 +105,7 @@ const AdminUsers = () => {
                 </Box>
               </Box>
             </TableCell>
-            <TableCell align='center'>{userAdmin.email}</TableCell>
+            <TableCell align='left'>{userAdmin.email}</TableCell>
             <TableCell align='center'>
               <Grid
                 alignItems='center'

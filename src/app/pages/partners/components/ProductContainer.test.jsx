@@ -13,6 +13,7 @@ describe('productContainer components', () => {
   it('should show alert title', async () => {
     const props = {
       assignedProducts: jest.fn(),
+      partner: 'Bamba',
       productPartner: [{ id: '1', sku: '1', name: '1' }],
       setAssignedProducts: jest.fn(),
     }

@@ -11,6 +11,11 @@ const initialState = {
   productsNotActive: {
     data: [],
   },
+  productsByPartners: {
+    data: [],
+    meta: {},
+  },
+  productDetails: {},
 }
 
 export const getProducts = createAsyncThunk(
@@ -20,6 +25,43 @@ export const getProducts = createAsyncThunk(
       const response = params
         ? await httpService.get(`${apiConstants.ADMIN_URL}/products${params}`)
         : await httpService.get(`${apiConstants.ADMIN_URL}/products`)
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const getProductDetails = createAsyncThunk(
+  'list/productDetails',
+  async (productId, thunkAPI) => {
+    try {
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/product/${productId}`,
+      )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const getProductsByPartners = createAsyncThunk(
+  'list/productsByPartner',
+  async (params, thunkAPI) => {
+    try {
+      const response = params.page
+        ? await httpService.get(
+          `${apiConstants.ADMIN_URL}/products?partner=${params.partner}${params.page}`,
+        )
+        : await httpService.get(
+          `${apiConstants.ADMIN_URL}/products?partner=${params.partner}`,
+        )
 
       return response
     } catch (error) {
@@ -77,8 +119,14 @@ export const productSlice = createSlice({
     builder.addCase(getProducts.fulfilled, (state, action) => {
       state.products = action.payload
     })
+    builder.addCase(getProductDetails.fulfilled, (state, action) => {
+      state.productDetails = action.payload.data
+    })
     builder.addCase(getProductsNotActive.fulfilled, (state, action) => {
       state.productsNotActive = action.payload
+    })
+    builder.addCase(getProductsByPartners.fulfilled, (state, action) => {
+      state.productsByPartners = action.payload
     })
     builder.addCase(createProduct.fulfilled, (state, action) => {
       state.products = {

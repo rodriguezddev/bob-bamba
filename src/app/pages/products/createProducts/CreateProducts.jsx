@@ -143,7 +143,7 @@ const CreateProducts = () => {
             defaultValue=''
             name='sku'
             rules={{
-              maxLength: 12,
+              maxLength: 15,
               minLength: 8,
               required: 'El SKU es requerido',
               pattern: getSkuProduct(),
@@ -162,7 +162,7 @@ const CreateProducts = () => {
                   radius='.5rem'
                   onChange={onChange}
                   type='text'
-                  value={value}
+                  value={value.toUpperCase()}
                   width='18rem'
                 />
                 <Typography
@@ -179,7 +179,7 @@ const CreateProducts = () => {
                     data-testid='error-message-product'
                     variant='caption'
                   >
-                    El sku debe contener entre 8 y 12 caracteres
+                    El sku debe contener entre 8 y 15 caracteres
                   </Typography>
                 )}
               </Grid>

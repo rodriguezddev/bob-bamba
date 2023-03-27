@@ -64,7 +64,7 @@ export const getSkuProduct = () => {
 
   return {
     value: skuRegex,
-    message: 'El sku debe tener el siguiente formato ej. bamba-vida',
+    message: 'El sku debe tener el siguiente formato ej. BAMBA-SEGURO',
   }
 }
 

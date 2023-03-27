@@ -67,3 +67,7 @@ export const getTextActionUploadFile = (action) => {
 
   return actionText[action] || action
 }
+
+export const handleTextClipping = (text, maxLength) => (text && text.length > maxLength
+  ? text.slice(0, maxLength).split(' ').slice(0, -1).join(' ')
+  : text)

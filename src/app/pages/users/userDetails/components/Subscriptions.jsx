@@ -17,11 +17,12 @@ import {
   handleSubscriptionsCanceled,
   handleSubscriptionsNumbers,
   orderSubscriptions,
-} from '../../../../utils/utilsHandleSubscriptions'
+} from '../../../../utils/utilsSubscriptions'
 import {
   cancelSubscription,
   resetSubscription,
 } from '../../../../slices/subscriptions/subscriptionsSlice'
+import ProductDetails from './ProductDetails'
 
 const Subscriptions = ({ user }) => {
   const dispatch = useDispatch()
@@ -33,6 +34,8 @@ const Subscriptions = ({ user }) => {
   const [isShowSubscriptionsSuccessAlert, setIsShowSubscriptionsSuccessAlert] = useState(false)
   const [isOpenPdfViewer, setIsOpenPdfViewer] = useState(false)
   const [pdfViewerFile, setPdfViewerFile] = useState('')
+  const [isShowProductDetailsAlert, setIsShowProductDetailsAlert] = useState(false)
+  const [productSubscription, setProductSubscription] = useState({})
 
   useEffect(() => {
     if (user && Object.entries(user)?.length !== 0) {
@@ -74,6 +77,11 @@ const Subscriptions = ({ user }) => {
   const setSubscription = () => {
     dispatch(cancelSubscription(subscriptionsId))
     setIsShowSubscriptionsAlert(false)
+  }
+
+  const handleShowProductsDetails = (productData) => {
+    setProductSubscription(productData)
+    setIsShowProductDetailsAlert(true)
   }
 
   return (
@@ -186,6 +194,16 @@ const Subscriptions = ({ user }) => {
                             }}
                           >
                             <CardContent>{product.name}</CardContent>
+                            <MainButton
+                              background={theme.palette.background.default}
+                              data-testid={`button-to-show-product-${product.sku}`}
+                              onClick={() => handleShowProductsDetails(product)}
+                              radius='0'
+                              type='secondary'
+                              width='6rem'
+                            >
+                              Ver más
+                            </MainButton>
                           </Card>
                         </Grid>
                       ))}
@@ -222,6 +240,19 @@ const Subscriptions = ({ user }) => {
           alertTitle='¡Suscripción cancelada!'
           isOpen={isShowSubscriptionsSuccessAlert}
           setIsOpen={setIsShowSubscriptionsSuccessAlert}
+        />
+      )}
+      {isShowProductDetailsAlert && (
+        <Alert
+          actionAlertContentText='Detalles del producto'
+          alertContentText={
+            <ProductDetails productId={productSubscription.id} />
+          }
+          alertTextButton='Cerrar'
+          alertTitle={productSubscription.name}
+          isOpen={isShowProductDetailsAlert}
+          setIsOpen={setIsShowProductDetailsAlert}
+          width='68rem'
         />
       )}
     </Box>

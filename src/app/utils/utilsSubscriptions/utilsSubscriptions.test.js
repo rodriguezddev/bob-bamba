@@ -1,4 +1,4 @@
-import * as utilsHandleSubscriptions from '.'
+import * as utilsSubscriptions from '.'
 
 describe('test functions utils cancel subscription', () => {
   it('get ordered subscription', () => {
@@ -25,7 +25,7 @@ describe('test functions utils cancel subscription', () => {
       },
     ]
 
-    expect(utilsHandleSubscriptions.orderSubscriptions(subscriptions)).toEqual([
+    expect(utilsSubscriptions.orderSubscriptions(subscriptions)).toEqual([
       {
         id: '815fcbc4-f789-4787-8f9d-ef98fedef63a',
         status: 'ACTIVE',
@@ -75,7 +75,7 @@ describe('test functions utils cancel subscription', () => {
     }
 
     expect(
-      utilsHandleSubscriptions.handleSubscriptionsCanceled(
+      utilsSubscriptions.handleSubscriptionsCanceled(
         subscriptions,
         canceledSubscription,
       ),
@@ -108,7 +108,7 @@ describe('test functions utils cancel subscription', () => {
     ]
 
     expect(
-      utilsHandleSubscriptions.handleSubscriptionsNumbers(subscriptions),
+      utilsSubscriptions.handleSubscriptionsNumbers(subscriptions),
     ).toEqual(1)
   })
 })

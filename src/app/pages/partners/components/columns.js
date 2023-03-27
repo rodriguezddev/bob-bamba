@@ -24,4 +24,9 @@ export const columns = [
     id: 'actions',
     label: 'Acciones',
   },
+  {
+    align: 'center',
+    id: 'products',
+    label: 'Productos',
+  },
 ]
