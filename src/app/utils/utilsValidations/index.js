@@ -55,7 +55,7 @@ export const getCodePattern = () => {
 
   return {
     value: regEx,
-    message: 'El código no debe contener espacios ej. MI-CODIGO-PARTNER',
+    message: 'El código no debe contener espacios ej. mi-codigo-partner',
   }
 }
 

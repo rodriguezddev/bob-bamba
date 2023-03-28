@@ -31,7 +31,7 @@ const CreatePartners = () => {
   const onSubmit = (dataForm) => {
     const values = {
       name: dataForm.name,
-      code: dataForm.code,
+      code: dataForm.code.toLowerCase(),
       type: dataForm.partnerType,
       company: {
         name: dataForm.nameCompany,
@@ -134,7 +134,7 @@ const CreatePartners = () => {
                   placeholder=''
                   radius='.5rem'
                   type='text'
-                  value={value.toLocaleUpperCase()}
+                  value={value.toLowerCase()}
                   width='18rem'
                 />
                 <Typography
