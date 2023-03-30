@@ -51,7 +51,7 @@ const CreateProducts = () => {
     }
 
     const values = {
-      sku: dataForm.sku,
+      sku: dataForm.sku.toUppercase(),
       name: dataForm.name,
       is_recurrent: dataForm.is_recurrent,
       expiration_unit: dataForm.expiration_unit,
@@ -160,9 +160,14 @@ const CreateProducts = () => {
                   id='sku-product'
                   placeholder=''
                   radius='.5rem'
+                  sx={{
+                    '& input': {
+                      textTransform: 'uppercase',
+                    },
+                  }}
                   onChange={onChange}
                   type='text'
-                  value={value.toUpperCase()}
+                  value={value}
                   width='18rem'
                 />
                 <Typography

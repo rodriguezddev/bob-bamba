@@ -133,8 +133,13 @@ const CreatePartners = () => {
                   onChange={onChange}
                   placeholder=''
                   radius='.5rem'
+                  sx={{
+                    '& input': {
+                      textTransform: 'lowercase',
+                    },
+                  }}
                   type='text'
-                  value={value.toLowerCase()}
+                  value={value}
                   width='18rem'
                 />
                 <Typography

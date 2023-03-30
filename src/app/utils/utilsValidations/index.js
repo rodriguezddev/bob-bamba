@@ -60,7 +60,7 @@ export const getCodePattern = () => {
 }
 
 export const getSkuProduct = () => {
-  const skuRegex = /^(?=(?:.*[a-z]){1})(?=(?:.*[@$?¡\-_]){1})\S{8,16}$/
+  const skuRegex = /([a-zA-Z]{1}-[a-zA-Z]{1})/
 
   return {
     value: skuRegex,

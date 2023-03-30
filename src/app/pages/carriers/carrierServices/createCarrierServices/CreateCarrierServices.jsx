@@ -36,7 +36,7 @@ const CreateCarrierServices = () => {
   const onSubmit = (dataForm) => {
     const values = {
       name: dataForm.name,
-      sku: dataForm.sku,
+      sku: dataForm.sku.toUpperCase(),
       cost_per_year: dataForm.cost_per_year,
       cost_per_month: dataForm.cost_per_month,
       is_enabled: dataForm.is_enabled,
@@ -149,9 +149,14 @@ const CreateCarrierServices = () => {
                     id='sku-carrierService'
                     placeholder=''
                     radius='.5rem'
+                    sx={{
+                      '& input': {
+                        textTransform: 'uppercase',
+                      },
+                    }}
                     onChange={onChange}
                     type='text'
-                    value={value.toUpperCase()}
+                    value={value}
                     width='18rem'
                   />
                   <Typography
