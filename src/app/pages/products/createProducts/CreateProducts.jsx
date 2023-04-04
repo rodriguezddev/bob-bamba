@@ -51,7 +51,7 @@ const CreateProducts = () => {
     }
 
     const values = {
-      sku: dataForm.sku.toUppercase(),
+      sku: dataForm.sku.toUpperCase(),
       name: dataForm.name,
       is_recurrent: dataForm.is_recurrent,
       expiration_unit: dataForm.expiration_unit,
