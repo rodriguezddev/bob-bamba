@@ -57,7 +57,7 @@ describe('users details view', () => {
     cy.get('#email').type('test12@hotmail.com')
     cy.get('[data-testid="button-filter-search"]').click()
     cy.get('[data-testid="icon-button-GORD820625G12"]').click()
-    cy.get('.MuiBox-root > .MuiButtonBase-root').click()
+    cy.get('[data-testid="recovery-message-button"]').click()
     cy.get('[data-testid="recoveryMessageForm-title"]').should(
       'contain',
       'Mensaje de recuperación',
@@ -67,5 +67,20 @@ describe('users details view', () => {
     )
       .first()
       .click()
+  })
+
+  it('show subscriptions message', () => {
+    cy.login('admin@vivebamba.com', 'Password')
+    cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.intercept('/admin/api/v1/users').as('getUsers')
+    cy.wait('@getUsers')
+    cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')
+    cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.get('[data-testid="FilterAltIcon"] > path').click()
+    cy.get('#email').type('test12@hotmail.com')
+    cy.get('[data-testid="button-filter-search"]').click()
+    cy.get('[data-testid="icon-button-GORD820625G12"]').click()
+    cy.get('[data-testid="subscriptions-button"]').click()
+    cy.get('#alert-dialog-title').should('contain', 'Crear suscripción')
   })
 })

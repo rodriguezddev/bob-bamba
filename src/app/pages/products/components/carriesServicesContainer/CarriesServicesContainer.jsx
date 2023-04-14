@@ -109,7 +109,7 @@ const CarriesServicesContainer = ({ assignedCarriesServices, carriers }) => {
               labelDisplayedRows={() => ''}
               onPageChange={onPageChange}
               page={page}
-              rowsPerPageOptions={[10]}
+              rowsPerPage={10}
               SelectProps={{
                 native: true,
               }}

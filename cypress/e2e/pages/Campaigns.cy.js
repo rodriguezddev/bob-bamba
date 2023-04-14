@@ -28,6 +28,8 @@ describe('Campaigns view', () => {
   })
 
   it('use filters campaigns', () => {
+    cy.intercept('/admin/api/v1/newsletter-messages').as('getCampaigns')
+    cy.wait('@getCampaigns')
     cy.get('[data-testid="FilterAltIcon"] > path').click()
     cy.get('#send_date').type('2023-10-01')
     cy.get('[data-testid="button-filter-search"]').click()

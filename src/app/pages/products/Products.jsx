@@ -16,6 +16,7 @@ import DescriptionList from './components/DescriptionList'
 import { MainButton } from '../../components/buttons'
 import { filters } from './components/filters'
 import { MainFilter } from '../../components/filters'
+import useRowsPerPage from '../../hooks/useRowsPerPage'
 
 const Products = () => {
   const navigate = useNavigate()
@@ -25,6 +26,7 @@ const Products = () => {
   const { products } = useSelector((state) => state.product)
   const [showDetailsProduct, setShowDetailsProduct] = useState(false)
   const [details, setDetails] = useState({})
+  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getProducts)
 
   useEffect(() => {
     dispatch(getProducts())
@@ -40,7 +42,13 @@ const Products = () => {
   }
 
   const onPageChange = (event, newPage) => {
-    dispatch(getProducts(`${search ? `${search}&` : '?'}page=${newPage + 1}`))
+    dispatch(
+      getProducts(
+        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
+          newPage + 1
+        }`,
+      ),
+    )
     setPage(newPage)
   }
 
@@ -78,8 +86,9 @@ const Products = () => {
         columns={columns}
         count={products?.meta?.total ?? 0}
         onPageChange={onPageChange}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
-        rowsPerPageOptions={[10]}
+        rowsPerPage={rowsPerPage}
         SelectProps={{
           native: true,
         }}

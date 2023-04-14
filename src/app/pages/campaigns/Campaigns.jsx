@@ -26,6 +26,7 @@ import {
 import { ActionAlert, Alert } from '../../components/modals'
 import CampaignsForm from './components/CampaignsForm'
 import UploadUsersCampaignIconButton from './components/UploadUsersCampaignIconButton'
+import useRowsPerPage from '../../hooks/useRowsPerPage'
 
 const Campaigns = () => {
   const dispatch = useDispatch()
@@ -49,6 +50,7 @@ const Campaigns = () => {
   const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
   const [isShowSuccessAlert, setIsShowSuccessAlert] = useState(false)
   const [isShowConfirmAlert, setIsShowConfirmAlert] = useState(false)
+  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCampaigns)
 
   useEffect(() => {
     dispatch(getCampaigns())
@@ -91,7 +93,13 @@ const Campaigns = () => {
   }
 
   const onPageChange = (event, newPage) => {
-    dispatch(getCampaigns(`${search ? `${search}&` : '?'}page=${newPage + 1}`))
+    dispatch(
+      getCampaigns(
+        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
+          newPage + 1
+        }`,
+      ),
+    )
     setPage(newPage)
   }
 
@@ -153,8 +161,9 @@ const Campaigns = () => {
         columns={columns}
         count={campaigns?.meta?.total ?? 0}
         onPageChange={onPageChange}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
-        rowsPerPageOptions={[10]}
+        rowsPerPage={rowsPerPage}
         SelectProps={{
           native: true,
         }}

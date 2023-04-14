@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Card, CardContent, Grid } from '@mui/material'
-import { GeneralTitle } from '../../../../components/texts'
+import { GeneralTitle } from '../../../../../components/texts'
 
 const ActivationDetailsCard = ({
   activationDate,

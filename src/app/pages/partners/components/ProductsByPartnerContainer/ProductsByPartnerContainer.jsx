@@ -114,13 +114,13 @@ const ProductsByPartnerContainer = ({ partner }) => {
       )}
       <Pagination
         count={productsByPartners?.meta?.total ?? 0}
+        labelDisplayedRows={() => null}
         onPageChange={onPageChange}
         page={pageProducts}
+        rowsPerPage={10}
         SelectProps={{
           native: true,
         }}
-        rowsPerPageOptions={[10]}
-        labelDisplayedRows={() => null}
       />
       {isShowProductDetailsAlert && (
         <Alert

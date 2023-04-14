@@ -10,17 +10,17 @@ import {
   MenuItem,
   Typography,
 } from '@mui/material'
-import { MainButton } from '../../../../components/buttons'
-import { GeneralTitle } from '../../../../components/texts'
-import { SelectInput } from '../../../../components/inputs'
-import theme from '../../../../theme'
+import { MainButton } from '../../../../../components/buttons'
+import { GeneralTitle } from '../../../../../components/texts'
+import { SelectInput } from '../../../../../components/inputs'
+import theme from '../../../../../theme'
 import {
   getTemplates,
   getWhatsAppAccounts,
   resetTemplates,
   sendRecoveryMessage,
-} from '../../../../slices/recoveryMessage/recoveryMessageSlice'
-import { handleTextClipping } from '../../../../utils/UtilsTranslate'
+} from '../../../../../slices/recoveryMessage/recoveryMessageSlice'
+import { handleTextClipping } from '../../../../../utils/UtilsTranslate'
 
 const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
   const {

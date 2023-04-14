@@ -10,6 +10,7 @@ import { MainButton } from '../../../components/buttons'
 import { filters } from './components/filters'
 import { MainFilter } from '../../../components/filters'
 import theme from '../../../theme'
+import useRowsPerPage from '../../../hooks/useRowsPerPage'
 
 const CarrierServices = () => {
   const navigate = useNavigate()
@@ -17,6 +18,7 @@ const CarrierServices = () => {
   const { carrierServices } = useSelector((state) => state.carrier)
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
+  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCarrierServices)
 
   useEffect(() => {
     dispatch(getCarrierServices())
@@ -33,7 +35,11 @@ const CarrierServices = () => {
 
   const onPageChange = (event, newPage) => {
     dispatch(
-      getCarrierServices(`${search ? `${search}&` : '?'}page=${newPage + 1}`),
+      getCarrierServices(
+        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
+          newPage + 1
+        }`,
+      ),
     )
 
     setPage(newPage)
@@ -78,8 +84,9 @@ const CarrierServices = () => {
         columns={columns}
         count={carrierServices?.meta?.total ?? 0}
         onPageChange={onPageChange}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
-        rowsPerPageOptions={[10]}
+        rowsPerPage={rowsPerPage}
         SelectProps={{
           native: true,
         }}

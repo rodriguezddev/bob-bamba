@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
 import { Controller, useForm } from 'react-hook-form'
 import { Box, Grid } from '@mui/material'
 import FilterAltIcon from '@mui/icons-material/FilterAlt'
@@ -14,10 +13,8 @@ import { resetResultSubscriptionFile } from '../../../slices/partner/partnerSlic
 
 const MainFilter = ({ fieldDetails, handleSearch }) => {
   const dispatch = useDispatch()
-  const location = useLocation()
   const [isShowForm, setIsShowForm] = useState(false)
   const { control, handleSubmit, reset } = useForm()
-  const { resultSubscriptionFile } = useSelector((state) => state.partner)
 
   const handleShowForm = () => {
     setIsShowForm(!isShowForm)
@@ -38,12 +35,6 @@ const MainFilter = ({ fieldDetails, handleSearch }) => {
     dispatch(resetResultSubscriptionFile())
     handleSearch()
   }
-
-  useEffect(() => {
-    if (resultSubscriptionFile?.partnerName && location.pathname === '/users') {
-      setIsShowForm(true)
-    }
-  }, [])
 
   return (
     <>
@@ -90,13 +81,7 @@ const MainFilter = ({ fieldDetails, handleSearch }) => {
                     <FieldFilter
                       field={field}
                       onChange={onChange}
-                      value={
-                        field.id === 'partner'
-                        && resultSubscriptionFile?.partnerName
-                        && location.pathname === '/users'
-                          ? resultSubscriptionFile?.partnerName
-                          : value
-                      }
+                      value={value}
                     />
                   )}
                 />

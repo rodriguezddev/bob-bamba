@@ -21,6 +21,7 @@ import Carriers from './carriers/carriers'
 import CreateCarriers from './carriers/carriers/createCarriers'
 import Campaigns from './campaigns'
 import CreateCampaigns from './campaigns/createCampaigns'
+import CreateUsersWithSubscription from './partners/createUsersWithSubscription'
 
 const Routes = () => {
   const dispatch = useDispatch()
@@ -51,6 +52,10 @@ const Routes = () => {
           <Route path='/' element={<Home />} />
           <Route path='/partners' element={<Partners />} />
           <Route path='/partners/create' element={<CreatePartners />} />
+          <Route
+            path='/partners/createUsers/:id'
+            element={<CreateUsersWithSubscription />}
+          />
           <Route path='/users' element={<Users />} />
           <Route path='/users/details/:id' element={<UserDetails />} />
           <Route path='/admin-users' element={<AdminUsers />} />

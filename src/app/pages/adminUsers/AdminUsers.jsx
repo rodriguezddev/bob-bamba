@@ -16,6 +16,7 @@ import { GeneralTitle } from '../../components/texts'
 import { MainButton } from '../../components/buttons'
 import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
+import useRowsPerPage from '../../hooks/useRowsPerPage'
 
 const AdminUsers = () => {
   const dispatch = useDispatch()
@@ -26,6 +27,7 @@ const AdminUsers = () => {
   const [search, setSearch] = useState('')
   const [showAlert, setShowAlert] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getAdmins)
 
   useEffect(() => {
     dispatch(getAdmins())
@@ -37,7 +39,13 @@ const AdminUsers = () => {
   }
 
   const onPageChange = (event, newPage) => {
-    dispatch(getAdmins(`${search ? `${search}&` : '?'}page=${newPage + 1}`))
+    dispatch(
+      getAdmins(
+        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
+          newPage + 1
+        }`,
+      ),
+    )
     setPage(newPage)
   }
 
@@ -87,8 +95,9 @@ const AdminUsers = () => {
         columns={columns}
         count={admins?.meta?.total ?? 0}
         onPageChange={onPageChange}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
-        rowsPerPageOptions={[10]}
+        rowsPerPage={rowsPerPage}
         SelectProps={{
           native: true,
         }}

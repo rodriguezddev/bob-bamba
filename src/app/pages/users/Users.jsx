@@ -12,6 +12,7 @@ import { columns } from './components/columns'
 import { getUsers } from '../../slices/user/userSlice'
 import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
+import useRowsPerPage from '../../hooks/useRowsPerPage'
 
 const Users = () => {
   const [page, setPage] = useState(0)
@@ -19,14 +20,9 @@ const Users = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { users } = useSelector((state) => state.user)
-  const { resultSubscriptionFile } = useSelector((state) => state.partner)
+  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getUsers)
 
   useEffect(() => {
-    if (resultSubscriptionFile?.partnerName) {
-      dispatch(getUsers(`?partner=${resultSubscriptionFile?.partnerName}`))
-      return
-    }
-
     dispatch(getUsers())
   }, [])
 
@@ -36,17 +32,13 @@ const Users = () => {
   }
 
   const onPageChange = (event, newPage) => {
-    if (resultSubscriptionFile?.partnerName) {
-      dispatch(
-        getUsers(
-          `?partner=${resultSubscriptionFile?.partnerName}&page=${newPage + 1}`,
-        ),
-      )
-      setPage(newPage)
-      return
-    }
-
-    dispatch(getUsers(`${search ? `${search}&` : '?'}page=${newPage + 1}`))
+    dispatch(
+      getUsers(
+        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
+          newPage + 1
+        }`,
+      ),
+    )
     setPage(newPage)
   }
 
@@ -64,8 +56,9 @@ const Users = () => {
         columns={columns}
         count={users?.meta?.total ?? 0}
         onPageChange={onPageChange}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
-        rowsPerPageOptions={[10]}
+        rowsPerPage={rowsPerPage}
         SelectProps={{
           native: true,
         }}

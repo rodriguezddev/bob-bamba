@@ -1,10 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useTheme } from '@mui/material/styles'
-import {
-  Box,
-} from '@mui/system'
-import { IconButton } from '@mui/material'
+import { Box, IconButton } from '@mui/material'
 import FirstPageIcon from '@mui/icons-material/FirstPage'
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight'
@@ -13,10 +10,10 @@ import LastPageIcon from '@mui/icons-material/LastPage'
 const TablePaginationActions = (props) => {
   const theme = useTheme()
   const {
-    page, onPageChange, count,
+    page, onPageChange, count, rowsPerPage,
   } = props
   const rightToLeft = 'rtl'
-  const totalPage = Math.max(0, Math.ceil(count / 10))
+  const totalPage = Math.max(0, Math.ceil(count / rowsPerPage))
 
   const handleFirstPageButtonClick = (event) => {
     onPageChange(event, 0)
@@ -56,7 +53,7 @@ const TablePaginationActions = (props) => {
       </IconButton>
       <IconButton
         onClick={handleNextButtonClick}
-        disabled={page >= (totalPage - 1)}
+        disabled={page >= totalPage - 1}
         aria-label='next page'
       >
         {theme.direction === rightToLeft ? (
@@ -67,7 +64,7 @@ const TablePaginationActions = (props) => {
       </IconButton>
       <IconButton
         onClick={handleLastPageButtonClick}
-        disabled={page >= (totalPage - 1)}
+        disabled={page >= totalPage - 1}
         aria-label='last page'
       >
         {theme.direction === rightToLeft ? <FirstPageIcon /> : <LastPageIcon />}
@@ -77,9 +74,10 @@ const TablePaginationActions = (props) => {
 }
 
 TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
-  count: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
 }
 
 export default TablePaginationActions

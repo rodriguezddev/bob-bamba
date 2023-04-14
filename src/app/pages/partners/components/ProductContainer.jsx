@@ -34,7 +34,7 @@ const ProductContainer = ({ assignedProducts, partner }) => {
 
   useEffect(() => {
     dispatch(getProducts())
-    dispatch(getProductsByPartners({ partner }))
+    dispatch(getProductsByPartners({ partner, limit: '&limit=100' }))
   }, [])
 
   useEffect(() => {
@@ -168,13 +168,13 @@ const ProductContainer = ({ assignedProducts, partner }) => {
             </Box>
             <Pagination
               count={products?.meta?.total ?? 0}
+              labelDisplayedRows={() => ''}
               onPageChange={onPageChange}
               page={pageProducts}
+              rowsPerPage={10}
               SelectProps={{
                 native: true,
               }}
-              rowsPerPageOptions={[10]}
-              labelDisplayedRows={() => ''}
             />
           </Grid>
         </Grid>

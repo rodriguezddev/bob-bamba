@@ -7,7 +7,8 @@ import TableHead from '../tableHead/TableHead'
 import Pagination from '../pagination/Pagination'
 
 const GeneralTable = (props) => {
-  const { columns, children } = props
+  const { columns, children, page } = props
+
   return (
     <TableContainer
       component={Paper}
@@ -21,7 +22,7 @@ const GeneralTable = (props) => {
         <TableHead columns={columns} />
         <TableBody>{children}</TableBody>
       </Table>
-      <Pagination {...props} />
+      <Pagination {...props} page={page} />
     </TableContainer>
   )
 }
@@ -37,7 +38,9 @@ GeneralTable.propTypes = {
   ).isRequired,
   count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
+  onRowsPerPageChange: PropTypes.func.isRequired,
   page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
   SelectProps: PropTypes.shape({}).isRequired,
 }
 

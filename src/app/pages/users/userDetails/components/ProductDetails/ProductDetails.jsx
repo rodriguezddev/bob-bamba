@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import {
   Box, Grid, List, ListItem, Typography,
 } from '@mui/material'
-import { getProductDetails } from '../../../../slices/product/productSlice'
+import { getProductDetails } from '../../../../../slices/product/productSlice'
 
 const ProductDetails = ({ productId }) => {
   const dispatch = useDispatch()

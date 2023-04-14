@@ -1,8 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
-import {
-  ThemeProvider,
-} from '@mui/material'
+import { ThemeProvider } from '@mui/material'
 import GeneralTable from './GeneralTable'
 import TableCell from '../tableCell/TableCell'
 import TableRow from '../tableRow/TableRow'
@@ -27,8 +25,10 @@ describe('TableHead component', () => {
     const props = {
       columns,
       count: 1,
-      onPageChange: () => {},
+      onPageChange: jest.fn(),
+      onRowsPerPageChange: jest.fn(),
       page: 0,
+      rowsPerPage: 10,
       SelectProps: {
         native: false,
       },
@@ -52,12 +52,8 @@ describe('TableHead component', () => {
         <GeneralTable {...props}>
           {items?.map((item) => (
             <TableRow key={item.id}>
-              <TableCell align='center'>
-                {item.name}
-              </TableCell>
-              <TableCell align='center'>
-                {item.last_name}
-              </TableCell>
+              <TableCell align='center'>{item.name}</TableCell>
+              <TableCell align='center'>{item.last_name}</TableCell>
             </TableRow>
           ))}
         </GeneralTable>

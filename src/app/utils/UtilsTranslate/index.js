@@ -20,6 +20,7 @@ export const getStatusProducts = (status) => {
     CANCELED: 'Cancelado',
     INACTIVE: 'Inactivo',
     OUT_STOCK: 'Fuera de stock',
+    PENDING_ACTIVATION: 'Pendiente de activación',
   }
 
   return statusProducts[status] || '-'

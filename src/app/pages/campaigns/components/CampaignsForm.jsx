@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PropTypes from 'prop-types'
-import {
-  Grid, MenuItem, TextField, Typography,
-} from '@mui/material'
+import { Grid, MenuItem, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import { Controller } from 'react-hook-form'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
@@ -205,9 +203,6 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
                       error={!!errorInput}
                       minDate={new Date()}
                       onChange={onChange}
-                      renderInput={(params) => (
-                        <TextField id='sendDate' {...params} />
-                      )}
                       sx={{
                         borderRadius: '.5',
                         borderColor: errorInput && 'red',

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { Controller, useForm } from 'react-hook-form'
 import {
-  Box, Grid, MenuItem, TextField, Typography,
+  Box, Grid, MenuItem, Typography,
 } from '@mui/material'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { es } from 'date-fns/locale'
@@ -182,9 +182,6 @@ const CreateCampaigns = () => {
                     error={!!errorInput}
                     minDate={new Date()}
                     onChange={onChange}
-                    renderInput={(params) => (
-                      <TextField id='sendDate' {...params} />
-                    )}
                     sx={{
                       borderRadius: '.5',
                       borderColor: errorInput && 'red',

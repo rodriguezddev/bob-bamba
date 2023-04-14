@@ -417,7 +417,6 @@ describe('PartnerSlice redux', () => {
         },
       ],
       isSuccess: true,
-      partnerName: 'Bamba',
     }
 
     const responseMock = {

@@ -5,6 +5,8 @@ describe('Create campaigns view', () => {
     cy.login('admin@vivebamba.com', 'Password')
     cy.get('[data-testid="drawer-item-Campañas"]').should('contain', 'Campañas')
     cy.get('[data-testid="drawer-item-Campañas"]').first().click()
+    cy.intercept('/admin/api/v1/newsletter-messages').as('getCampaigns')
+    cy.wait('@getCampaigns')
     cy.get('[data-testid="button-create-campaigns"]').click()
     cy.get('[data-testid="title-create-campaigns"]').should(
       'contain',
@@ -31,6 +33,10 @@ describe('Create campaigns view', () => {
   it('Remove errors form', () => {
     cy.get('#accountName').click()
     cy.get('[data-value="symplifica"]').click()
+    cy.intercept('/admin/api/v1/message/templates?account_name=symplifica').as(
+      'getTemplates',
+    )
+    cy.wait('@getTemplates')
     cy.get('[data-testid="error-message-account-name-campaigns"]').should(
       'not.have.value',
       'El nombre de la cuenta es requerido',

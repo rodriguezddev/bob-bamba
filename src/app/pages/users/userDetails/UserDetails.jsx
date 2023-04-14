@@ -50,6 +50,7 @@ const UserDetails = () => {
         {user.cellphone && (
           <Box mt={5}>
             <MainButton
+              data-testid='recovery-message-button'
               height='3rem'
               onClick={handleShowFormMessage}
               width='20rem'

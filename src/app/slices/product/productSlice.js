@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
+import { createSubscription } from '../subscriptions/subscriptionsSlice'
 
 const initialState = {
   products: {
@@ -55,9 +56,9 @@ export const getProductsByPartners = createAsyncThunk(
   'list/productsByPartner',
   async (params, thunkAPI) => {
     try {
-      const response = params.page
+      const response = params.limit
         ? await httpService.get(
-          `${apiConstants.ADMIN_URL}/products?partner=${params.partner}${params.page}`,
+          `${apiConstants.ADMIN_URL}/products?partner=${params.partner}${params.limit}`,
         )
         : await httpService.get(
           `${apiConstants.ADMIN_URL}/products?partner=${params.partner}`,
@@ -134,6 +135,15 @@ export const productSlice = createSlice({
         data: [action.payload.data, ...state.products.data],
       }
       state.product = action.payload.data
+    })
+    builder.addCase(createSubscription.fulfilled, (state, action) => {
+      const updatedProductsNotActive = state.productsNotActive.data.filter(
+        (product) => !action.payload.data.products.some(
+          (item) => item.sku === product.sku,
+        ),
+      )
+
+      state.productsNotActive.data = updatedProductsNotActive
     })
   },
 })

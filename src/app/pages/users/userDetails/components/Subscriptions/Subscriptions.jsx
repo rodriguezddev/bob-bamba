@@ -3,26 +3,26 @@ import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import { Box } from '@mui/system'
 import { Card, CardContent, Grid } from '@mui/material'
-import { GeneralTitle } from '../../../../components/texts'
-import theme from '../../../../theme'
-import { MainButton } from '../../../../components/buttons'
+import { GeneralTitle } from '../../../../../components/texts'
+import theme from '../../../../../theme'
+import { MainButton } from '../../../../../components/buttons'
 import {
   getPeriodSubscriptions,
   getStatusProducts,
-} from '../../../../utils/UtilsTranslate'
-import { Alert, PdfViewer } from '../../../../components/modals'
-import ActivationDetailsCard from './ActivationDetailsCard'
-import { formatDate } from '../../../../utils/utilsFormat'
+} from '../../../../../utils/UtilsTranslate'
+import { Alert, PdfViewer } from '../../../../../components/modals'
+import ActivationDetailsCard from '../ActivationDetailsCard'
+import { formatDate } from '../../../../../utils/utilsFormat'
 import {
   handleSubscriptionsCanceled,
   handleSubscriptionsNumbers,
   orderSubscriptions,
-} from '../../../../utils/utilsSubscriptions'
+} from '../../../../../utils/utilsSubscriptions'
 import {
   cancelSubscription,
   resetSubscription,
-} from '../../../../slices/subscriptions/subscriptionsSlice'
-import ProductDetails from './ProductDetails'
+} from '../../../../../slices/subscriptions/subscriptionsSlice'
+import ProductDetails from '../ProductDetails'
 
 const Subscriptions = ({ user }) => {
   const dispatch = useDispatch()

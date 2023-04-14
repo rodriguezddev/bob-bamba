@@ -9,8 +9,10 @@ describe('Pagination component', () => {
   it('should show component', () => {
     const props = {
       count: 1,
-      onPageChange: () => {},
+      onPageChange: jest.fn(),
+      onRowsPerPageChange: jest.fn(),
       page: 0,
+      rowsPerPage: 10,
       SelectProps: {
         native: false,
       },

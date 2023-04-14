@@ -158,6 +158,7 @@ const CreateProducts = () => {
                   height='3rem'
                   hiddenIcon
                   id='sku-product'
+                  onChange={onChange}
                   placeholder=''
                   radius='.5rem'
                   sx={{
@@ -165,7 +166,6 @@ const CreateProducts = () => {
                       textTransform: 'uppercase',
                     },
                   }}
-                  onChange={onChange}
                   type='text'
                   value={value}
                   width='18rem'

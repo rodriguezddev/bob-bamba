@@ -147,6 +147,7 @@ const CreateCarrierServices = () => {
                     height='3rem'
                     hiddenIcon
                     id='sku-carrierService'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
                     sx={{
@@ -154,7 +155,6 @@ const CreateCarrierServices = () => {
                         textTransform: 'uppercase',
                       },
                     }}
-                    onChange={onChange}
                     type='text'
                     value={value}
                     width='18rem'
@@ -349,10 +349,10 @@ const CreateCarrierServices = () => {
                           labelDisplayedRows={() => ''}
                           onPageChange={onPageChange}
                           page={page}
+                          rowsPerPage={10}
                           SelectProps={{
                             native: true,
                           }}
-                          rowsPerPageOptions={[10]}
                         />
                       </Grid>
                     </SelectInput>

@@ -16,32 +16,24 @@ import { columns } from './components/columns'
 import {
   assignProducts,
   getPartners,
-  handleSubscriptionIsSuccess,
   resetsAssignProductsIsSuccess,
   resetUsersBatch,
 } from '../../slices/partner/partnerSlice'
-import {
-  getTextErrorUploadFile,
-  getTextActionUploadFile,
-  getTypePartner,
-} from '../../utils/UtilsTranslate'
+import { getTypePartner } from '../../utils/UtilsTranslate'
 import { MainButton } from '../../components/buttons'
 import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
 import ProductContainer from './components/ProductContainer'
-import UploadIconPartner from './components/UploadIconPartner/UploadIconPartner'
-import { formatDate } from '../../utils/utilsFormat'
 import UploadUserBatch from './components/UploadUserBatch/UploadUserBatch'
 import ProductsByPartnerContainer from './components/ProductsByPartnerContainer/ProductsByPartnerContainer'
+import useRowsPerPage from '../../hooks/useRowsPerPage'
 
 const Partners = () => {
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
-  const { partners, resultSubscriptionFile, usersBatch } = useSelector(
-    (state) => state.partner,
-  )
+  const { partners, usersBatch } = useSelector((state) => state.partner)
   const [partnerActionAlert, setPartnerActionAlert] = useState({})
   const [partnerInfo, setPartnerInfo] = useState({})
   const [assignedProducts, setAssignedProducts] = useState([])
@@ -49,6 +41,7 @@ const Partners = () => {
   const [isShowProducts, setIsShowProducts] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [isShowAssignedConfirmationAlert, setIsShowAssignedConfirmationAlert] = useState(false)
+  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getPartners)
 
   useEffect(() => {
     dispatch(getPartners())
@@ -60,7 +53,13 @@ const Partners = () => {
   }
 
   const onPageChange = (event, newPage) => {
-    dispatch(getPartners(`${search ? `${search}&` : '?'}page=${newPage + 1}`))
+    dispatch(
+      getPartners(
+        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
+          newPage + 1
+        }`,
+      ),
+    )
     setPage(newPage)
   }
 
@@ -86,35 +85,6 @@ const Partners = () => {
     setIsShowProducts(true)
   }
 
-  const handleAlertSuccess = () => {
-    if (resultSubscriptionFile?.total_successfully_processed === 0) {
-      dispatch(handleSubscriptionIsSuccess())
-      return
-    }
-
-    navigate('/users')
-    dispatch(handleSubscriptionIsSuccess())
-  }
-
-  const handleUnprocessedUsers = (usersErrors) => usersErrors.map((item) => {
-    const { action, sku, user } = item
-
-    return {
-      name: user?.name,
-      lastName: user?.lastname,
-      secondLastname: user?.second_lastname,
-      email: user?.email,
-      cellphone: user?.cellphone,
-      gender: user?.gender,
-      birthdate: formatDate(user?.birthdate),
-      rfc: user?.tax_id,
-      curp: user?.personal_id,
-      sku,
-      action: getTextActionUploadFile(action),
-      error: getTextErrorUploadFile(item.error),
-    }
-  })
-
   const handleProductAssigned = () => {
     const body = {
       partnerId: partnerActionAlert.id,
@@ -139,6 +109,10 @@ const Partners = () => {
     }
   }, [partners.products])
 
+  const handleNavigateToCreateUsers = (partnerId) => {
+    navigate(`/partners/createUsers/${partnerId}`)
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
@@ -160,8 +134,9 @@ const Partners = () => {
         columns={columns}
         count={partners?.meta?.total ?? 0}
         onPageChange={onPageChange}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
-        rowsPerPageOptions={[10]}
+        rowsPerPage={rowsPerPage}
         SelectProps={{
           native: true,
         }}
@@ -204,11 +179,15 @@ const Partners = () => {
                     partner={partner}
                   />
                 </Grid>
-                <Grid item>
-                  <UploadIconPartner
-                    icon={<GroupAddIcon />}
-                    partner={partner}
-                  />
+                <Grid
+                  item
+                  onClick={() => handleNavigateToCreateUsers(partner.id)}
+                >
+                  <Tooltip title='Carga de usuarios con suscripción'>
+                    <IconButton color='primary' sx={{ padding: 0 }}>
+                      <GroupAddIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
               </Grid>
             </TableCell>
@@ -325,44 +304,6 @@ const Partners = () => {
           }!`}
           isOpen={usersBatch?.isSuccess}
           setIsOpen={handleSuccessUsersBatchAlert}
-        />
-      )}
-      {resultSubscriptionFile?.isSuccess && (
-        <Alert
-          alertContentText={(
-            <>
-              <Typography component='span' variant='subtitle1'>
-                <b>Total de registros:&nbsp;</b>
-                {resultSubscriptionFile?.total_processed}
-              </Typography>
-              <br />
-              <Typography component='span' variant='subtitle1'>
-                <b>Cargados con éxito:&nbsp;</b>
-                {resultSubscriptionFile?.total_successfully_processed}
-              </Typography>
-              <br />
-              <Typography color='error' component='span' variant='subtitle1'>
-                <b>Con error:&nbsp;</b>
-                {resultSubscriptionFile?.total_unprocessed}
-              </Typography>
-              <br />
-              <br />
-              {resultSubscriptionFile?.unprocessed_users?.length !== 0 && (
-                <CSVLink
-                  data={handleUnprocessedUsers(
-                    resultSubscriptionFile?.unprocessed_users,
-                  )}
-                  filename='user-upload-unprocessed.csv'
-                >
-                  Ver detalle de errores
-                </CSVLink>
-              )}
-            </>
-          )}
-          alertTextButton='Cerrar'
-          alertTitle='Resultado'
-          isOpen
-          setIsOpen={handleAlertSuccess}
         />
       )}
     </Box>

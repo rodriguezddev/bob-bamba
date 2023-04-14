@@ -10,7 +10,7 @@ import UploadUserBatch from './UploadUserBatch'
 import store from '../../../../store'
 
 describe('UploadUserBatch components', () => {
-  it('should show UploadIconPartner', () => {
+  it('should show UploadUserBatch', () => {
     render(
       <Provider store={store}>
         <ThemeProvider theme={theme}>

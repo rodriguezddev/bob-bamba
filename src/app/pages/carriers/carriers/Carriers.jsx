@@ -15,6 +15,7 @@ import { columns } from './components/columns'
 import { filters } from './components/filters'
 import CarrierForm from './components/CarrierForm'
 import { ActionAlert } from '../../../components/modals'
+import useRowsPerPage from '../../../hooks/useRowsPerPage'
 
 const Carriers = () => {
   const navigate = useNavigate()
@@ -25,6 +26,7 @@ const Carriers = () => {
   const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
   const [carrierToUpdate, setCarrierToUpdate] = useState({})
   const [isShowConfirmAlert, setIsShowConfirmAlert] = useState(false)
+  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCarriers)
 
   useEffect(() => {
     dispatch(getCarriers())
@@ -49,7 +51,13 @@ const Carriers = () => {
   }
 
   const onPageChange = (event, newPage) => {
-    dispatch(getCarriers(`${search ? `${search}&` : '?'}page=${newPage + 1}`))
+    dispatch(
+      getCarriers(
+        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
+          newPage + 1
+        }`,
+      ),
+    )
 
     setPage(newPage)
   }
@@ -76,8 +84,9 @@ const Carriers = () => {
         columns={columns}
         count={carriers?.meta?.total ?? 0}
         onPageChange={onPageChange}
+        onRowsPerPageChange={handleChangeRowsPerPage}
         page={page}
-        rowsPerPageOptions={[10]}
+        rowsPerPage={rowsPerPage}
         SelectProps={{
           native: true,
         }}

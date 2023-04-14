@@ -3,8 +3,8 @@ import { Provider } from 'react-redux'
 import { render, screen } from '@testing-library/react'
 import { ThemeProvider } from '@mui/material'
 import '@testing-library/jest-dom'
-import theme from '../../../../theme'
-import store from '../../../../store'
+import theme from '../../../../../theme'
+import store from '../../../../../store'
 import ActivationDetailsCard from './ActivationDetailsCard'
 
 describe('ActivationCard components', () => {

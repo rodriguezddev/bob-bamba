@@ -8,6 +8,8 @@ describe('List admin users view', () => {
       'Administradores',
     )
     cy.get('[data-testid="drawer-item-Administradores"]').first().click()
+    cy.intercept('/admin/api/v1/admins').as('getAdmins')
+    cy.wait('@getAdmins')
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(1)').should(
       'contain',
       'Nombre del colaborador',

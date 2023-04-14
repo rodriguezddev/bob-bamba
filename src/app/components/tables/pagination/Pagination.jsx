@@ -5,25 +5,36 @@ import {
 } from '@mui/material'
 import TablePaginationActions from './TablePaginationActions'
 
-const Pagination = (props) => (
-  <Table>
-    <TableFooter>
-      <TableRow>
-        <TablePagination
-          {...props}
-          ActionsComponent={TablePaginationActions}
-          rowsPerPage={10}
-        />
-      </TableRow>
-    </TableFooter>
-  </Table>
-)
+const Pagination = (props) => {
+  const { rowsPerPage, page } = props
+  return (
+    <Table>
+      <TableFooter>
+        <TableRow>
+          <TablePagination
+            {...props}
+            ActionsComponent={TablePaginationActions}
+            labelRowsPerPage='Columnas por páginas'
+            page={page}
+            rowsPerPage={rowsPerPage}
+          />
+        </TableRow>
+      </TableFooter>
+    </Table>
+  )
+}
 
 Pagination.propTypes = {
   count: PropTypes.number.isRequired,
   onPageChange: PropTypes.func.isRequired,
+  onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
   SelectProps: PropTypes.shape({}).isRequired,
+}
+
+Pagination.defaultProps = {
+  onRowsPerPageChange: null,
 }
 
 export default Pagination

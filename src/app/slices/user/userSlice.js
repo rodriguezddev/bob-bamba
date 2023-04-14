@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
+import { createSubscription } from '../subscriptions/subscriptionsSlice'
 
 const initialState = {
   users: {
@@ -79,6 +80,12 @@ export const userSlice = createSlice({
     })
     builder.addCase(getUser.fulfilled, (state, action) => {
       state.user = action.payload.data
+    })
+    builder.addCase(createSubscription.fulfilled, (state, action) => {
+      state.user.subscriptions = [
+        ...state.user.subscriptions,
+        action.payload.data,
+      ]
     })
     builder.addCase(createUsers.fulfilled, (state, action) => {
       state.users.createUsers = { ...action.payload.data, isSuccess: true }

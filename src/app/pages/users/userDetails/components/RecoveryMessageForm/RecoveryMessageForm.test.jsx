@@ -4,9 +4,9 @@ import { act, render, screen } from '@testing-library/react'
 import { ThemeProvider } from '@mui/material'
 import '@testing-library/jest-dom'
 import RecoveryMessageForm from './RecoveryMessageForm'
-import theme from '../../../../theme'
-import store from '../../../../store'
-import httpService from '../../../../services/api_services/HttpService'
+import theme from '../../../../../theme'
+import store from '../../../../../store'
+import httpService from '../../../../../services/api_services/HttpService'
 
 describe('RecoveryMessageForm component', () => {
   it('should show RecoveryMessageForm', async () => {

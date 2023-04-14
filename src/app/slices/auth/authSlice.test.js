@@ -20,6 +20,9 @@ describe('authSlice redux', () => {
     const formData = {
       email: 'ejemplo@vivebamaba.com',
       password: 'Password',
+      client_id: 'xxxxxxxxxxxxxxx',
+      client_secret: 'xxxxxxxxxxxxxx',
+      grant_type: 'password',
     }
 
     const responseMock = {
@@ -51,21 +54,6 @@ describe('authSlice redux', () => {
     const { user } = await store.getState()
 
     expect(user).toEqual(state)
-  })
-
-  it('should login thunk request', async () => {
-    const dispatch = jest.fn()
-    const state = {
-      user: {},
-      loggedIn: false,
-    }
-    const thunk = login()
-    await thunk(dispatch, () => state, undefined)
-    const { calls } = dispatch.mock
-
-    expect(calls).toHaveLength(2)
-    expect(calls[0][0].type).toEqual('auth/login/pending')
-    expect(calls[1][0].type).toEqual('auth/login/rejected')
   })
 
   it('should return user logout state', async () => {

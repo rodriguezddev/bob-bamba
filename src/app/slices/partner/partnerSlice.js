@@ -151,7 +151,6 @@ export const partnerSlice = createSlice({
     builder.addCase(createSubscriptionBatch.fulfilled, (state, action) => {
       state.resultSubscriptionFile = {
         ...action.payload.data,
-        partnerName: action.meta.arg.partner,
         isSuccess: true,
       }
     })
