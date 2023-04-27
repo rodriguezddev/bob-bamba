@@ -10,28 +10,114 @@ import theme from '../../../theme'
 import httpService from '../../../services/api_services/HttpService'
 import '@testing-library/jest-dom/extend-expect'
 
-test('renders create partners view', async () => {
+test('renders create campaigns view', async () => {
   const responseMock = {
-    code: 0,
-    data: {
-      bamba_attendance: 'Asistencia Bamba',
-      bamba_asesor: 'Asesor Bamba',
+    data: [
+      {
+        id: '7c775d03-f6cb-48cb-8571-d2c1ab282860',
+        name: 'Agente Bamba (5625774041)',
+        keys: {
+          phone_id: '116422888031263',
+          account_id: '114901301537529',
+        },
+        is_enabled: true,
+        provider: 'WHATSAPP',
+        notification_type: 'WHATSAPP',
+      },
+    ],
+    links: {
+      first: 'http://staging.bamba.tech/admin/api/v1/notice-accounts?page=1',
+      last: 'http://staging.bamba.tech/admin/api/v1/notice-accounts?page=1',
+      prev: null,
+      next: null,
     },
+    meta: {
+      current_page: 1,
+      from: 1,
+      last_page: 1,
+      links: [
+        {
+          url: null,
+          label: '&laquo; Anterior',
+          active: false,
+        },
+        {
+          url: 'http://staging.bamba.tech/admin/api/v1/notice-accounts?page=1',
+          label: '1',
+          active: true,
+        },
+        {
+          url: null,
+          label: 'Siguiente &raquo;',
+          active: false,
+        },
+      ],
+      path: 'http://staging.bamba.tech/admin/api/v1/notice-accounts',
+      per_page: 10,
+      to: 5,
+      total: 5,
+    },
+    code: 0,
   }
 
   const templates = {
     code: 0,
     data: {
-      bienvenida_symplifica: {
-        text: '¡Hola!\n\nHoy es un gran día.',
-        language: 'es_MX',
-        number_parameters: 0,
-      },
+      text: 'Por ser parte de Bamba',
+      language: 'es_MX',
+      number_parameters: 0,
     },
   }
 
-  jest.spyOn(httpService, 'get').mockResolvedValueOnce(responseMock)
-  jest.spyOn(httpService, 'get').mockResolvedValueOnce(templates)
+  const partners = {
+    data: [
+      {
+        id: '2cf8ba04-6dfb-43cd-807f-b0722d7b7b9e',
+        name: 'Ti rosa SA',
+        code: 'TIA-ROSA-1',
+        type: 'AGGREGATOR',
+        meta: null,
+        company: null,
+      },
+    ],
+    links: {
+      first: 'http://staging.bamba.tech/admin/api/v1/partners?page=1',
+      last: 'http://staging.bamba.tech/admin/api/v1/partners?page=1',
+      prev: null,
+      next: null,
+    },
+    meta: {
+      current_page: 1,
+      from: 1,
+      last_page: 1,
+      links: [
+        {
+          url: null,
+          label: '&laquo; Anterior',
+          active: false,
+        },
+        {
+          url: 'http://staging.bamba.tech/admin/api/v1/partners?page=1',
+          label: '1',
+          active: true,
+        },
+        {
+          url: null,
+          label: 'Siguiente &raquo;',
+          active: false,
+        },
+      ],
+      path: 'http://staging.bamba.tech/admin/api/v1/partners',
+      per_page: 100,
+      to: 1,
+      total: 1,
+    },
+    code: 0,
+  }
+
+  jest
+    .spyOn(httpService, 'get')
+    .mockResolvedValue(responseMock, templates, partners)
 
   await act(async () => {
     render(

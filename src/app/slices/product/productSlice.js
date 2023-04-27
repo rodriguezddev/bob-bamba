@@ -115,6 +115,9 @@ export const productSlice = createSlice({
     resetProduct: (state) => {
       state.product = {}
     },
+    resetProductDetails: (state) => {
+      state.productDetails = {}
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getProducts.fulfilled, (state, action) => {
@@ -150,6 +153,6 @@ export const productSlice = createSlice({
 
 export const product = (state) => state.products
 
-export const { resetProduct } = productSlice.actions
+export const { resetProduct, resetProductDetails } = productSlice.actions
 
 export default productSlice.reducer

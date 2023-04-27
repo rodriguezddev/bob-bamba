@@ -12,7 +12,7 @@ const CustomDateTimePicker = styled(DateTimePicker)(
     color: theme.palette.common.black,
     fontSize: `${fontSize}`,
     height: `${height}`,
-    padding: '0.75rem 1rem',
+    padding: '0.5rem 1rem',
     position: 'inherit',
     width: `${width}`,
     '& .MuiInputBase-root, .MuiInputBase-input': {

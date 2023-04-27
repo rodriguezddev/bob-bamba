@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
-  Box, Grid, IconButton, Tooltip,
+  Box, Grid, IconButton, Tooltip, Typography,
 } from '@mui/material'
 import { CSVLink } from 'react-csv'
 import { useForm } from 'react-hook-form'
@@ -19,14 +19,18 @@ import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
 import {
   deleteCampaign,
+  getCampaign,
   getCampaigns,
-  resetDeleteCampaigns,
+  resetUploadUsersCampaigns,
   updateCampaign,
+  assignUsers,
+  resetCampaign,
 } from '../../slices/campaigns/campaignsSlice'
 import { ActionAlert, Alert } from '../../components/modals'
-import CampaignsForm from './components/CampaignsForm'
-import UploadUsersCampaignIconButton from './components/UploadUsersCampaignIconButton'
 import useRowsPerPage from '../../hooks/useRowsPerPage'
+import { handleSentCampaign } from '../../utils/UtilsTranslate'
+import AssignUsersContainer from './components/assignUsersContainer/AssignUsersContainer'
+import CampaignsForm from './components/campaignsForm'
 
 const Campaigns = () => {
   const dispatch = useDispatch()
@@ -38,18 +42,24 @@ const Campaigns = () => {
       accountName: '',
       template_lang: '',
       template: '',
+      partnerId: '',
     },
   })
   const { handleSubmit, reset } = campaignsForm
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
-  const { campaigns } = useSelector((state) => state.campaign)
+  const { campaigns, campaign, isUploadUsersCampaigns } = useSelector(
+    (state) => state.campaign,
+  )
   const [campaignsAlert, setCampaignsAlert] = useState({})
   const [dataUpdateCampaign, setDataUpdateCampaign] = useState({})
   const [isShowDeleteAlert, setIsShowDeleteAlert] = useState(false)
   const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
-  const [isShowSuccessAlert, setIsShowSuccessAlert] = useState(false)
   const [isShowConfirmAlert, setIsShowConfirmAlert] = useState(false)
+  const [isShowDownloadAlert, setIsShowDownloadAlert] = useState(false)
+  const [isShowAssignUsersAlert, setIsShowAssignUsersAlert] = useState(false)
+  const [isOpenUsersSuccessAlert, setIsOpenUsersSuccessAlert] = useState(false)
+  const [userFile, setUserFile] = useState('')
   const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCampaigns)
 
   useEffect(() => {
@@ -60,13 +70,25 @@ const Campaigns = () => {
     const [template, language] = dataForm.infoTemplate.split(' ')
     const data = {
       send_date: format(dataForm.send_date, 'yyyy-MM-dd HH:mm'),
-      account_name: dataForm.accountName,
+      notice_account_id: dataForm.accountId,
       template_lang: language,
       template,
     }
 
     setDataUpdateCampaign(data)
     setIsShowConfirmAlert(true)
+    setIsShowUpdateAlert(false)
+    dispatch(resetCampaign())
+  }
+
+  const handleAssignUsers = (dataForm) => {
+    const data = new FormData()
+    data.append('users_file', userFile)
+    data.append('partner_id', dataForm.partnerId)
+
+    dispatch(assignUsers({ data, campaignId: campaignsAlert.id }))
+    setIsShowAssignUsersAlert(false)
+    dispatch(resetCampaign())
   }
 
   const handleUpdateCampaign = () => {
@@ -120,12 +142,24 @@ const Campaigns = () => {
       return
     }
 
+    if (value === 'assign') {
+      setIsShowAssignUsersAlert(true)
+      return
+    }
+
     setIsShowDeleteAlert(true)
   }
 
+  const handleCampaigns = (campaignId) => {
+    dispatch(getCampaign(campaignId))
+    setIsShowDownloadAlert(true)
+  }
+
   const handleUsersCampaigns = (campaignUsers) => {
-    const newUsers = campaignUsers.map((item) => {
-      const { subscriptions, ...rest } = item
+    const newUsers = campaignUsers.map((campaignUser) => {
+      const {
+        id, subscriptions, metadata, ...rest
+      } = campaignUser
 
       return rest
     })
@@ -134,11 +168,16 @@ const Campaigns = () => {
   }
 
   useEffect(() => {
-    if (campaigns.deleteCampaign?.isSuccess) {
-      setIsShowSuccessAlert(campaigns.deleteCampaign?.isSuccess)
-      dispatch(resetDeleteCampaigns())
+    if (isUploadUsersCampaigns) {
+      setIsOpenUsersSuccessAlert(isUploadUsersCampaigns)
     }
-  }, [campaigns])
+  }, [isUploadUsersCampaigns])
+
+  useEffect(() => {
+    if (!isOpenUsersSuccessAlert) {
+      dispatch(resetUploadUsersCampaigns())
+    }
+  }, [isOpenUsersSuccessAlert])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -147,11 +186,11 @@ const Campaigns = () => {
         <MainButton
           color='primary'
           data-testid='button-create-campaigns'
-          fontSize='1rem'
-          height='3.75rem'
+          fontSize='0.85rem'
+          height='3rem'
           onClick={navigateToCreateUser}
           radius='0.62rem'
-          width='18rem'
+          width='15rem'
         >
           Crear campaña
         </MainButton>
@@ -168,72 +207,70 @@ const Campaigns = () => {
           native: true,
         }}
       >
-        {campaigns?.data?.map((campaign) => (
-          <TableRow key={campaign.id}>
+        {campaigns?.data?.map((campaignInfo) => (
+          <TableRow key={campaignInfo.id}>
             <TableCell align='left'>
-              {campaign?.account_name?.replace(/_/g, ' ')}
+              {campaignInfo?.notice_account.name?.replace(/_/g, ' ')}
             </TableCell>
-            <TableCell align='left'>{campaign?.send_date}</TableCell>
+            <TableCell align='left'>{campaignInfo?.send_date}</TableCell>
             <TableCell align='left'>
-              {campaign?.template?.replace(/_/g, ' ')}
+              {campaignInfo?.template?.replace(/_/g, ' ')}
             </TableCell>
             <TableCell align='center'>
-              {campaign?.template_lang?.replace(/_/g, ' ')}
-            </TableCell>
-            {!campaign?.users || campaign?.users?.length === 0 ? (
-              <TableCell align='center'>-</TableCell>
-            ) : (
-              <TableCell align='center'>
-                <CSVLink
-                  data={handleUsersCampaigns(campaign?.users)}
-                  filename='user-campaigns-assigned.csv'
-                >
-                  <Tooltip title='Descargar archivo de usuarios asociados'>
-                    <SimCardDownloadIcon color='primary' />
-                  </Tooltip>
-                </CSVLink>
-              </TableCell>
-            )}
-            <TableCell align='center'>
-              {campaign?.sent ? 'Enviada' : 'Pendiente'}
+              {campaignInfo?.template_lang?.replace(/_/g, ' ')}
             </TableCell>
             <TableCell align='center'>
-              <Grid
-                alignItems='center'
-                container
-                direction='row'
-                justifyContent='center'
-                spacing={4}
-              >
+              {handleSentCampaign(campaignInfo?.sent)}
+            </TableCell>
+            <TableCell align='center'>
+              <Grid alignItems='center' container direction='row' spacing={1}>
                 <Grid item>
                   <Tooltip title='Eliminar campaña'>
                     <IconButton
-                      onClick={() => handleActionsCampaigns(campaign)}
+                      onClick={() => handleActionsCampaigns(campaignInfo)}
+                      sx={{ padding: 0 }}
                     >
                       <img
                         alt='delete'
-                        height={24}
+                        height={20}
                         src={DeleteIcon}
-                        width={24}
+                        width={20}
                       />
                     </IconButton>
                   </Tooltip>
                 </Grid>
                 <Grid
                   item
-                  onClick={() => handleActionsCampaigns(campaign, 'update')}
+                  onClick={() => handleActionsCampaigns(campaignInfo, 'update')}
                 >
                   <Tooltip title='Actualizar campaña'>
-                    <IconButton color='primary'>
-                      <BorderColorIcon />
+                    <IconButton color='primary' sx={{ padding: 0 }}>
+                      <BorderColorIcon sx={{ fontSize: '1.25rem' }} />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid
+                  item
+                  onClick={() => handleActionsCampaigns(campaignInfo, 'assign')}
+                >
+                  <Tooltip title='Asignar usuarios'>
+                    <IconButton color='primary' sx={{ padding: 0 }}>
+                      <GroupAddIcon sx={{ fontSize: '1.25rem' }} />
                     </IconButton>
                   </Tooltip>
                 </Grid>
                 <Grid item>
-                  <UploadUsersCampaignIconButton
-                    campaignId={campaign?.id}
-                    icon={<GroupAddIcon />}
-                  />
+                  <Tooltip title='Descargar archivo de usuarios asociados'>
+                    <IconButton
+                      onClick={() => handleCampaigns(campaignInfo.id)}
+                      sx={{ padding: 0 }}
+                    >
+                      <SimCardDownloadIcon
+                        color='primary'
+                        sx={{ fontSize: '1.25rem' }}
+                      />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
               </Grid>
             </TableCell>
@@ -251,16 +288,6 @@ const Campaigns = () => {
           setIsOpen={setIsShowDeleteAlert}
         />
       )}
-      {isShowSuccessAlert && (
-        <Alert
-          alertContentText='La campaña se ha eliminado'
-          alertTextButton='Cerrar'
-          alertTitle='¡Eliminado!'
-          isOpen={isShowSuccessAlert}
-          setIsOpen={setIsShowSuccessAlert}
-        />
-      )}
-
       {isShowUpdateAlert && (
         <ActionAlert
           actionAlertContentText='Al editar la campaña se restablecerán los usuarios'
@@ -279,16 +306,58 @@ const Campaigns = () => {
           />
         </ActionAlert>
       )}
+      {isShowAssignUsersAlert && (
+        <ActionAlert
+          actionAlertContentText=''
+          actionAlertTextButton='Cerrar'
+          actionAlertTitle='Asignar usuarios a esta campaña'
+          isOpen={isShowAssignUsersAlert}
+          isShowPrimaryButton
+          maxWidth='sm'
+          onClick={handleSubmit(handleAssignUsers)}
+          primaryButtonTextAlert='Actualizar'
+          setActionsIsOpen={setIsShowAssignUsersAlert}
+        >
+          <AssignUsersContainer
+            assignUsers={campaignsForm}
+            setUserFile={setUserFile}
+          />
+        </ActionAlert>
+      )}
       {isShowConfirmAlert && (
         <Alert
           actionButton={handleUpdateCampaign}
           alertContentText='Los datos de esta campaña se sobre escribirán'
           alertTextButton='Cancelar'
-          alertTitle='Quieres editar esta campaña?'
+          alertTitle='¿Quieres actualizar esta campaña?'
           isShowPrimaryButton
           isOpen={isShowConfirmAlert}
+          primaryButtonTextAlert='Confirmar'
           setIsOpen={setIsShowConfirmAlert}
-          primaryButtonTextAlert='Aceptar'
+        />
+      )}
+      {isShowDownloadAlert && (
+        <Alert
+          alertContentText={
+            !campaign?.users || campaign?.users?.length === 0 ? (
+              <Box align='center'>Esta campaña no tiene usuarios asignados</Box>
+            ) : (
+              <CSVLink
+                data={handleUsersCampaigns(campaign?.users)}
+                filename='user-campaigns-assigned.csv'
+              >
+                <Box alignItems='center' display='flex' flexDirection='column'>
+                  <Typography mt={1} variant='caption'>
+                    Click aquí
+                  </Typography>
+                </Box>
+              </CSVLink>
+            )
+          }
+          alertTextButton='Cerrar'
+          alertTitle='Descargar usuarios asignados'
+          isOpen={isShowDownloadAlert}
+          setIsOpen={setIsShowDownloadAlert}
         />
       )}
     </Box>

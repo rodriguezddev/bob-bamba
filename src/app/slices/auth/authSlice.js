@@ -6,41 +6,22 @@ const initialState = {
   loggedIn: false,
 }
 
-export const login = createAsyncThunk(
-  'auth/login',
-  async (values, thunkAPI) => {
-    try {
-      const response = await httpService.post('/api/token/create', values)
+export const login = createAsyncThunk('auth/login', async (data, thunkAPI) => {
+  try {
+    const response = await httpService.loginAuth('/oauth/token', data)
 
-      return response
-    } catch (error) {
-      const message = error
-
-      return thunkAPI.rejectWithValue(message)
-    }
-  },
-)
-
-export const logout = createAsyncThunk(
-  'auth/logout',
-  async (values, thunkAPI) => {
-    try {
-      const response = await httpService.post('/api/token/destroy', values)
-
-      return response
-    } catch (error) {
-      const message = error
-
-      return thunkAPI.rejectWithValue(message)
-    }
-  },
-)
+    return response
+  } catch (error) {
+    const message = error
+    return thunkAPI.rejectWithValue(message)
+  }
+})
 
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
   reducers: {
-    reset: (state) => {
+    logout: (state) => {
       state.loggedIn = false
       state.user = {}
     },
@@ -48,17 +29,13 @@ export const authSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(login.fulfilled, (state, action) => {
       state.loggedIn = true
-      state.user = action.payload.data
-    })
-    builder.addCase(logout.fulfilled, (state) => {
-      state.loggedIn = false
-      state.user = {}
+      state.user.token = action.payload.access_token
     })
   },
 })
 
 export const auth = (state) => state.auth
 
-export const { reset } = authSlice.actions
+export const { logout } = authSlice.actions
 
 export default authSlice.reducer

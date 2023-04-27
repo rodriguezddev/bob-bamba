@@ -18,11 +18,9 @@ import {
   handleSubscriptionsNumbers,
   orderSubscriptions,
 } from '../../../../../utils/utilsSubscriptions'
-import {
-  cancelSubscription,
-  resetSubscription,
-} from '../../../../../slices/subscriptions/subscriptionsSlice'
+import { cancelSubscription } from '../../../../../slices/subscriptions/subscriptionsSlice'
 import ProductDetails from '../ProductDetails'
+import { resetProductDetails } from '../../../../../slices/product/productSlice'
 
 const Subscriptions = ({ user }) => {
   const dispatch = useDispatch()
@@ -31,7 +29,6 @@ const Subscriptions = ({ user }) => {
   const [subscriptionsNumbers, setSubscriptionsNumbers] = useState('')
   const [subscriptionsId, setSubscriptionsId] = useState('')
   const [isShowSubscriptionsAlert, setIsShowSubscriptionsAlert] = useState(false)
-  const [isShowSubscriptionsSuccessAlert, setIsShowSubscriptionsSuccessAlert] = useState(false)
   const [isOpenPdfViewer, setIsOpenPdfViewer] = useState(false)
   const [pdfViewerFile, setPdfViewerFile] = useState('')
   const [isShowProductDetailsAlert, setIsShowProductDetailsAlert] = useState(false)
@@ -57,11 +54,6 @@ const Subscriptions = ({ user }) => {
         ),
       )
     }
-
-    if (canceledSubscription?.isSuccess) {
-      setIsShowSubscriptionsSuccessAlert(canceledSubscription?.isSuccess)
-      dispatch(resetSubscription())
-    }
   }, [canceledSubscription])
 
   const handlePdfViewerFile = (file) => {
@@ -82,6 +74,7 @@ const Subscriptions = ({ user }) => {
   const handleShowProductsDetails = (productData) => {
     setProductSubscription(productData)
     setIsShowProductDetailsAlert(true)
+    dispatch(resetProductDetails())
   }
 
   return (
@@ -124,14 +117,14 @@ const Subscriptions = ({ user }) => {
                     marginBottom='2.5rem'
                   >
                     <GeneralTitle
-                      fontSize='1.25rem'
+                      fontSize='1rem'
                       lineHeight='1rem'
                       marginRight='.5rem'
                       text={`Suscripción #${index + 1}`}
                       xs={4}
                     />
                     <GeneralTitle
-                      fontSize='1.25rem'
+                      fontSize='1rem'
                       lineHeight='1rem'
                       marginRight='.5rem'
                       text={`Estatus: ${getStatusProducts(
@@ -197,6 +190,7 @@ const Subscriptions = ({ user }) => {
                             <MainButton
                               background={theme.palette.background.default}
                               data-testid={`button-to-show-product-${product.sku}`}
+                              fontSize='0.85rem'
                               onClick={() => handleShowProductsDetails(product)}
                               radius='0'
                               type='secondary'
@@ -234,12 +228,17 @@ const Subscriptions = ({ user }) => {
           setIsOpen={setIsShowSubscriptionsAlert}
         />
       )}
-      {isShowSubscriptionsSuccessAlert && (
+      {isShowProductDetailsAlert && (
         <Alert
+          actionAlertContentText='Detalles del producto'
+          alertContentText={
+            <ProductDetails productId={productSubscription.id} />
+          }
           alertTextButton='Cerrar'
-          alertTitle='¡Suscripción cancelada!'
-          isOpen={isShowSubscriptionsSuccessAlert}
-          setIsOpen={setIsShowSubscriptionsSuccessAlert}
+          alertTitle={productSubscription.name}
+          isOpen={isShowProductDetailsAlert}
+          setIsOpen={setIsShowProductDetailsAlert}
+          width='68rem'
         />
       )}
       {isShowProductDetailsAlert && (

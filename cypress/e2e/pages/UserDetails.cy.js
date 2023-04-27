@@ -67,6 +67,7 @@ describe('users details view', () => {
     )
       .first()
       .click()
+    cy.get('[data-testid="navbar-logout"]').first().click()
   })
 
   it('show subscriptions message', () => {

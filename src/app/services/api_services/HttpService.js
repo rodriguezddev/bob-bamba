@@ -12,6 +12,18 @@ class HttpService {
       .then((response) => response)
   }
 
+  loginAuth = async (path, data) => {
+    const requestOptions = {
+      method: 'POST',
+      headers: await this.getHeaders(),
+      body: data,
+    }
+
+    return fetch(`${process.env.REACT_APP_API_URL}${path}`, requestOptions)
+      .then((response) => this.handleResponse(response))
+      .then((response) => response)
+  }
+
   post = (path, data, isFile = false) => {
     const requestOptions = {
       method: 'POST',
@@ -86,7 +98,6 @@ class HttpService {
       }
     }
     return {
-      'Content-Type': 'application/json',
       Accept: 'application/json',
       'Access-Control-Allow-Origin': '*',
     }

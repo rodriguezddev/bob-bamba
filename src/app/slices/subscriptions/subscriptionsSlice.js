@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
+import { handleSetSuccessMessage } from '../successMessage/successMessageSlice'
 
 const initialState = {
   subscriptions: {
@@ -17,10 +18,14 @@ export const createSubscription = createAsyncThunk(
   'create/subscriptions',
   async (values, thunkAPI) => {
     try {
+      const messageSuccess = { title: '¡Suscripción creada correctamente!' }
+
       const response = await httpService.post(
         `${apiConstants.ADMIN_URL}/subscription/${values.userId}/create`,
         { products: values.products },
       )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
 
       return response
     } catch (error) {
@@ -35,10 +40,14 @@ export const cancelSubscription = createAsyncThunk(
   'cancel/subscriptions',
   async (params, thunkAPI) => {
     try {
+      const messageSuccess = { title: '¡Suscripción cancelada!' }
+
       const response = await httpService.post(
         `${apiConstants.ADMIN_URL}/subscription/${params}/cancel`,
         true,
       )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
 
       return response
     } catch (error) {
@@ -64,7 +73,7 @@ export const subscriptionsSlice = createSlice({
       state.subscriptionActivated = { isSuccess: true }
     })
     builder.addCase(cancelSubscription.fulfilled, (state, action) => {
-      state.canceledSubscription = { ...action.payload.data, isSuccess: true }
+      state.canceledSubscription = action.payload.data
     })
   },
 })

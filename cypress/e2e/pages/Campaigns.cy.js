@@ -15,15 +15,19 @@ describe('Campaigns view', () => {
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(3)').should(
       'contain',
-      'Template',
+      'Plantilla',
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(4)').should(
       'contain',
-      'Idioma del template',
+      'Idioma de la plantilla',
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(5)').should(
       'contain',
-      'Usuarios asignados',
+      'Estatus',
+    )
+    cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(6)').should(
+      'contain',
+      'Acciones',
     )
   })
 
@@ -31,11 +35,11 @@ describe('Campaigns view', () => {
     cy.intercept('/admin/api/v1/newsletter-messages').as('getCampaigns')
     cy.wait('@getCampaigns')
     cy.get('[data-testid="FilterAltIcon"] > path').click()
-    cy.get('#send_date').type('2023-10-01')
+    cy.get('#send_date').type('2023-04-26')
     cy.get('[data-testid="button-filter-search"]').click()
     cy.get('.MuiTableBody-root > .MuiTableRow-root > :nth-child(2)').should(
       'contain',
-      '01-10-2023 00:00',
+      '26-04-2023 01:00',
     )
   })
 

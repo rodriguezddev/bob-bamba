@@ -12,17 +12,12 @@ export const columns = [
   {
     align: 'center',
     id: 'template',
-    label: 'Template',
+    label: 'Plantilla',
   },
   {
     align: 'center',
     id: 'template_lang',
-    label: 'Idioma del template',
-  },
-  {
-    align: 'center',
-    id: 'userAssigned',
-    label: 'Usuarios asignados',
+    label: 'Idioma de la plantilla',
   },
   {
     align: 'center',

@@ -23,12 +23,15 @@ const Login = () => {
   } = useForm()
 
   const onSubmit = (dataForm) => {
-    const values = {
-      email: dataForm.email,
-      password: dataForm.password,
-    }
+    const data = new FormData()
 
-    dispatch(login(values))
+    data.append('grant_type', 'password')
+    data.append('username', dataForm.email)
+    data.append('password', dataForm.password)
+    data.append('client_id', process.env.REACT_APP_API_CLIENT_ID)
+    data.append('client_secret', process.env.REACT_APP_API_CLIENT_SECRET)
+
+    dispatch(login(data))
   }
 
   useEffect(() => {
@@ -39,10 +42,10 @@ const Login = () => {
 
   return (
     <Grid
+      alignItems='center'
       container
       direction='column'
       justifyContent='center'
-      alignItems='center'
       spacing={3}
       style={{ minHeight: '100vh' }}
     >
@@ -59,15 +62,15 @@ const Login = () => {
       </Grid>
       <Grid item xs={12}>
         <Box mt={3} mb={5}>
-          <img src={logo} alt='Bamba' width={470} height={88} />
+          <img alt='Bamba' height={58} src={logo} width={360} />
         </Box>
       </Grid>
       <Grid item xs={12}>
         <Box px={3}>
           <Controller
-            name='email'
-            defaultValue=''
             control={control}
+            defaultValue=''
+            name='email'
             rules={{
               required: 'El email es requerido',
               pattern: getEmailPattern(),
@@ -77,12 +80,11 @@ const Login = () => {
               fieldState: { error: errorInput },
             }) => (
               <InputTextLarge
-                id='email'
-                placeholder='Ingresa tu correo electrónico'
                 background={theme.palette.background.blueLight}
                 fontSize='1.12rem'
-                height='4.75rem'
+                id='email'
                 onChange={onChange}
+                placeholder='Ingresa tu correo electrónico'
                 type='text'
                 value={value}
                 error={!!errorInput}
@@ -94,9 +96,9 @@ const Login = () => {
       <Grid item xs={12}>
         <Box px={3}>
           <Controller
-            name='password'
-            defaultValue=''
             control={control}
+            defaultValue=''
+            name='password'
             rules={{
               required: 'El password es requerido',
             }}
@@ -109,7 +111,6 @@ const Login = () => {
                 placeholder='Ingresa tu contraseña'
                 background={theme.palette.background.blueLight}
                 fontSize='1.12rem'
-                height='4.75rem'
                 onChange={onChange}
                 type='password'
                 value={value}
@@ -129,13 +130,13 @@ const Login = () => {
       </Grid>
       <Grid item xs={12}>
         <MainButton
+          disabled={isLoading}
+          fontSize='1.12rem'
+          height='3.75rem'
           onClick={handleSubmit(onSubmit)}
           radius='6.25rem'
-          width='30.62rem'
-          height='4.75rem'
-          fontSize='1.12rem'
           type='primary'
-          disabled={isLoading}
+          width='26.25rem'
         >
           Enviar
         </MainButton>

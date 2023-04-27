@@ -50,9 +50,9 @@ InputTextLarge.defaultProps = {
   align: 'center',
   background: null,
   fontSize: '24px',
-  height: '76px',
-  width: '490px',
+  height: '3.75rem',
   value: '',
+  width: '26.25rem',
 }
 
 export default InputTextLarge

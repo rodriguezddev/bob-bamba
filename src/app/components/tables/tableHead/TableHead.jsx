@@ -40,9 +40,9 @@ TableHead.propTypes = {
 
 TableHead.defaultProps = {
   color: 'primary.main',
-  fontSize: '1.38rem',
+  fontSize: '1rem',
   fontWeight: 600,
-  lineheight: '2.56rem',
+  lineheight: '2rem',
 }
 
 export default TableHead

@@ -8,40 +8,36 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
 import { es } from 'date-fns/locale'
 import DateFnsUtils from '@date-io/date-fns'
 import { LocalizationProvider } from '@mui/x-date-pickers'
-import { GeneralTitle } from '../../../components/texts'
-import { MainDateTimePicker, SelectInput } from '../../../components/inputs'
-import { Alert } from '../../../components/modals'
-import { resetCampaign } from '../../../slices/campaigns/campaignsSlice'
+import { GeneralTitle } from '../../../../components/texts'
+import { MainDateTimePicker, SelectInput } from '../../../../components/inputs'
 import {
   getWhatsAppAccounts,
   getTemplates,
   resetTemplates,
-} from '../../../slices/recoveryMessage/recoveryMessageSlice'
-import { handleTextClipping } from '../../../utils/UtilsTranslate'
+} from '../../../../slices/recoveryMessage/recoveryMessageSlice'
+import { handleTextClipping } from '../../../../utils/UtilsTranslate'
 
-const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
+const CampaignsForm = ({ campaignsForm }) => {
   const dispatch = useDispatch()
-  const { campaign } = useSelector((state) => state.campaign)
   const { templates, whatsAppAccounts } = useSelector(
     (state) => state.recoveryMessage,
   )
   const { control, watch, reset } = campaignsForm
   const [templateMessage, setTemplateMessage] = useState('')
-  const [isShowSuccessAlert, setIsShowSuccessAlert] = useState(false)
 
   useEffect(() => {
     dispatch(getWhatsAppAccounts())
   }, [])
 
-  const accountName = watch('accountName') || ''
+  const accountId = watch('accountId') || ''
 
   useEffect(() => {
     dispatch(getWhatsAppAccounts())
   }, [])
 
   useEffect(() => {
-    if (accountName) {
-      dispatch(getTemplates(accountName))
+    if (accountId) {
+      dispatch(getTemplates(accountId))
     }
 
     dispatch(resetTemplates())
@@ -49,19 +45,7 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
       ...formValues,
       infoTemplate: '',
     }))
-  }, [accountName])
-
-  const handleCloseAlert = () => {
-    dispatch(resetCampaign())
-    setIsShowUpdateAlert(false)
-    setIsShowSuccessAlert(false)
-  }
-
-  useEffect(() => {
-    if (campaign && Object.entries(campaign)?.length !== 0) {
-      setIsShowSuccessAlert(true)
-    }
-  }, [campaign])
+  }, [accountId])
 
   return (
     <Box>
@@ -71,12 +55,12 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
             <GeneralTitle
               fontSize='.75rem'
               lineHeight='1rem'
-              text='Cuentas de WhatsApp'
+              text='Cuentas de WhatsApp*'
             />
             <Controller
               control={control}
               defaultValue=''
-              name='accountName'
+              name='accountId'
               rules={{
                 required: 'El nombre de la cuenta es requerido',
               }}
@@ -84,18 +68,25 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
                 field: { onChange, value },
                 fieldState: { error: errorInput },
               }) => (
-                <Grid container flexDirection='column' marginTop='.5rem'>
+                <Grid
+                  container
+                  flexDirection='column'
+                  marginTop='.5rem'
+                  width='16rem'
+                >
                   <SelectInput
                     error={!!errorInput}
-                    height='3rem'
-                    id='accountName'
+                    id='accountId'
                     onChange={onChange}
                     value={value}
                   >
                     <MenuItem value=''>Seleccionar</MenuItem>
-                    {Object.entries(whatsAppAccounts).map(([key, account]) => (
-                      <MenuItem key={key} value={key}>
-                        {account}
+                    {whatsAppAccounts?.data?.map((whatsAppAccount) => (
+                      <MenuItem
+                        key={whatsAppAccount?.id}
+                        value={`${whatsAppAccount?.id}`}
+                      >
+                        {whatsAppAccount?.name}
                       </MenuItem>
                     ))}
                   </SelectInput>
@@ -132,12 +123,11 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
                   container
                   flexDirection='column'
                   marginTop='.5rem'
-                  width='18rem'
+                  width='16rem'
                 >
                   <SelectInput
-                    disabled={accountName === '' || templates.length === 0}
+                    disabled={accountId === '' || templates.length === 0}
                     error={!!errorInput}
-                    height='3rem'
                     id='infoTemplate'
                     onChange={onChange}
                     value={value}
@@ -165,7 +155,7 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
                   >
                     {errorInput?.message}
                   </Typography>
-                  {accountName === '' && (
+                  {accountId === '' && (
                     <Typography marginY='1rem' variant='caption'>
                       Selecciona una cuenta de WhatsApp para ver los templates
                       disponibles
@@ -175,7 +165,7 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
               )}
             />
           </Grid>
-          <Grid item lg={4} md={6} xs={12}>
+          <Grid item lg={4} md={6} xs={12} width='16rem'>
             <GeneralTitle
               fontSize='.75rem'
               lineHeight='1rem'
@@ -206,8 +196,7 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
                       sx={{
                         borderRadius: '.5',
                         borderColor: errorInput && 'red',
-                        height: '3rem',
-                        width: '18rem',
+                        width: '16rem',
                       }}
                       toolbarTitle='Selecciona una fecha'
                       value={value}
@@ -237,22 +226,12 @@ const CampaignsForm = ({ campaignsForm, setIsShowUpdateAlert }) => {
           </Grid>
         </Grid>
       )}
-      {isShowSuccessAlert && (
-        <Alert
-          alertContentText='Se actualizo la campaña'
-          alertTextButton='Cerrar'
-          alertTitle='¡Actualización exitosa!'
-          isOpen={isShowSuccessAlert}
-          setIsOpen={handleCloseAlert}
-        />
-      )}
     </Box>
   )
 }
 
 CampaignsForm.propTypes = {
   campaignsForm: PropTypes.shape().isRequired,
-  setIsShowUpdateAlert: PropTypes.func.isRequired,
 }
 
 export default CampaignsForm

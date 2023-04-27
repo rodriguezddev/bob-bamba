@@ -14,12 +14,22 @@ test('renders list users view', async () => {
   const responseMock = {
     data: [
       {
-        id: '8827daa2-78ea-4d00-af5f-c2dc7eba13c7',
-        template: 'bienvenida_symplifica',
+        id: '9e5aa558-9836-4c0f-86b3-0c6811268862',
+        template: 'conversacionales_realidad',
         template_lang: 'es_MX',
-        account_name: 'bamba_attendance',
-        send_date: '2023-03-16T06:00:00.000000Z',
-        users: [],
+        send_date: '30-04-2023 00:00',
+        sent: false,
+        notice_account: {
+          id: '7c775d03-f6cb-48cb-8571-d2c1ab282860',
+          name: 'Agente Bamba (5625774041)',
+          keys: {
+            phone_id: '116422888031263',
+            account_id: '114901301537529',
+          },
+          is_enabled: true,
+          provider: 'WHATSAPP',
+          notification_type: 'WHATSAPP',
+        },
       },
     ],
     links: {

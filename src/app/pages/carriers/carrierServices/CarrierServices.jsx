@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Link } from '@mui/material'
+import { Box } from '@mui/material'
 import { getCarrierServices } from '../../../slices/carriers/carrierSlice'
 import { GeneralTitle } from '../../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../../components/tables'
@@ -33,6 +33,10 @@ const CarrierServices = () => {
     navigate('/carrier-services/create')
   }
 
+  const handleNavigateToCarriers = () => {
+    navigate('/carriers')
+  }
+
   const onPageChange = (event, newPage) => {
     dispatch(
       getCarrierServices(
@@ -53,29 +57,28 @@ const CarrierServices = () => {
           <MainButton
             color='primary'
             data-testid='button-create-carrierService'
-            fontSize='1rem'
-            height='3.75rem'
+            fontSize='0.85rem'
+            height='3rem'
             onClick={handleCreateCarrierService}
             radius='0.62rem'
-            width='18rem'
+            width='15rem'
           >
             Crear carrier service
           </MainButton>
           <Box marginY={2}>
-            <Link href='/carriers' underline='none'>
-              <MainButton
-                background={theme.palette.background.blueLight}
-                color='primary'
-                data-testid='button-redirect-carrier'
-                fontSize='1rem'
-                height='3.75rem'
-                radius='0.62rem'
-                type='secondary'
-                width='18rem'
-              >
-                Ir a los carriers
-              </MainButton>
-            </Link>
+            <MainButton
+              background={theme.palette.background.blueLight}
+              color='primary'
+              data-testid='button-redirect-carrier'
+              fontSize='1rem'
+              height='3rem'
+              onClick={handleNavigateToCarriers}
+              radius='0.62rem'
+              type='secondary'
+              width='15rem'
+            >
+              Ir a los carriers
+            </MainButton>
           </Box>
         </Box>
       </Box>

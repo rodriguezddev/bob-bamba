@@ -51,9 +51,8 @@ const UserDetails = () => {
           <Box mt={5}>
             <MainButton
               data-testid='recovery-message-button'
-              height='3rem'
               onClick={handleShowFormMessage}
-              width='20rem'
+              width='16rem'
             >
               Mensaje de recuperación&nbsp;
               <WhatsAppIcon />
@@ -72,12 +71,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 hiddenIcon
                 placeholder=''
                 radius='.5rem'
                 value={user.name || '-'}
-                width='18rem'
               />
             </Grid>
           </Grid>
@@ -90,12 +87,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 placeholder=''
                 hiddenIcon
                 radius='.5rem'
                 value={user.lastname || '-'}
-                width='18rem'
               />
             </Grid>
           </Grid>
@@ -108,12 +103,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 hiddenIcon
                 placeholder=''
                 radius='.5rem'
                 value={user.second_lastname || '-'}
-                width='18rem'
               />
             </Grid>
           </Grid>
@@ -122,12 +115,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 hiddenIcon
                 placeholder=''
                 radius='.5rem'
                 value={user.email || '-'}
-                width='18rem'
               />
             </Grid>
           </Grid>
@@ -140,12 +131,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 hiddenIcon
                 placeholder=''
                 radius='.5rem'
                 value={user.birthdate}
-                width='18rem'
               />
             </Grid>
           </Grid>
@@ -154,12 +143,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 hiddenIcon
                 placeholder=''
                 radius='.5rem'
                 value={user.personal_id || '-'}
-                width='18rem'
               />
             </Grid>
           </Grid>
@@ -168,12 +155,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 placeholder=''
                 hiddenIcon
                 radius='.5rem'
                 value={user.tax_id || '-'}
-                width='18rem'
               />
             </Grid>
           </Grid>
@@ -182,7 +167,6 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <SelectInput
                 disabled
-                height='3rem'
                 onChange={() => {}}
                 value={user.gender || '-'}
               >
@@ -202,12 +186,10 @@ const UserDetails = () => {
             <Grid marginTop='.5rem'>
               <MainInput
                 disabled
-                height='3rem'
                 hiddenIcon
                 placeholder=''
                 radius='.5rem'
                 value={user.cellphone || '-'}
-                width='18rem'
               />
             </Grid>
           </Grid>

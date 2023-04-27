@@ -2,6 +2,7 @@
 
 describe('List admin users view', () => {
   it('display list admin users success', () => {
+    cy.clearLocalStorage()
     cy.login('admin@vivebamba.com', 'Password')
     cy.get('[data-testid="drawer-item-Administradores"]').should(
       'contain',

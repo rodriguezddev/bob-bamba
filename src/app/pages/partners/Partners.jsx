@@ -110,7 +110,7 @@ const Partners = () => {
   }, [partners.products])
 
   const handleNavigateToCreateUsers = (partnerId) => {
-    navigate(`/partners/createUsers/${partnerId}`)
+    navigate(`/partners/create-users/${partnerId}`)
   }
 
   return (
@@ -120,11 +120,11 @@ const Partners = () => {
         <MainButton
           color='primary'
           data-testid='button-create-partner'
-          fontSize='1rem'
-          height='3.75rem'
+          fontSize='0.85rem'
+          height='3rem'
           onClick={navigateToCreateUser}
           radius='0.62rem'
-          width='18rem'
+          width='15rem'
         >
           Crear partner
         </MainButton>
@@ -159,23 +159,17 @@ const Partners = () => {
               </Typography>
             </TableCell>
             <TableCell align='center'>
-              <Grid
-                alignItems='center'
-                container
-                direction='row'
-                justifyContent='center'
-                spacing={1}
-              >
+              <Grid alignItems='center' container direction='row' spacing={1}>
                 <Grid item onClick={() => handlePartner(partner)}>
                   <Tooltip title='Asignar productos'>
                     <IconButton color='primary' sx={{ padding: 0 }}>
-                      <PlaylistAddCircleIcon />
+                      <PlaylistAddCircleIcon sx={{ fontSize: '1.25rem' }} />
                     </IconButton>
                   </Tooltip>
                 </Grid>
                 <Grid item>
                   <UploadUserBatch
-                    icon={<UploadFileIcon />}
+                    icon={<UploadFileIcon sx={{ fontSize: '1.25rem' }} />}
                     partner={partner}
                   />
                 </Grid>
@@ -185,7 +179,7 @@ const Partners = () => {
                 >
                   <Tooltip title='Carga de usuarios con suscripción'>
                     <IconButton color='primary' sx={{ padding: 0 }}>
-                      <GroupAddIcon />
+                      <GroupAddIcon sx={{ fontSize: '1.25rem' }} />
                     </IconButton>
                   </Tooltip>
                 </Grid>
@@ -205,7 +199,7 @@ const Partners = () => {
                       color='primary'
                       data-testid={`icon-button-${partner.name}`}
                     >
-                      <VisibilityIcon />
+                      <VisibilityIcon sx={{ fontSize: '1.25rem' }} />
                     </IconButton>
                   </Tooltip>
                 </Grid>

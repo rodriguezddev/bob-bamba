@@ -49,7 +49,7 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: ['Silka'].join(','),
-    fontSize: 16,
+    fontSize: 12,
   },
   components: {
     MuiCssBaseline: {

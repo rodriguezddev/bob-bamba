@@ -16,7 +16,7 @@ import theme from '../../theme'
 
 const DashboardLayout = ({ children, window }) => {
   const container = window !== undefined && (() => window().document.body)
-  const drawerWidth = '18.37rem'
+  const drawerWidth = '15rem'
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const handleDrawerToggle = () => {

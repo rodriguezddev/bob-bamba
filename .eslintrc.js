@@ -32,5 +32,6 @@ module.exports = {
       RULES.ERROR,
       { exceptMethods: ['handleResponse', 'getHeaders'] },
     ],
+    'cypress/no-unnecessary-waiting': RULES.OFF,
   },
 }

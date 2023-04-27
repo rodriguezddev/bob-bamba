@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from '@mui/icons-material/Person'
 import CustomAvatar from './styles'
 import AvatarBambaMan from '../../assets/images/avatar_bamba_man.png'
 import AvatarBambaWoman from '../../assets/images/avatar_bamba_woman.png'
@@ -12,14 +12,8 @@ const Avatar = (props) => {
   if (!avatar) avatar = gender === 'M' ? AvatarBambaMan : AvatarBambaWoman
 
   return (
-    <CustomAvatar
-      alt='avatar'
-      {...props}
-      src={gender !== 'O' ? avatar : null}
-    >
-      {gender === 'O' && (
-        <PersonIcon />
-      )}
+    <CustomAvatar alt='avatar' {...props} src={gender !== 'O' ? avatar : null}>
+      {gender === 'O' && <PersonIcon />}
     </CustomAvatar>
   )
 }
@@ -33,9 +27,9 @@ Avatar.propTypes = {
 
 Avatar.defaultProps = {
   gender: 'O',
-  height: '4.43rem',
+  height: '3.5rem',
   image: null,
-  width: '4.5rem',
+  width: '3.5rem',
 }
 
 export default Avatar

@@ -58,19 +58,19 @@ const ProductsByPartnerContainer = ({ partner }) => {
   }
 
   return (
-    <Grid container>
+    <Grid container display='flex'>
       {productsWithPrice.length !== 0 ? (
         productsWithPrice.map((product) => (
-          <Grid item key={product?.sku} xs={6}>
+          <Grid item key={product?.sku} xs={4}>
             <Card
               sx={{
-                margin: '.5rem 0',
-                maxWidth: '100%',
+                margin: '.5rem',
+                maxWidth: '17rem',
               }}
             >
-              <CardContent key={product?.sku}>
+              <CardContent key={product?.sku} sx={{ padding: '1rem' }}>
                 <Typography
-                  fontSize='1.5rem'
+                  fontSize='1rem'
                   fontWeight={600}
                   sx={{
                     margin: '.5rem',
@@ -79,22 +79,25 @@ const ProductsByPartnerContainer = ({ partner }) => {
                   {product?.name}
                 </Typography>
                 <Box display='flex'>
-                  <Typography fontWeight={600} ml={1}>
+                  <Typography fontSize='0.85rem' fontWeight={600} ml={1}>
                     Sku:
                   </Typography>
-                  <Typography ml={1}>{product?.sku}</Typography>
+                  <Typography fontSize='0.85rem' ml={1}>
+                    {product?.sku}
+                  </Typography>
                 </Box>
                 <Box display='flex'>
-                  <Typography fontWeight={600} ml={1}>
+                  <Typography fontSize='0.85rem' fontWeight={600} ml={1}>
                     Precio:
                   </Typography>
-                  <Typography ml={1}>
+                  <Typography fontSize='0.85rem' ml={1}>
                     {product?.price}
                     MXN
                   </Typography>
                 </Box>
                 <Box m={1}>
                   <Typography
+                    fontSize='0.85rem'
                     onClick={() => handleShowProducts(product)}
                     sx={{ cursor: 'pointer' }}
                   >
@@ -130,7 +133,7 @@ const ProductsByPartnerContainer = ({ partner }) => {
           alertTitle={productId.name}
           isOpen={isShowProductDetailsAlert}
           setIsOpen={setIsShowProductDetailsAlert}
-          width='68rem'
+          width='65rem'
         />
       )}
     </Grid>

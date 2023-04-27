@@ -6,7 +6,7 @@ import { SelectInput } from '../../inputs'
 const SelectFilter = ({ field, onChange, value }) => (
   <Grid container flexDirection='column' marginTop='.5rem'>
     <SelectInput
-      height='3rem'
+      height='2.5rem'
       id='fieldFilter'
       onChange={onChange}
       value={value}

@@ -1,3 +1,5 @@
 export { default as Alert } from './Alert/Alert'
 export { default as ActionAlert } from './ActionAlert/ActionAlert'
 export { default as PdfViewer } from './PdfViewer/PdfViewer'
+export { default as AlertError } from './AlertError/AlertError'
+export { default as AlertSuccess } from './AlertSuccess/AlertSuccess'

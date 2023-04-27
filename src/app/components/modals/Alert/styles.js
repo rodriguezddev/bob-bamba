@@ -21,14 +21,14 @@ export const CustomDialogTitle = styled(DialogTitle)(({ theme, error }) => ({
   color: `${error && theme.palette.error.main}`,
   fontStyle: 'normal',
   fontWeight: 600,
-  fontSize: '3rem',
+  fontSize: '2.5rem',
   lineHeight: '2.5rem',
 }))
 
 export const CustomDialogContentText = styled(DialogContentText)(
   ({ theme }) => ({
     color: `${theme.palette.primary.main}`,
-    fontSize: '1.12rem',
+    fontSize: '1rem',
     lineHeight: '1.37rem',
   }),
 )

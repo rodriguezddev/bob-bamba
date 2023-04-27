@@ -100,15 +100,17 @@ const CreateUsersWithSubscription = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <SelectInput
                     error={!!errorInput}
-                    height='3rem'
                     id='account'
                     onChange={onChange}
                     value={value}
                   >
                     <MenuItem value=''>Seleccionar</MenuItem>
-                    {Object.entries(whatsAppAccounts).map(([key, account]) => (
-                      <MenuItem key={key} value={key}>
-                        {account}
+                    {whatsAppAccounts?.data?.map((whatsAppAccount) => (
+                      <MenuItem
+                        key={whatsAppAccount.id}
+                        value={`${whatsAppAccount.id}`}
+                      >
+                        {whatsAppAccount.name}
                       </MenuItem>
                     ))}
                   </SelectInput>
@@ -125,14 +127,18 @@ const CreateUsersWithSubscription = () => {
             />
           </Grid>
           <Grid item md={6} xs={12}>
-            <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Template' />
+            <GeneralTitle
+              fontSize='.75rem'
+              lineHeight='1rem'
+              text='Plantilla'
+            />
             <Controller
               control={control}
               defaultValue=''
               name='infoTemplate'
               rules={
                 accountType && {
-                  required: 'El template es requerido',
+                  required: 'La plantilla es requerida',
                 }
               }
               render={({
@@ -143,7 +149,6 @@ const CreateUsersWithSubscription = () => {
                   <SelectInput
                     disabled={accountType === '' || templates.length === 0}
                     error={!!errorInput}
-                    height='3rem'
                     id='infoTemplate'
                     onChange={onChange}
                     value={value}
@@ -191,11 +196,9 @@ const CreateUsersWithSubscription = () => {
         <MainButton
           data-testid='create-product-button'
           disabled={isLoading || !fileForm}
-          height='3rem'
           onClick={handleSubmit(onSubmit)}
           radius='1.55rem'
           type='primary'
-          width='10.12rem'
         >
           Enviar
         </MainButton>

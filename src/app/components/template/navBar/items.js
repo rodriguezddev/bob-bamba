@@ -34,6 +34,11 @@ const items = [
     icon: 'campaign',
     title: 'Campañas',
   },
+  {
+    href: '/notifications',
+    icon: 'notification',
+    title: 'Notificaciones',
+  },
 ]
 
 export default items

@@ -1,7 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authReducer, {
-  authSlice, login, logout, reset,
-} from './authSlice'
+import authReducer, { authSlice, login, logout } from './authSlice'
 import httpService from '../../services/api_services/HttpService'
 
 describe('authSlice redux', () => {
@@ -26,27 +24,17 @@ describe('authSlice redux', () => {
     }
 
     const responseMock = {
-      code: 0,
-      data: {
-        token: '1|vdzPSudEWNbiEMiqdy6Xr0iDJGXc1uxswEUD8mfm',
-        user: {
-          name: 'Ejemplo',
-          lastname: 'Ejemplo',
-          email: 'ejemplo@vivebamba.com',
-        },
-      },
+      token_type: 'Bearer',
+      expires_in: 31622400,
+      access_token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9s',
+      refresh_token: 'def5020035cef372458012b9ea5d01fa6013',
     }
 
     const state = {
-      token: '1|vdzPSudEWNbiEMiqdy6Xr0iDJGXc1uxswEUD8mfm',
-      user: {
-        name: 'Ejemplo',
-        lastname: 'Ejemplo',
-        email: 'ejemplo@vivebamba.com',
-      },
+      token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9s',
     }
 
-    jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
+    jest.spyOn(httpService, 'loginAuth').mockResolvedValueOnce(responseMock)
 
     const store = configureStore({ reducer: authSlice.reducer })
     await store.dispatch(login(formData))
@@ -56,34 +44,19 @@ describe('authSlice redux', () => {
     expect(user).toEqual(state)
   })
 
-  it('should return user logout state', async () => {
-    const responseMock = {}
-
-    const state = {}
-
-    jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
-
-    const store = configureStore({ reducer: authSlice.reducer })
-    await store.dispatch(logout())
-
-    const { user } = await store.getState()
-
-    expect(user).toEqual(state)
-  })
-
-  it('should logout thunk request', async () => {
+  it('should login thunk request', async () => {
     const dispatch = jest.fn()
     const state = {
       user: {},
       loggedIn: false,
     }
-    const thunk = logout()
+    const thunk = login()
     await thunk(dispatch, () => state, undefined)
     const { calls } = dispatch.mock
 
     expect(calls).toHaveLength(2)
-    expect(calls[0][0].type).toEqual('auth/logout/pending')
-    expect(calls[1][0].type).toEqual('auth/logout/rejected')
+    expect(calls[0][0].type).toEqual('auth/login/pending')
+    expect(calls[1][0].type).toEqual('auth/login/rejected')
   })
 
   it('should handle reset user', () => {
@@ -91,7 +64,7 @@ describe('authSlice redux', () => {
       user: { id: 1 },
       loggedIn: false,
     }
-    const actualState = authReducer(state, reset())
+    const actualState = authReducer(state, logout())
 
     expect(actualState.user).toEqual({})
   })

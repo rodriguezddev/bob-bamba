@@ -29,9 +29,9 @@ SelectInput.propTypes = {
 SelectInput.defaultProps = {
   border_color: theme.palette.common.greyLight,
   fontSize: '1rem',
-  height: '3.75rem',
+  height: '2.5rem',
   multiple: false,
-  width: '17.94rem',
+  width: '16rem',
 }
 
 export default SelectInput

@@ -15,7 +15,7 @@ describe('recoveryMessageSlice redux', () => {
       isSuccess: false,
     },
     templates: {},
-    whatsAppAccounts: {},
+    whatsAppAccounts: [],
   }
   afterEach(() => {
     jest.restoreAllMocks()
@@ -123,7 +123,7 @@ describe('recoveryMessageSlice redux', () => {
         isSuccess: false,
       },
       templates: {},
-      whatsAppAccounts: {},
+      whatsAppAccounts: [],
     }
 
     jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)

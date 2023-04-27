@@ -13,8 +13,8 @@ export const filters = [
   },
   {
     id: 'template',
-    name: 'Idioma del template',
-    placeholder: 'Idioma del template',
+    name: 'Idioma de la plantilla',
+    placeholder: 'Idioma de la plantilla',
     type: 'text',
   },
 ]

@@ -60,7 +60,7 @@ MainDatetimePicker.defaultProps = {
   disabledButton: false,
   fontSize: '1rem',
   format: 'yyyy-MM-dd HH:mm',
-  height: '3.75rem',
+  height: '2.5rem',
   hiddenIcon: false,
   iconColor: 'common.greyDark',
   Icon: SearchIcon,
@@ -69,7 +69,7 @@ MainDatetimePicker.defaultProps = {
   onChange: null,
   radius: '0.9rem',
   value: null,
-  width: '18.75rem',
+  width: '16rem',
 }
 
 export default MainDatetimePicker

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Box } from '@mui/system'
@@ -6,7 +5,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Card, CardContent, Grid } from '@mui/material'
 import { GeneralTitle } from '../../../../../components/texts'
 import theme from '../../../../../theme'
-import { getProductsNotActive } from '../../../../../slices/product/productSlice'
+import {
+  getProductsNotActive,
+  resetProductDetails,
+} from '../../../../../slices/product/productSlice'
 import ProductDetails from '../ProductDetails'
 import { MainButton } from '../../../../../components/buttons'
 import { ActionAlert, Alert } from '../../../../../components/modals'
@@ -19,7 +21,6 @@ import {
 const ProductsNotActive = ({ userId }) => {
   const dispatch = useDispatch()
   const { productsNotActive } = useSelector((state) => state.product)
-  const { subscriptionActivated } = useSelector((state) => state.subscriptions)
   const [isShowProductDetailsAlert, setIsShowProductDetailsAlert] = useState(false)
   const [productSubscription, setProductSubscription] = useState({})
   const [isShowAddProducts, setIsShowAddProducts] = useState(false)
@@ -32,10 +33,16 @@ const ProductsNotActive = ({ userId }) => {
   const handleShowProductsDetails = (productData) => {
     setProductSubscription(productData)
     setIsShowProductDetailsAlert(true)
+    dispatch(resetProductDetails())
   }
 
   const handleShowAddProducts = () => {
     setIsShowAddProducts(!isShowAddProducts)
+  }
+
+  const handleSubscriptionSuccess = () => {
+    dispatch(resetSubscription())
+    setAssignedProducts([])
   }
 
   const handleProducts = () => {
@@ -45,18 +52,10 @@ const ProductsNotActive = ({ userId }) => {
     }
 
     dispatch(createSubscription(data))
-  }
 
-  const handleSubscriptionSuccess = () => {
-    dispatch(resetSubscription())
-    setAssignedProducts([])
+    handleShowAddProducts()
+    handleSubscriptionSuccess()
   }
-
-  useEffect(() => {
-    if (subscriptionActivated?.isSuccess) {
-      handleShowAddProducts()
-    }
-  }, [subscriptionActivated?.isSuccess])
 
   return (
     <Box>
@@ -75,9 +74,8 @@ const ProductsNotActive = ({ userId }) => {
           <Box>
             <MainButton
               data-testid='subscriptions-button'
-              height='3rem'
               onClick={handleShowAddProducts}
-              width='20rem'
+              width='16rem'
             >
               Agregar suscripción
             </MainButton>
@@ -143,14 +141,6 @@ const ProductsNotActive = ({ userId }) => {
           isOpen={isShowProductDetailsAlert}
           setIsOpen={setIsShowProductDetailsAlert}
           width='68rem'
-        />
-      )}
-      {subscriptionActivated?.isSuccess && (
-        <Alert
-          alertTextButton='Cerrar'
-          alertTitle='¡Suscripción creada correctamente!'
-          isOpen={subscriptionActivated?.isSuccess}
-          setIsOpen={handleSubscriptionSuccess}
         />
       )}
     </Box>

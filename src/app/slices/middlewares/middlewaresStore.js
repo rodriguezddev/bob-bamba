@@ -1,6 +1,6 @@
 import { isFulfilled, isPending, isRejectedWithValue } from '@reduxjs/toolkit'
 import { logError } from '../../services/sentry/sentryService'
-import { reset } from '../auth/authSlice'
+import { logout } from '../auth/authSlice'
 import { handleSetError } from '../error/errorSlice'
 import { handleLoading, handleNotLoading } from '../loading/loadingSlice'
 
@@ -11,7 +11,7 @@ export const storeQueryLogger = ({ dispatch }) => (next) => (action) => {
     )
 
     if (action?.payload?.status === 401) {
-      dispatch(reset())
+      dispatch(logout())
     }
 
     logError(sentryErrorMessage, action?.payload)

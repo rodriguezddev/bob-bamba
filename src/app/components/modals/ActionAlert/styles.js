@@ -11,7 +11,7 @@ export const CustomActionDialog = styled(Dialog)(() => ({
   padding: '3.93rem 5.37rem',
   '& .MuiPaper-root ': {
     maxHeight: '100%',
-    width: '68.87rem',
+    width: '62rem',
   },
 }))
 
@@ -20,7 +20,7 @@ export const CustomActionDialogTitle = styled(DialogTitle)(
     color: `${error && theme.palette.error.main}`,
     fontStyle: 'normal',
     fontWeight: 600,
-    fontSize: '3rem',
+    fontSize: '2.5rem',
     lineHeight: '2.5rem',
     padding: '3rem 3rem 1rem',
   }),
@@ -29,9 +29,9 @@ export const CustomActionDialogTitle = styled(DialogTitle)(
 export const CustomActionDialogContentText = styled(DialogContentText)(
   ({ theme }) => ({
     color: `${theme.palette.primary.main}`,
-    fontSize: '1.12rem',
+    fontSize: '1rem',
     lineHeight: '1.37rem',
-    paddingBottom: '2rem',
+    paddingBottom: '0rem',
   }),
 )
 

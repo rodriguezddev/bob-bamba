@@ -19,22 +19,27 @@ const NavBar = () => {
   return (
     <Box
       sx={{
-        overflow: 'auto',
-        minHeight: '100%',
-        padding: '3.12rem 0.75rem',
         bgcolor: theme.palette.background.blueLight,
+        minHeight: '100%',
+        overflow: 'auto',
+        padding: '3rem 0.75rem',
       }}
     >
       <Box px={4}>
-        <img src={LogoDefault} width={85} height={100} alt='logo' />
+        <img src={LogoDefault} alt='logo' height={70} width={70} />
       </Box>
       <List sx={{ marginTop: '2rem' }}>
         {items?.map((item) => (
           <ListItem
             data-testid={`drawer-item-${item.title}`}
             key={item.title}
-            sx={{ color: 'primary.main', margin: '1rem 0' }}
             onClick={() => navigate(item.href)}
+            sx={{
+              color: 'primary.main',
+              margin: '0.5rem 0',
+              paddingX: '0.5rem',
+              paddingBottom: '0',
+            }}
           >
             <CustomListItemButton
               selected={
@@ -44,34 +49,38 @@ const NavBar = () => {
             >
               <ListItemIcon
                 sx={{
-                  justifyContent: 'center',
                   color:
                     window.location.pathname.includes(item.href)
                     && item.href !== '/'
                       ? 'common.white'
                       : 'primary.main',
+                  minWidth: '2.5rem',
                 }}
               >
-                <Icon name={item.icon} sx={{ fontSize: 30 }} />
+                <Icon name={item.icon} sx={{ fontSize: 22 }} />
               </ListItemIcon>
-              <ListItemText primary={item.title} color='primary.main' />
+              <ListItemText
+                color='primary.main'
+                primary={item.title}
+                sx={{ fontSize: '0.85rem' }}
+              />
             </CustomListItemButton>
           </ListItem>
         ))}
       </List>
       <List
         sx={{
+          alignItems: 'flex-end',
           display: 'flex',
           flexDirection: 'row',
-          alignItems: 'flex-end',
           height: '10%',
         }}
       >
         <ListItem
           data-testid='navbar-logout'
           button
-          sx={{ color: 'primary.main', margin: '1rem 0' }}
           onClick={() => dispatch(logout())}
+          sx={{ color: 'primary.main', margin: '1rem 0' }}
         >
           <ListItemIcon>
             <ExitToAppIcon color='primary' />

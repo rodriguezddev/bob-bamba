@@ -6,7 +6,7 @@ import Home from './Home'
 test('renders app', () => {
   render(<Home />)
 
-  const textHeader = screen.getByText(/Bamba/i)
+  const textHeader = screen.getByText(/Bienvenido a/i)
 
-  expect(textHeader).toHaveTextContent('Bamba')
+  expect(textHeader).toHaveTextContent('Bienvenido a')
 })

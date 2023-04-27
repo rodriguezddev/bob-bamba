@@ -81,9 +81,7 @@ describe('Partner view', () => {
   })
 
   it('should close modal', () => {
-    cy.get(
-      '.MuiDialogActions-root > .css-1g0p17o-MuiButtonBase-root-MuiButton-root',
-    ).click()
+    cy.get('[data-testid="close-button-action-alert"]').click()
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(1)').should(
       'contain',
       'Nombre del partner',

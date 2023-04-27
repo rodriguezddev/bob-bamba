@@ -22,9 +22,10 @@ import {
   getTemplates,
   resetTemplates,
 } from '../../../slices/recoveryMessage/recoveryMessageSlice'
-import UploadUsersCampaignButton from './components/uploadUsersButton/UploadUsersCampaignButton'
+import UploadUsersCampaignButton from '../components/uploadUsersCampaignButton'
 import { Alert } from '../../../components/modals'
 import { handleTextClipping } from '../../../utils/UtilsTranslate'
+import { getPartners } from '../../../slices/partner/partnerSlice'
 
 const CreateCampaigns = () => {
   const dispatch = useDispatch()
@@ -36,20 +37,22 @@ const CreateCampaigns = () => {
   const [templateMessage, setTemplateMessage] = useState('')
   const [userFile, setUserFile] = useState('')
   const { campaign } = useSelector((state) => state.campaign)
+  const { partners } = useSelector((state) => state.partner)
   const { templates, whatsAppAccounts } = useSelector(
     (state) => state.recoveryMessage,
   )
-  const [showCreateConfirmationAlert, setShowCreateConfirmationAlert] = useState(false)
+  const [showCreateSuccessAlert, setShowCreateSuccessAlert] = useState(false)
 
-  const accountName = watch('accountName') || ''
+  const accountId = watch('accountId') || ''
 
   useEffect(() => {
     dispatch(getWhatsAppAccounts())
+    dispatch(getPartners('?limit=100'))
   }, [])
 
   useEffect(() => {
-    if (accountName) {
-      dispatch(getTemplates(accountName))
+    if (accountId) {
+      dispatch(getTemplates(accountId))
     }
 
     dispatch(resetTemplates())
@@ -57,17 +60,17 @@ const CreateCampaigns = () => {
       ...formValues,
       infoTemplate: '',
     }))
-  }, [accountName])
+  }, [accountId])
 
   const onSubmit = (dataForm) => {
     const data = new FormData()
     const [template, language] = dataForm.infoTemplate.split(' ')
 
     data.append('send_date', format(dataForm.send_date, 'yyyy-MM-dd HH:mm'))
-    data.append('account_name', dataForm.accountName)
+    data.append('notice_account_id', dataForm.accountId)
     data.append('template', template)
     data.append('template_lang', language)
-
+    data.append('partner_id', dataForm.partnerId)
     if (userFile !== '') {
       data.append('users_file', userFile)
     }
@@ -77,27 +80,24 @@ const CreateCampaigns = () => {
 
   const handleCloseAlert = () => {
     dispatch(resetCampaign())
-    setShowCreateConfirmationAlert(false)
+    setShowCreateSuccessAlert(false)
     navigate('/campaigns')
   }
 
   useEffect(() => {
-    if (campaign && Object.entries(campaign)?.length !== 0) {
-      setShowCreateConfirmationAlert(true)
+    if (Object.entries(campaign)?.length !== 0 && campaign.isSuccess) {
+      setShowCreateSuccessAlert(true)
     }
   }, [campaign])
 
   return (
     <Box sx={{ width: '100%' }}>
-      {showCreateConfirmationAlert && (
+      {showCreateSuccessAlert && (
         <Alert
-          alertContentText={`Se creo la campaña con la cuenta ${campaign?.account_name.replace(
-            /_/g,
-            ' ',
-          )}`}
+          alertContentText='Se creo la campaña'
           alertTextButton='Cerrar'
           alertTitle='¡Registro exitoso!'
-          isOpen={showCreateConfirmationAlert}
+          isOpen={showCreateSuccessAlert}
           setIsOpen={handleCloseAlert}
         />
       )}
@@ -113,12 +113,12 @@ const CreateCampaigns = () => {
           <GeneralTitle
             fontSize='.75rem'
             lineHeight='1rem'
-            text='Cuentas de WhatsApp'
+            text='Cuentas de WhatsApp*'
           />
           <Controller
             control={control}
             defaultValue=''
-            name='accountName'
+            name='accountId'
             rules={{
               required: 'El nombre de la cuenta es requerido',
             }}
@@ -126,21 +126,27 @@ const CreateCampaigns = () => {
               field: { onChange, value },
               fieldState: { error: errorInput },
             }) => (
-              <Grid container flexDirection='column' marginTop='.5rem'>
+              <Grid
+                container
+                flexDirection='column'
+                marginTop='.5rem'
+                width='16rem'
+              >
                 <SelectInput
                   error={!!errorInput}
-                  height='3rem'
-                  id='accountName'
+                  id='accountId'
                   onChange={onChange}
                   value={value}
                 >
                   <MenuItem value=''>Seleccionar</MenuItem>
-                  {whatsAppAccounts
-                    && Object.entries(whatsAppAccounts).map(([key, item]) => (
-                      <MenuItem key={key} value={`${key}`}>
-                        {item}
-                      </MenuItem>
-                    ))}
+                  {whatsAppAccounts?.data?.map((whatsAppAccount) => (
+                    <MenuItem
+                      key={whatsAppAccount?.id}
+                      value={`${whatsAppAccount?.id}`}
+                    >
+                      {whatsAppAccount?.name}
+                    </MenuItem>
+                  ))}
                 </SelectInput>
                 <Typography
                   color='error.main'
@@ -171,7 +177,12 @@ const CreateCampaigns = () => {
               field: { onChange, value },
               fieldState: { error: errorInput },
             }) => (
-              <Grid container flexDirection='column' marginTop='.5rem'>
+              <Grid
+                container
+                flexDirection='column'
+                marginTop='.5rem'
+                width='16rem'
+              >
                 <LocalizationProvider
                   adapterLocale={es}
                   dateAdapter={AdapterDateFns}
@@ -183,10 +194,8 @@ const CreateCampaigns = () => {
                     minDate={new Date()}
                     onChange={onChange}
                     sx={{
-                      borderRadius: '.5',
+                      borderRadius: '.5rem',
                       borderColor: errorInput && 'red',
-                      height: '3rem',
-                      width: '18rem',
                     }}
                     toolbarTitle='Selecciona una fecha'
                     value={value}
@@ -195,6 +204,50 @@ const CreateCampaigns = () => {
                 <Typography
                   color='error.main'
                   data-testid='error-message-send-date-campaigns'
+                  mt={1}
+                  variant='caption'
+                >
+                  {errorInput?.message}
+                </Typography>
+              </Grid>
+            )}
+          />
+        </Grid>
+        <Grid item lg={4} md={6} xs={12}>
+          <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Partner*' />
+          <Controller
+            control={control}
+            defaultValue=''
+            name='partnerId'
+            rules={{
+              required: 'El nombre del partner es requerido',
+            }}
+            render={({
+              field: { onChange, value },
+              fieldState: { error: errorInput },
+            }) => (
+              <Grid
+                container
+                flexDirection='column'
+                marginTop='.5rem'
+                width='16rem'
+              >
+                <SelectInput
+                  error={!!errorInput}
+                  id='partnerId'
+                  onChange={onChange}
+                  value={value}
+                >
+                  <MenuItem value=''>Seleccionar</MenuItem>
+                  {partners?.data?.map((partner) => (
+                    <MenuItem key={partner?.id} value={`${partner?.id}`}>
+                      {partner?.name}
+                    </MenuItem>
+                  ))}
+                </SelectInput>
+                <Typography
+                  color='error.main'
+                  data-testid='error-message-partnerId-campaigns'
                   mt={1}
                   variant='caption'
                 >
@@ -219,13 +272,13 @@ const CreateCampaigns = () => {
           </Grid>
         </Grid>
         <Grid item lg={4} md={6} xs={12}>
-          <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Template*' />
+          <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Plantilla*' />
           <Controller
             control={control}
             defaultValue=''
             name='infoTemplate'
             rules={{
-              required: 'El template es requerido',
+              required: 'La plantilla es requerida',
             }}
             render={({
               field: { onChange, value },
@@ -235,12 +288,11 @@ const CreateCampaigns = () => {
                 container
                 flexDirection='column'
                 marginTop='.5rem'
-                width='18rem'
+                width='16rem'
               >
                 <SelectInput
-                  disabled={accountName === '' || templates.length === 0}
+                  disabled={accountId === '' || templates.length === 0}
                   error={!!errorInput}
-                  height='3rem'
                   id='infoTemplate'
                   onChange={onChange}
                   value={value}
@@ -268,7 +320,7 @@ const CreateCampaigns = () => {
                 >
                   {errorInput?.message}
                 </Typography>
-                {accountName === '' && (
+                {accountId === '' && (
                   <Typography marginY='1rem' variant='caption'>
                     Selecciona una cuenta de WhatsApp para ver los templates
                     disponibles
@@ -293,11 +345,9 @@ const CreateCampaigns = () => {
         <MainButton
           data-testid='create-product-button'
           disabled={isLoading}
-          height='3rem'
           onClick={handleSubmit(onSubmit)}
           radius='1.55rem'
           type='primary'
-          width='10.12rem'
         >
           Enviar
         </MainButton>

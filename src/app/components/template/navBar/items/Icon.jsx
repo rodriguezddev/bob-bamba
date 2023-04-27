@@ -7,6 +7,7 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 import LocalMallIcon from '@mui/icons-material/LocalMall'
 import AddBusinessIcon from '@mui/icons-material/AddBusiness'
 import CampaignIcon from '@mui/icons-material/Campaign'
+import NotificationsIcon from '@mui/icons-material/Notifications'
 
 const Icon = ({ name, ...props }) => {
   const Icons = {
@@ -17,6 +18,7 @@ const Icon = ({ name, ...props }) => {
     product: <LocalMallIcon {...props} />,
     profile: <PersonOutlineIcon {...props} />,
     campaign: <CampaignIcon {...props} />,
+    notification: <NotificationsIcon {...props} />,
   }
 
   return Icons[name] ?? null

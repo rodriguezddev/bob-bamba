@@ -22,7 +22,7 @@ MainButton.propTypes = {
 MainButton.defaultProps = {
   background: null,
   fontSize: '1rem',
-  height: '3rem',
+  height: '2.5rem',
   onClick: null,
   radius: '1.5rem',
   type: 'primary',

@@ -22,7 +22,6 @@ describe('UserSlice redux', () => {
       renew_period: 'MONTHLY',
       next_renewal_at: '2023-07-10T01:57:23.000000Z',
       certificate_file: '',
-      isSuccess: true,
     }
 
     const responseMock = {

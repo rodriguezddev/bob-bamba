@@ -53,7 +53,7 @@ MainInput.defaultProps = {
   disabled: false,
   disabledButton: false,
   fontSize: '1rem',
-  height: '3.75rem',
+  height: '2.5rem',
   hiddenIcon: false,
   iconColor: 'common.greyDark',
   Icon: SearchIcon,
@@ -62,7 +62,7 @@ MainInput.defaultProps = {
   onChange: null,
   radius: '0.9rem',
   value: '',
-  width: '18.75rem',
+  width: '16rem',
 }
 
 export default MainInput

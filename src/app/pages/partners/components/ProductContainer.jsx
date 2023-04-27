@@ -119,9 +119,9 @@ const ProductContainer = ({ assignedProducts, partner }) => {
           <Grid>
             <Box
               sx={{
-                overflowY: 'scroll',
+                height: '18rem',
+                overflowY: 'auto',
                 padding: '1rem',
-                height: '30rem',
               }}
             >
               {productsAvailable.length === 0 ? (
@@ -129,7 +129,7 @@ const ProductContainer = ({ assignedProducts, partner }) => {
                   alignItems='center'
                   container
                   direction='row'
-                  height='25rem'
+                  height='16rem'
                   justifyContent='center'
                 >
                   <Typography
@@ -148,11 +148,15 @@ const ProductContainer = ({ assignedProducts, partner }) => {
                     key={value?.sku}
                     sx={{
                       margin: '.5rem 0',
-                      maxWidth: '27rem',
+                      maxWidth: '25.5rem',
                     }}
                   >
                     <ListItemButton onClick={() => handlePartner(value)}>
-                      <CardContent>
+                      <CardContent
+                        sx={{
+                          padding: '0.5rem',
+                        }}
+                      >
                         <Typography
                           sx={{
                             margin: '.5rem',
@@ -182,7 +186,7 @@ const ProductContainer = ({ assignedProducts, partner }) => {
         <Grid item xs={6}>
           <Box
             sx={{
-              height: '30rem',
+              height: '18rem',
               overflowY: 'auto',
               padding: '1rem',
             }}
@@ -192,7 +196,7 @@ const ProductContainer = ({ assignedProducts, partner }) => {
                 alignItems='center'
                 container
                 direction='row'
-                height='25rem'
+                height='16rem'
                 justifyContent='center'
               >
                 <Typography
@@ -210,10 +214,14 @@ const ProductContainer = ({ assignedProducts, partner }) => {
                   sx={{
                     cursor: 'pointer',
                     margin: '.5rem 0',
-                    maxWidth: '27rem',
+                    maxWidth: '24.5rem',
                   }}
                 >
-                  <CardContent>
+                  <CardContent
+                    sx={{
+                      padding: '0.5rem',
+                    }}
+                  >
                     <Grid
                       container
                       direction='row'

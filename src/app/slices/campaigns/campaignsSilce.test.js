@@ -7,6 +7,7 @@ import campaignsReducer, {
   deleteCampaign,
   assignUsers,
   updateCampaign,
+  getCampaign,
 } from './campaignsSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -20,9 +21,9 @@ describe('CampaignSlice redux', () => {
       campaigns: {
         data: [],
         meta: {},
-        deleteCampaign: {},
       },
       campaign: {},
+      isUploadUsersCampaigns: false,
     })
   })
 
@@ -94,9 +95,9 @@ describe('CampaignSlice redux', () => {
       campaigns: {
         data: [],
         meta: {},
-        deleteCampaign: {},
       },
       campaign: {},
+      isUploadUsersCampaigns: false,
     }
     const thunk = getCampaigns()
     await thunk(dispatch, () => state, undefined)
@@ -105,6 +106,95 @@ describe('CampaignSlice redux', () => {
     expect(calls).toHaveLength(2)
     expect(calls[0][0].type).toEqual('list/campaigns/pending')
     expect(calls[1][0].type).toEqual('list/campaigns/rejected')
+  })
+
+  it('should return get campaign state', async () => {
+    const responseMock = {
+      data: {
+        id: 'cc80d3e2-98c7-4fbf-8ee5-da666bab163f',
+        template: 'bienvenida_symplifica',
+        template_lang: 'es_MX',
+        account_name: 'bamba_attendance',
+        send_date: '05-11-2023 00:00',
+        sent: false,
+        users: [
+          {
+            id: '8838d6d3-54e7-4cdd-9fa0-51f45cf0de29',
+            name: 'Sergio',
+            lastname: 'Diaz',
+            second_lastname: 'Benitez',
+            photo: null,
+            birthdate: '08-10-1994',
+            gender: 'M',
+            email: 'Sergiodiaz594@gmail.com',
+            cellphone: '5624961011',
+            tax_id: 'DIBS941008PF3',
+            personal_id: null,
+            metadata: null,
+            newsletter_sent: true,
+            newsletter_date_sent: null,
+            subscriptions: [],
+          },
+        ],
+      },
+    }
+
+    const campaignState = {
+      id: 'cc80d3e2-98c7-4fbf-8ee5-da666bab163f',
+      template: 'bienvenida_symplifica',
+      template_lang: 'es_MX',
+      account_name: 'bamba_attendance',
+      send_date: '05-11-2023 00:00',
+      sent: false,
+      users: [
+        {
+          id: '8838d6d3-54e7-4cdd-9fa0-51f45cf0de29',
+          name: 'Sergio',
+          lastname: 'Diaz',
+          second_lastname: 'Benitez',
+          photo: null,
+          birthdate: '08-10-1994',
+          gender: 'M',
+          email: 'Sergiodiaz594@gmail.com',
+          cellphone: '5624961011',
+          tax_id: 'DIBS941008PF3',
+          personal_id: null,
+          metadata: null,
+          newsletter_sent: true,
+          newsletter_date_sent: null,
+          subscriptions: [],
+        },
+      ],
+    }
+
+    jest.spyOn(httpService, 'get').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: campaignSlice.reducer })
+    await store.dispatch(getCampaign())
+
+    const { campaign } = await store.getState()
+
+    expect(campaign).toEqual(campaignState)
+  })
+
+  it('should get campaign thunk request', async () => {
+    const dispatch = jest.fn()
+
+    const state = {
+      users: {
+        data: [],
+        meta: {},
+        createUsers: {},
+      },
+      user: {},
+    }
+    const thunk = getCampaign()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('campaign/details/pending')
+    expect(calls[1][0].type).toEqual('campaign/details/rejected')
   })
 
   it('should return create campaign state', async () => {
@@ -133,6 +223,7 @@ describe('CampaignSlice redux', () => {
       account_name: 'bamba_attendance',
       send_date: '2023-03-16T06:00:00.000000Z',
       users: [],
+      isSuccess: true,
     }
 
     jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
@@ -151,9 +242,9 @@ describe('CampaignSlice redux', () => {
       campaigns: {
         data: [],
         meta: {},
-        deleteCampaign: {},
       },
       campaign: {},
+      isUploadUsersCampaigns: false,
     }
 
     const thunk = createCampaign()
@@ -214,9 +305,9 @@ describe('CampaignSlice redux', () => {
       campaigns: {
         data: [],
         meta: {},
-        deleteCampaign: {},
       },
       campaign: {},
+      isUploadUsersCampaigns: false,
     }
 
     const thunk = updateCampaign()
@@ -299,9 +390,9 @@ describe('CampaignSlice redux', () => {
       campaigns: {
         data: [],
         meta: {},
-        deleteCampaign: {},
       },
       campaign: {},
+      isUploadUsersCampaigns: false,
     }
 
     const thunk = assignUsers()
@@ -317,7 +408,6 @@ describe('CampaignSlice redux', () => {
     const state = {
       data: [],
       meta: {},
-      deleteCampaign: { isSuccess: true },
     }
 
     jest.spyOn(httpService, 'delete').mockResolvedValueOnce()
@@ -335,9 +425,9 @@ describe('CampaignSlice redux', () => {
       campaigns: {
         data: [],
         meta: {},
-        deleteCampaign: {},
       },
       campaign: {},
+      isUploadUsersCampaigns: false,
     }
 
     const thunk = deleteCampaign()
@@ -354,9 +444,9 @@ describe('CampaignSlice redux', () => {
       campaigns: {
         data: [],
         meta: {},
-        deleteCampaign: {},
       },
       campaign: {},
+      isUploadUsersCampaigns: false,
     }
 
     const actualState = campaignsReducer(state, resetCampaign())

@@ -1,22 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import readXlsxFile from 'read-excel-file'
 import { CSVLink } from 'react-csv'
-import UploadIcon from '../../../components/buttons/uploadIcon/UploadIcon'
-import {
-  assignUsers,
-  resetCampaign,
-} from '../../../slices/campaigns/campaignsSlice'
-import { schema } from './schema'
-import { Alert } from '../../../components/modals'
+import readXlsxFile from 'read-excel-file'
+import { schema } from '../schema'
+import { UploadButton } from '../../../../components/buttons'
+import { Alert } from '../../../../components/modals'
 
-const UploadUsersCampaignIconButton = ({ campaignId, icon }) => {
+const UploadUsersButton = ({ setUserFile }) => {
   const inputRef = useRef(null)
-  const dispatch = useDispatch()
   const [errorsExcel, setErrors] = useState([])
   const [isOpenAlert, setIsOpenAlert] = useState(false)
-  const { campaign } = useSelector((state) => state.campaign)
 
   const errorsToShow = errorsExcel.map((item) => {
     const { type, ...rest } = item
@@ -24,14 +17,11 @@ const UploadUsersCampaignIconButton = ({ campaignId, icon }) => {
   })
 
   const handleChange = (event) => {
-    const dataForm = new FormData()
     const file = event.target.files && event.target.files[0]
 
     if (!file) {
       return
     }
-
-    dataForm.append('users_file', file)
 
     if (event.target.files) {
       readXlsxFile(file, { schema })
@@ -43,19 +33,13 @@ const UploadUsersCampaignIconButton = ({ campaignId, icon }) => {
             return
           }
 
-          dispatch(assignUsers({ data: dataForm, campaignId }))
+          setUserFile(file)
         })
         .finally(() => {
           inputRef.current.value = null
         })
     }
   }
-
-  useEffect(() => {
-    if (campaign && Object.entries(campaign)?.length !== 0) {
-      dispatch(resetCampaign())
-    }
-  }, [campaign])
 
   const handleAlertError = () => {
     setIsOpenAlert(false)
@@ -64,15 +48,17 @@ const UploadUsersCampaignIconButton = ({ campaignId, icon }) => {
 
   return (
     <>
-      <UploadIcon
+      <UploadButton
         accept='.xlsx'
-        color='primary'
+        data-testid='create-product-button'
+        height='2.5rem'
         onChange={handleChange}
+        radius='1.55rem'
         ref={inputRef}
-        toolTipInfo='Asignar usuarios a la campaña'
-      >
-        {icon}
-      </UploadIcon>
+        type='primary'
+        textButton='Cargar usuarios'
+        width='16rem'
+      />
       {isOpenAlert && (
         <Alert
           alertContentText={(
@@ -98,9 +84,8 @@ const UploadUsersCampaignIconButton = ({ campaignId, icon }) => {
   )
 }
 
-UploadUsersCampaignIconButton.propTypes = {
-  campaignId: PropTypes.string.isRequired,
-  icon: PropTypes.element.isRequired,
+UploadUsersButton.propTypes = {
+  setUserFile: PropTypes.func.isRequired,
 }
 
-export default UploadUsersCampaignIconButton
+export default UploadUsersButton

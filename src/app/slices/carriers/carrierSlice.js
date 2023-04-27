@@ -151,7 +151,6 @@ export const carrierSlice = createSlice({
 })
 
 export const carrier = (state) => state.carriers
-export const { resetCarrierService } = carrierSlice.actions
-export const { resetCarrier } = carrierSlice.actions
+export const { resetCarrierService, resetCarrier } = carrierSlice.actions
 
 export default carrierSlice.reducer

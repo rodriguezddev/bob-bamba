@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
+import { handleSetSuccessMessage } from '../successMessage/successMessageSlice'
 
 const initialState = {
   admins: {
@@ -48,13 +49,19 @@ export const createAdmin = createAsyncThunk(
 
 export const deleteAdmins = createAsyncThunk(
   'delete/admins',
-  async (adminId, thunkAPI) => {
+  async (values, thunkAPI) => {
     try {
+      const messageSuccess = {
+        title: '¡Eliminado!',
+        subtitle: values.messageSuccess,
+      }
       const response = await httpService.post(
-        `${apiConstants.ADMIN_URL}/admin/${adminId}/delete`,
+        `${apiConstants.ADMIN_URL}/admin/${values.id}/delete`,
       )
 
-      return { response, id: adminId }
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return { response, id: values.id }
     } catch (error) {
       const message = error
 

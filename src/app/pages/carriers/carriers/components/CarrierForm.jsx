@@ -83,15 +83,13 @@ const CarrierForm = ({
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='name-carrier'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
-                    onChange={onChange}
                     type='text'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -120,15 +118,13 @@ const CarrierForm = ({
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='code-carrier'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
-                    onChange={onChange}
                     type='text'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -162,8 +158,8 @@ const CarrierForm = ({
                     </Typography>
                     <Switch
                       id='enabled-carrier'
-                      value={value}
                       onChange={onChange}
+                      value={value}
                     />
                     <Typography
                       data-testid='message-is-enabled-carrier'

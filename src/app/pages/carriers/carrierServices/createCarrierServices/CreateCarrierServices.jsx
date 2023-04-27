@@ -104,15 +104,13 @@ const CreateCarrierServices = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='name-carrierService'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
-                    onChange={onChange}
                     type='text'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -144,7 +142,6 @@ const CreateCarrierServices = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='sku-carrierService'
                     onChange={onChange}
@@ -157,7 +154,6 @@ const CreateCarrierServices = () => {
                     }}
                     type='text'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -200,15 +196,13 @@ const CreateCarrierServices = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='cost-per-year-carrierService'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
-                    onChange={onChange}
                     type='number'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -241,15 +235,13 @@ const CreateCarrierServices = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='cost-per-month-carrierService'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
-                    onChange={onChange}
                     type='number'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -282,7 +274,6 @@ const CreateCarrierServices = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <SelectInput
                     error={!!errorInput}
-                    height='3rem'
                     id='category-carrierService'
                     onChange={onChange}
                     value={value}
@@ -332,7 +323,6 @@ const CreateCarrierServices = () => {
                     <SelectInput
                       displayEmpty
                       error={!!errorInput}
-                      height='3rem'
                       id='carrier-carrierService'
                       onChange={onChange}
                       value={value}
@@ -416,11 +406,9 @@ const CreateCarrierServices = () => {
       <Box display='flex' my={4} sx={{ justifyContent: 'flex-end' }}>
         <MainButton
           disabled={isLoading}
-          height='3rem'
           onClick={handleSubmit(onSubmit)}
           radius='1.55rem'
           type='primary'
-          width='10.12rem'
         >
           Enviar
         </MainButton>

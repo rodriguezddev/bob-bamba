@@ -6,11 +6,7 @@ import { Alert } from '../../components/modals'
 import { Avatar } from '../../components/avatar'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
 import DeleteIcon from '../../assets/images/icons/delete.svg'
-import {
-  deleteAdmins,
-  getAdmins,
-  resetDeleteAdmin,
-} from '../../slices/adminUsers/adminSlice'
+import { deleteAdmins, getAdmins } from '../../slices/adminUsers/adminSlice'
 import { columns } from './components/columns'
 import { GeneralTitle } from '../../components/texts'
 import { MainButton } from '../../components/buttons'
@@ -26,7 +22,6 @@ const AdminUsers = () => {
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const [showAlert, setShowAlert] = useState(false)
-  const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getAdmins)
 
   useEffect(() => {
@@ -54,7 +49,11 @@ const AdminUsers = () => {
   }
 
   const setAdmin = (id) => {
-    dispatch(deleteAdmins(id))
+    const values = {
+      id,
+      messageSuccess: `El administrador ${adminAlert.name} ${adminAlert.lastname} se ha eliminado`,
+    }
+    dispatch(deleteAdmins(values))
     setShowAlert(false)
   }
 
@@ -67,13 +66,6 @@ const AdminUsers = () => {
     setShowAlert(true)
   }
 
-  useEffect(() => {
-    if (admins.deleteAdmin?.isSuccess) {
-      setShowSuccessAlert(admins.deleteAdmin?.isSuccess)
-      dispatch(resetDeleteAdmin())
-    }
-  }, [admins])
-
   return (
     <Box sx={{ width: '100%' }}>
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
@@ -81,11 +73,11 @@ const AdminUsers = () => {
         <MainButton
           color='primary'
           data-testid='button-create-admin-user'
-          fontSize='1rem'
-          height='3.75rem'
+          fontSize='0.85rem'
+          height='3rem'
           onClick={handleCreateUserAdmin}
           radius='0.62rem'
-          width='18rem'
+          width='15rem'
         >
           Crear usuario administrador
         </MainButton>
@@ -125,7 +117,7 @@ const AdminUsers = () => {
               >
                 <Grid item>
                   <IconButton onClick={() => handleDeleteAdminUser(userAdmin)}>
-                    <img src={DeleteIcon} alt='Editar' width={24} height={24} />
+                    <img src={DeleteIcon} alt='Editar' height={20} width={20} />
                   </IconButton>
                 </Grid>
               </Grid>
@@ -142,15 +134,6 @@ const AdminUsers = () => {
           setIsOpen={setShowAlert}
           isShowPrimaryButton
           isOpen={showAlert}
-        />
-      )}
-      {showSuccessAlert && (
-        <Alert
-          alertContentText={`El administrador ${adminAlert.name} ${adminAlert.lastname} se ha eliminado`}
-          alertTextButton='Cerrar'
-          alertTitle='¡Eliminado!'
-          isOpen={showSuccessAlert}
-          setIsOpen={setShowSuccessAlert}
         />
       )}
     </Box>

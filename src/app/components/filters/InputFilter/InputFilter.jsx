@@ -7,15 +7,15 @@ const InputFilter = ({ field, onChange, value }) => (
   <Grid container flexDirection='column' marginTop='.5rem'>
     <MainInput
       data-testid={`input-filter-${field.id}`}
-      id={field.id}
-      height='3rem'
+      height='2.5rem'
       hiddenIcon
+      id={field.id}
       onChange={onChange}
       placeholder={field.placeholder}
       radius='.5rem'
-      value={value}
       type={field.type}
-      width='18rem'
+      value={value}
+      width='16rem'
     />
   </Grid>
 )

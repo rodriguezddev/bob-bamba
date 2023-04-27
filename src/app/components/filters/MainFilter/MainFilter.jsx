@@ -40,7 +40,7 @@ const MainFilter = ({ fieldDetails, handleSearch }) => {
     <>
       <Box display='flex' my={4} sx={{ justifyContent: 'flex-end' }}>
         <Box onClick={handleShowForm} sx={{ cursor: 'pointer' }}>
-          <Box display='flex' alignContent='center'>
+          <Box alignContent='center' display='flex' fontSize='1rem'>
             {isShowForm ? (
               <>
                 <Box data-testid='filter-alt-off-icon'>

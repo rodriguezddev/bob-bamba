@@ -66,8 +66,8 @@ const ProductsContainer = ({
           <Grid>
             <Box
               sx={{
-                height: '30rem',
-                overflowY: 'scroll',
+                height: '18rem',
+                overflowY: 'auto',
                 padding: '1rem',
               }}
             >
@@ -76,11 +76,15 @@ const ProductsContainer = ({
                   key={value?.sku}
                   sx={{
                     margin: '.5rem 0',
-                    maxWidth: '27rem',
+                    maxWidth: '24.5rem',
                   }}
                 >
                   <ListItemButton onClick={() => handleSubscriptions(value)}>
-                    <CardContent>
+                    <CardContent
+                      sx={{
+                        padding: '0.5rem',
+                      }}
+                    >
                       <Typography
                         sx={{
                           margin: '.5rem',
@@ -99,7 +103,7 @@ const ProductsContainer = ({
           item
           xs={6}
           sx={{
-            height: '30rem',
+            height: '18rem',
             overflowY: 'auto',
             padding: '1rem',
           }}
@@ -109,7 +113,7 @@ const ProductsContainer = ({
               alignItems='center'
               container
               direction='row'
-              height='25rem'
+              height='15rem'
               justifyContent='center'
             >
               <Typography
@@ -127,10 +131,14 @@ const ProductsContainer = ({
                 sx={{
                   cursor: 'pointer',
                   margin: '.5rem 0',
-                  maxWidth: '27rem',
+                  maxWidth: '24.5rem',
                 }}
               >
-                <CardContent>
+                <CardContent
+                  sx={{
+                    padding: '0.5rem',
+                  }}
+                >
                   <Grid
                     container
                     direction='row'

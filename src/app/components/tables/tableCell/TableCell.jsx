@@ -2,9 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import CustomTableCell from './styles'
 
-const TableCell = (props) => (
-  <CustomTableCell {...props} />
-)
+const TableCell = (props) => <CustomTableCell {...props} />
 
 TableCell.propTypes = {
   color: PropTypes.string,
@@ -14,8 +12,8 @@ TableCell.propTypes = {
 
 TableCell.defaultProps = {
   color: 'primary.main',
-  fontSize: '1rem',
-  lineheight: '2.56rem',
+  fontSize: '0.85rem',
+  lineheight: '2rem',
 }
 
 export default TableCell

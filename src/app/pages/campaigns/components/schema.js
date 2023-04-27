@@ -1,7 +1,8 @@
 export const schema = {
+  cellphone: {
+    prop: 'cellphoneLowercase',
+  },
   Cellphone: {
-    prop: 'phone',
-    required: true,
-    type: String,
+    prop: 'cellphoneUppercase',
   },
 }

@@ -17,11 +17,14 @@ import carrierReducer from './slices/carriers/carrierSlice'
 import campaignsReducer from './slices/campaigns/campaignsSlice'
 import errorReducer from './slices/error/errorSlice'
 import loadingReducer from './slices/loading/loadingSlice'
+import notificationReducer from './slices/notifications/notificationsSlice'
+import noticeAccountsReducer from './slices/noticeAccounts/noticeAccountsSlice'
 import partnerReducer from './slices/partner/partnerSlice'
 import productReducer from './slices/product/productSlice'
 import subscriptionsReducer from './slices/subscriptions/subscriptionsSlice'
 import userReducer from './slices/user/userSlice'
 import recoveryMessageReducer from './slices/recoveryMessage/recoveryMessageSlice'
+import successMessageReducer from './slices/successMessage/successMessageSlice'
 import { storeQueryLogger } from './slices/middlewares/middlewaresStore'
 
 const reducers = combineReducers({
@@ -32,10 +35,13 @@ const reducers = combineReducers({
   campaign: campaignsReducer,
   error: errorReducer,
   loading: loadingReducer,
+  notification: notificationReducer,
+  noticeAccount: noticeAccountsReducer,
   partner: partnerReducer,
   product: productReducer,
   recoveryMessage: recoveryMessageReducer,
   subscriptions: subscriptionsReducer,
+  successMessage: successMessageReducer,
   user: userReducer,
 })
 

@@ -24,18 +24,23 @@ describe('Create campaigns view', () => {
       'contain',
       'La fecha de envío es requerida',
     )
+    cy.get('[data-testid="error-message-partnerId-campaigns"]').should(
+      'contain',
+      'El nombre del partner es requerido',
+    )
     cy.get('[data-testid="error-message-template-campaigns"]').should(
       'contain',
-      'El template es requerido',
+      'La plantilla es requerida',
     )
   })
 
   it('Remove errors form', () => {
-    cy.get('#accountName').click()
-    cy.get('[data-value="symplifica"]').click()
-    cy.intercept('/admin/api/v1/message/templates?account_name=symplifica').as(
-      'getTemplates',
-    )
+    cy.get('#accountId').click()
+    cy.wait(2000)
+    cy.get('[data-value="50e6cbd4-6a13-4cf7-ab8b-063c314362fc"]').click()
+    cy.intercept(
+      '/admin/api/v1/notice-account/50e6cbd4-6a13-4cf7-ab8b-063c314362fc/templates',
+    ).as('getTemplates')
     cy.wait('@getTemplates')
     cy.get('[data-testid="error-message-account-name-campaigns"]').should(
       'not.have.value',
@@ -50,11 +55,18 @@ describe('Create campaigns view', () => {
       'La fecha de envío es requerida',
     )
 
+    cy.get('#partnerId').click()
+    cy.get('[data-value="a438caaf-9745-4b19-8498-8d99800bd664"]').click()
+    cy.get('[data-testid="error-message-partnerId-campaigns"]').should(
+      'not.have.value',
+      'El nombre del partner es requerido',
+    )
+
     cy.get('#infoTemplate').click()
-    cy.get('[data-value="bienvenida_symplifica es_MX"]').click()
+    cy.get('[data-value="guardar_numero es_MX"]').click()
     cy.get('[data-testid="error-message-send-date-campaigns"]').should(
       'not.have.value',
-      'El template es requerido',
+      'La plantilla es requerida',
     )
   })
 })

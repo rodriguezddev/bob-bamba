@@ -115,15 +115,13 @@ const CreateProducts = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <MainInput
                   error={!!errorInput}
-                  height='3rem'
                   hiddenIcon
                   id='name-product'
+                  onChange={onChange}
                   placeholder=''
                   radius='.5rem'
-                  onChange={onChange}
                   type='text'
                   value={value}
-                  width='18rem'
                 />
                 <Typography
                   color='error.main'
@@ -155,7 +153,6 @@ const CreateProducts = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <MainInput
                   error={!!errorInput}
-                  height='3rem'
                   hiddenIcon
                   id='sku-product'
                   onChange={onChange}
@@ -168,7 +165,6 @@ const CreateProducts = () => {
                   }}
                   type='text'
                   value={value}
-                  width='18rem'
                 />
                 <Typography
                   color='error.main'
@@ -211,7 +207,6 @@ const CreateProducts = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <SelectInput
                   error={!!errorInput}
-                  height='3rem'
                   id='expiration-period-product'
                   onChange={onChange}
                   value={value}
@@ -243,7 +238,10 @@ const CreateProducts = () => {
             {assignedCarries.length !== 0 && (
               <Box mb={2}>{`Seleccionados: ${assignedCarries.length}`}</Box>
             )}
-            <MainButton onClick={() => handleShowDialogCarriers()} width='60%'>
+            <MainButton
+              onClick={() => handleShowDialogCarriers()}
+              width='16rem'
+            >
               {assignedCarries.length !== 0
                 ? 'Editar'
                 : 'Asignar carrier services'}
@@ -326,7 +324,6 @@ const CreateProducts = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <SelectInput
                   error={!!errorInput}
-                  height='3rem'
                   id='expiration-unit-product'
                   onChange={onChange}
                   value={value}
@@ -367,7 +364,6 @@ const CreateProducts = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <SelectInput
                   error={!!errorInput}
-                  height='3rem'
                   id='category-product'
                   onChange={onChange}
                   value={value}
@@ -395,11 +391,9 @@ const CreateProducts = () => {
         <MainButton
           data-testid='create-product-button'
           disabled={isLoading}
-          height='3rem'
           onClick={handleSubmit(onSubmit)}
           radius='1.55rem'
           type='primary'
-          width='10.12rem'
         >
           Enviar
         </MainButton>

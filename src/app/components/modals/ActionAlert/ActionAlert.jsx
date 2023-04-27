@@ -21,6 +21,7 @@ const ActionAlert = ({
   errorText,
   isOpen,
   isShowPrimaryButton,
+  maxWidth,
   primaryButtonTextAlert,
   setActionsIsOpen,
 }) => {
@@ -33,7 +34,7 @@ const ActionAlert = ({
     <CustomActionDialog
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
-      maxWidth='xl'
+      maxWidth={maxWidth}
       onClose={handleClose}
       open={isOpen}
       sx={{ zIndex: '1200' }}
@@ -63,6 +64,7 @@ const ActionAlert = ({
           background={
             isShowPrimaryButton ? theme.palette.background.blueLight : ''
           }
+          data-testid='close-button-action-alert'
           onClick={handleClose}
           type={isShowPrimaryButton ? 'secondary' : 'primary'}
         >
@@ -90,6 +92,7 @@ ActionAlert.propTypes = {
   errorText: PropTypes.bool,
   isOpen: PropTypes.bool.isRequired,
   isShowPrimaryButton: PropTypes.bool,
+  maxWidth: PropTypes.string,
   onClick: PropTypes.func.isRequired,
   primaryButtonTextAlert: PropTypes.string,
   setActionsIsOpen: PropTypes.func.isRequired,
@@ -98,6 +101,7 @@ ActionAlert.propTypes = {
 ActionAlert.defaultProps = {
   errorText: false,
   isShowPrimaryButton: false,
+  maxWidth: 'xl',
   primaryButtonTextAlert: 'Eliminar',
 }
 

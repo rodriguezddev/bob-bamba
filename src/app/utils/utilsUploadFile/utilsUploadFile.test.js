@@ -40,4 +40,18 @@ describe('Test function in utils', () => {
       result,
     )
   })
+
+  it('return cellphone field empty error', () => {
+    const status = []
+
+    const result = [
+      {
+        error: 'El campo cellphone es requerido',
+      },
+    ]
+
+    expect(utilsUploadFile.upperCaseOrLowerCasePhone(status)).toStrictEqual(
+      result,
+    )
+  })
 })

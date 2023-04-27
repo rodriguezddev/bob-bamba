@@ -56,10 +56,10 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
   const onSubmit = (dataForm) => {
     const [template, language] = dataForm.infoTemplate.split(' ')
     const values = {
-      account_name: dataForm.account,
+      user: user.id,
+      notice_account_id: dataForm.account,
       template,
-      language,
-      number: user.cellphone,
+      template_language: language,
     }
 
     dispatch(sendRecoveryMessage(values))
@@ -105,9 +105,12 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
                     value={value}
                   >
                     <MenuItem value=''>Seleccionar</MenuItem>
-                    {Object.entries(whatsAppAccounts).map(([key, account]) => (
-                      <MenuItem key={key} value={key}>
-                        {account}
+                    {whatsAppAccounts?.data?.map((whatsAppAccount) => (
+                      <MenuItem
+                        key={whatsAppAccount?.id}
+                        value={`${whatsAppAccount?.id}`}
+                      >
+                        {whatsAppAccount.name}
                       </MenuItem>
                     ))}
                   </SelectInput>
@@ -124,13 +127,17 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
             />
           </Grid>
           <Grid item lg={4} md={6} xs={12}>
-            <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Template' />
+            <GeneralTitle
+              fontSize='.75rem'
+              lineHeight='1rem'
+              text='Plantilla'
+            />
             <Controller
               control={control}
               defaultValue=''
               name='infoTemplate'
               rules={{
-                required: 'El template es requerido',
+                required: 'La plantilla es requerida',
               }}
               render={({
                 field: { onChange, value },
@@ -215,7 +222,10 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
 RecoveryMessageForm.propTypes = {
   handleShowForm: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  user: PropTypes.shape({ cellphone: PropTypes.string }).isRequired,
+  user: PropTypes.shape({
+    cellphone: PropTypes.string,
+    id: PropTypes.string,
+  }).isRequired,
 }
 
 export default RecoveryMessageForm

@@ -6,8 +6,8 @@ const CustomListItemButton = styled(ListItemButton)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.common.white,
     borderRadius: '10px',
-    width: '228px',
-    height: '56px',
+    width: '14.25rem',
+    height: '2.81rem',
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.common.white,

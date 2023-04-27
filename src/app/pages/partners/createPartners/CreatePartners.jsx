@@ -89,7 +89,6 @@ const CreatePartners = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <MainInput
                   error={!!errorInput}
-                  height='3rem'
                   hiddenIcon
                   id='name'
                   onChange={onChange}
@@ -97,7 +96,6 @@ const CreatePartners = () => {
                   radius='.5rem'
                   type='text'
                   value={value}
-                  width='18rem'
                 />
                 <Typography
                   color='error.main'
@@ -127,7 +125,6 @@ const CreatePartners = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <MainInput
                   error={!!errorInput}
-                  height='3rem'
                   hiddenIcon
                   id='code'
                   onChange={onChange}
@@ -140,7 +137,6 @@ const CreatePartners = () => {
                   }}
                   type='text'
                   value={value}
-                  width='18rem'
                 />
                 <Typography
                   color='error.main'
@@ -173,7 +169,6 @@ const CreatePartners = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <SelectInput
                   error={!!errorInput}
-                  height='3rem'
                   id='partnerType'
                   onChange={onChange}
                   value={value}
@@ -219,7 +214,6 @@ const CreatePartners = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <MainInput
                   error={!!errorInput}
-                  height='3rem'
                   hiddenIcon
                   id='nameCompany'
                   onChange={onChange}
@@ -227,7 +221,6 @@ const CreatePartners = () => {
                   radius='.5rem'
                   type='text'
                   value={value}
-                  width='18rem'
                 />
                 <Typography
                   color='error.main'
@@ -256,7 +249,6 @@ const CreatePartners = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <SelectInput
                   error={!!errorInput}
-                  height='3rem'
                   id='countryCode'
                   onChange={onChange}
                   value={value}
@@ -300,7 +292,6 @@ const CreatePartners = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <MainInput
                   error={!!errorInput}
-                  height='3rem'
                   hiddenIcon
                   id='phone'
                   onChange={onChange}
@@ -308,7 +299,6 @@ const CreatePartners = () => {
                   radius='.5rem'
                   type='text'
                   value={value}
-                  width='18rem'
                 />
                 <Typography
                   color='error.main'
@@ -342,7 +332,6 @@ const CreatePartners = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <MainInput
                   error={!!errorInput}
-                  height='3rem'
                   hiddenIcon
                   id='email'
                   onChange={onChange}
@@ -350,7 +339,6 @@ const CreatePartners = () => {
                   radius='.5rem'
                   type='text'
                   value={value}
-                  width='18rem'
                 />
                 <Typography
                   color='error.main'
@@ -374,11 +362,9 @@ const CreatePartners = () => {
         <Box my={7}>
           <MainButton
             disabled={isLoading}
-            height='3rem'
             onClick={handleSubmit(onSubmit)}
             radius='1.55rem'
             type='primary'
-            width='10.12rem'
           >
             Enviar
           </MainButton>

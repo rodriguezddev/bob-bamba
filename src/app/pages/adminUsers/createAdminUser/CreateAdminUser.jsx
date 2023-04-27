@@ -94,15 +94,13 @@ const CreateAdminUser = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='name-admin-user'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
-                    onChange={onChange}
                     type='text'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -135,15 +133,13 @@ const CreateAdminUser = () => {
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <MainInput
                     error={!!errorInput}
-                    height='3rem'
                     hiddenIcon
                     id='lastname-admin-user'
+                    onChange={onChange}
                     placeholder=''
                     radius='.5rem'
-                    onChange={onChange}
                     type='text'
                     value={value}
-                    width='18rem'
                   />
                   <Typography
                     color='error.main'
@@ -174,15 +170,13 @@ const CreateAdminUser = () => {
                   <Grid container flexDirection='column' marginTop='.5rem'>
                     <MainInput
                       error={!!errorInput}
-                      height='3rem'
                       hiddenIcon
                       id='email-admin-user'
+                      onChange={onChange}
                       placeholder=''
                       radius='.5rem'
-                      onChange={onChange}
                       type='text'
                       value={value}
-                      width='18rem'
                     />
                     <Typography
                       color='error.main'
@@ -219,17 +213,15 @@ const CreateAdminUser = () => {
                     <MainInput
                       disabledButton={false}
                       error={!!errorInput}
-                      height='3rem'
                       hiddenIcon={false}
                       id='password-admin-user'
                       Icon={showPassword ? Visibility : VisibilityOff}
                       onClick={handleShowPassword}
+                      onChange={onChange}
                       placeholder=''
                       radius='.5rem'
-                      onChange={onChange}
                       type={showPassword ? 'text' : 'password'}
                       value={value}
-                      width='18rem'
                     />
                     <Typography
                       color='error.main'
@@ -266,17 +258,15 @@ const CreateAdminUser = () => {
                     <MainInput
                       disabledButton={false}
                       error={!!errorInput}
-                      height='3rem'
                       hiddenIcon={false}
                       id='confirm-password-admin-user'
                       Icon={showConfirmPassword ? Visibility : VisibilityOff}
                       onClick={handleShowConfirmPassword}
+                      onChange={onChange}
                       placeholder=''
                       radius='.5rem'
-                      onChange={onChange}
                       type={showConfirmPassword ? 'text' : 'password'}
                       value={value}
-                      width='18rem'
                     />
                     <Typography
                       color='error.main'
@@ -295,11 +285,9 @@ const CreateAdminUser = () => {
       <Box display='flex' my={4} sx={{ justifyContent: 'flex-end' }}>
         <MainButton
           disabled={isLoading}
-          height='3rem'
           onClick={handleSubmit(onSubmit)}
           radius='1.55rem'
           type='primary'
-          width='10.12rem'
         >
           Enviar
         </MainButton>

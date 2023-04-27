@@ -17,14 +17,14 @@ const ActivationDetailsCard = ({
       <Grid container>
         <Grid alignItems='center' container direction='row' item xs={4}>
           <GeneralTitle
-            fontSize='1rem'
+            fontSize='0.85rem'
             lineHeight='1rem'
             marginRight='.5rem'
             text='Fecha de activación:'
             xs={6}
           />
           <GeneralTitle
-            fontSize='1rem'
+            fontSize='0.85rem'
             fontWeight='200'
             lineHeight='1rem'
             text={activationDate}
@@ -33,14 +33,14 @@ const ActivationDetailsCard = ({
         </Grid>
         <Grid alignItems='center' container direction='row' item xs={4}>
           <GeneralTitle
-            fontSize='1rem'
+            fontSize='0.85rem'
             lineHeight='1rem'
             marginRight='.5rem'
             text='Tipo de renovación:'
             xs={5}
           />
           <GeneralTitle
-            fontSize='1rem'
+            fontSize='0.85rem'
             fontWeight='200'
             lineHeight='1rem'
             text={activationType}
@@ -49,14 +49,14 @@ const ActivationDetailsCard = ({
         </Grid>
         <Grid alignItems='center' container direction='row' item xs={4}>
           <GeneralTitle
-            fontSize='1rem'
+            fontSize='0.85rem'
             lineHeight='1rem'
             marginRight='.5rem'
             text='Siguiente renovación:'
             xs={5}
           />
           <GeneralTitle
-            fontSize='1rem'
+            fontSize='0.85rem'
             lineHeight='1rem'
             fontWeight='200'
             text={nextActivation}

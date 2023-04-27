@@ -72,11 +72,11 @@ const Products = () => {
         <MainButton
           color='primary'
           data-testid='button-create-product'
-          fontSize='1rem'
-          height='3.75rem'
+          fontSize='0.85rem'
+          height='3rem'
           onClick={handleCreateProduct}
           radius='0.62rem'
-          width='18rem'
+          width='15rem'
         >
           Crear producto
         </MainButton>

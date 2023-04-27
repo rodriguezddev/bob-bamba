@@ -29,6 +29,7 @@ const Alert = ({
       fullWidth
       onClose={handleClose}
       open={isOpen}
+      sx={{ zIndex: '1200' }}
       width={width}
     >
       <CustomDialogTitle
