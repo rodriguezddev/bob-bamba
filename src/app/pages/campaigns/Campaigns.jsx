@@ -210,7 +210,7 @@ const Campaigns = () => {
         {campaigns?.data?.map((campaignInfo) => (
           <TableRow key={campaignInfo.id}>
             <TableCell align='left'>
-              {campaignInfo?.notice_account.name?.replace(/_/g, ' ')}
+              {campaignInfo?.notice_account?.name?.replace(/_/g, ' ')}
             </TableCell>
             <TableCell align='left'>{campaignInfo?.send_date}</TableCell>
             <TableCell align='left'>
