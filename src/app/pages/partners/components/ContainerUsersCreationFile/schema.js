@@ -1,4 +1,7 @@
-import { getEmailPattern } from '../../../../utils/utilsValidations'
+import {
+  getEmailPattern,
+  getRfcPattern,
+} from '../../../../utils/utilsValidations'
 
 export const schema = {
   Nombre: {
@@ -48,7 +51,13 @@ export const schema = {
   RFC: {
     prop: 'rfc',
     required: true,
-    type: String,
+    type: (rfc) => {
+      const { value, message } = getRfcPattern()
+      if (!value.test(rfc)) {
+        throw new Error(message)
+      }
+      return rfc
+    },
   },
   SKU: {
     prop: 'curp',
