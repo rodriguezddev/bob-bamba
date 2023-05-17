@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from 'react-hook-form'
 import {
   Box, Grid, IconButton, Tooltip,
 } from '@mui/material'
+import BorderColorIcon from '@mui/icons-material/BorderColor'
 import DeleteIcon from '../../../assets/images/icons/delete.svg'
 import { BackButton, MainButton } from '../../../components/buttons'
 import { GeneralTitle } from '../../../components/texts'
@@ -12,25 +14,47 @@ import { MainFilter } from '../../../components/filters'
 import { columns } from './components/columns'
 import { filters } from './components/filters'
 import useRowsPerPage from '../../../hooks/useRowsPerPage'
-import { Alert } from '../../../components/modals'
+import { ActionAlert, Alert } from '../../../components/modals'
 import {
   deleteNoticeAccounts,
   getNoticeAccounts,
+  updateNoticeAccounts,
 } from '../../../slices/noticeAccounts/noticeAccountsSlice'
+import NoticeAccountsForm from './components/NoticeAccountForm'
 
 const NoticeAccount = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { noticeAccounts } = useSelector((state) => state.noticeAccount)
+  const { config, noticeAccounts } = useSelector((state) => state.noticeAccount)
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const [isShowDialogDelete, setIsShowDialogDelete] = useState(false)
+  const [isShowDialogUpdate, setIsShowDialogUpdate] = useState(false)
   const [account, setAccount] = useState({})
+  const [updateData, setUpdateData] = useState({})
+  const [isShowConfirmDialogUpdate, setIsShowConfirmDialogUpdate] = useState(false)
   const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getNoticeAccounts)
+  const noticeAccountUseForm = useForm({
+    defaultValues: {
+      name: '',
+    },
+  })
+  const { handleSubmit, reset, watch } = noticeAccountUseForm
+  const accountName = watch('accountName') || ''
+  const providerName = watch('provider') || ''
+  const keyTypes = config[accountName]?.providers[providerName]?.key_types || {}
 
   useEffect(() => {
     dispatch(getNoticeAccounts())
   }, [])
+
+  useEffect(() => {
+    if (account) {
+      reset({
+        name: account?.name,
+      })
+    }
+  }, [account])
 
   const handleSearch = (path) => {
     setSearch(path)
@@ -51,6 +75,17 @@ const NoticeAccount = () => {
     dispatch(deleteNoticeAccounts(account))
   }
 
+  const handleShowDialogUpdateNoticeAccount = async (accountInfo) => {
+    setIsShowDialogUpdate(true)
+    await setAccount(accountInfo)
+  }
+
+  const onSubmit = () => {
+    dispatch(updateNoticeAccounts({ id: account.id, data: updateData }))
+    setIsShowConfirmDialogUpdate(false)
+    setIsShowDialogUpdate(false)
+  }
+
   const onPageChange = (event, newPage) => {
     dispatch(
       getNoticeAccounts(
@@ -62,6 +97,32 @@ const NoticeAccount = () => {
 
     setPage(newPage)
   }
+
+  const handleKeysFields = (types, form) => {
+    const keys = {}
+
+    Object.keys(types).forEach((key) => {
+      if ({}.hasOwnProperty.call(form, key)) {
+        keys[key] = form[key]
+      }
+    })
+
+    return keys
+  }
+
+  const handleDataForm = (dataForm) => {
+    const data = {
+      name: dataForm.name,
+      keys: handleKeysFields(keyTypes, dataForm),
+      is_enabled: dataForm.is_enabled,
+      provider: dataForm.provider,
+      notification_type: dataForm.accountName,
+    }
+
+    setUpdateData(data)
+    setIsShowConfirmDialogUpdate(true)
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <BackButton />
@@ -110,7 +171,18 @@ const NoticeAccount = () => {
                 spacing={4}
               >
                 <Grid item>
-                  <Tooltip title='Eliminar campaña'>
+                  <Tooltip title='Editar cuenta de notificación'>
+                    <IconButton
+                      color='primary'
+                      onClick={() => handleShowDialogUpdateNoticeAccount(noticeAccount)}
+                      sx={{ padding: 0 }}
+                    >
+                      <BorderColorIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item>
+                  <Tooltip title='Eliminar cuenta de notificación'>
                     <IconButton
                       onClick={() => handleShowDialogDeleteNoticeAccount(noticeAccount)}
                       sx={{ padding: 0 }}
@@ -138,6 +210,32 @@ const NoticeAccount = () => {
           setIsOpen={setIsShowDialogDelete}
           isShowPrimaryButton
           isOpen={isShowDialogDelete}
+        />
+      )}
+      {isShowDialogUpdate && (
+        <ActionAlert
+          actionAlertContentText={`Se actualizara la cuenta de ${account?.name}`}
+          actionAlertTextButton='Cerrar'
+          actionAlertTitle='Actualizar Cuenta de notificación'
+          isOpen={isShowDialogUpdate}
+          isShowPrimaryButton
+          onClick={handleSubmit(handleDataForm)}
+          primaryButtonTextAlert='Actualizar'
+          setActionsIsOpen={setIsShowDialogUpdate}
+        >
+          <NoticeAccountsForm noticeAccountUseForm={noticeAccountUseForm} />
+        </ActionAlert>
+      )}
+      {isShowConfirmDialogUpdate && (
+        <Alert
+          actionButton={onSubmit}
+          alertContentText='La información se actualizara con los nuevos valores'
+          alertTextButton='Cancelar'
+          alertTitle={`¿Quieres actualizarla cuenta ${account?.name}?`}
+          isShowPrimaryButton
+          isOpen={isShowConfirmDialogUpdate}
+          primaryButtonTextAlert='Actualizar'
+          setIsOpen={setIsShowConfirmDialogUpdate}
         />
       )}
     </Box>

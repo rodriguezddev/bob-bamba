@@ -21,7 +21,7 @@ export const createSubscription = createAsyncThunk(
       const messageSuccess = { title: '¡Suscripción creada correctamente!' }
 
       const response = await httpService.post(
-        `${apiConstants.ADMIN_URL}/subscription/${values.userId}/create`,
+        `${apiConstants.ADMIN_URL}/user/${values.userId}/subscription`,
         { products: values.products },
       )
 

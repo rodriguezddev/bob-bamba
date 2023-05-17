@@ -436,7 +436,7 @@ const CreateNotification = () => {
               <GeneralTitle
                 fontSize='.75rem'
                 lineHeight='1rem'
-                text={`${key}`}
+                text={input?.description}
               />
               <Controller
                 control={control}

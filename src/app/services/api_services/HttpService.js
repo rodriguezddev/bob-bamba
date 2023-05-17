@@ -95,6 +95,7 @@ class HttpService {
         'Access-Control-Allow-Origin': '*',
         Authorization: `Bearer ${user?.token}`,
         ...(!isFile && { 'Content-Type': 'application/json' }),
+        'x-bamba-channel': 'BOB',
       }
     }
     return {

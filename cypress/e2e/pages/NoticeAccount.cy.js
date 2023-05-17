@@ -32,6 +32,16 @@ describe('List notice accounts view', () => {
     )
     cy.get('[data-testid="button-filter-clean"]').click()
   })
+  it('show update modal', () => {
+    cy.get(
+      ':nth-child(1) > :nth-child(5) > .MuiGrid-container > :nth-child(1) > .MuiButtonBase-root > [data-testid="BorderColorIcon"]',
+    ).click()
+    cy.get('#alert-dialog-title').should(
+      'contain',
+      'Actualizar Cuenta de notificación',
+    )
+    cy.get('[data-testid="close-button-action-alert"]').click()
+  })
 
   it('check pagination', () => {
     cy.get('[aria-label="first page"]').should('be.disabled')

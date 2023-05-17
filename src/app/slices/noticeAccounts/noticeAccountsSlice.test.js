@@ -5,6 +5,7 @@ import noticeAccountReducer, {
   getNoticeAccounts,
   noticeAccountsSlice,
   resetNoticeAccounts,
+  updateNoticeAccounts,
 } from './noticeAccountsSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -218,6 +219,79 @@ describe('noticeAccountsSlice redux', () => {
     )
     expect(calls[1][0].type).toEqual(
       'noticeAccounts/noticeAccountsDelete/rejected',
+    )
+  })
+
+  it('should return update noticeAccounts state', async () => {
+    const state = {
+      data: [
+        {
+          id: 'dace5413-8b79-46d8-acca-f0edee58753e',
+          name: 'Test',
+          keys: {
+            account_id: 'test',
+            phone_id: 'test',
+          },
+          is_enabled: false,
+          provider: 'WHATSAPP',
+          notification_type: 'WHATSAPP',
+        },
+      ],
+      meta: {},
+    }
+
+    const responseMock = {
+      data: {
+        id: 'dace5413-8b79-46d8-acca-f0edee58753e',
+        name: 'Test',
+        keys: {
+          account_id: 'test',
+          phone_id: 'test',
+        },
+        is_enabled: false,
+        provider: 'WHATSAPP',
+        notification_type: 'WHATSAPP',
+      },
+      code: 0,
+    }
+
+    jest.spyOn(httpService, 'patch').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: noticeAccountsSlice.reducer })
+    await store.dispatch(
+      updateNoticeAccounts({
+        id: '75869080',
+        data: {},
+      }),
+    )
+
+    const { noticeAccounts } = await store.getState()
+
+    expect(noticeAccounts).toEqual(state)
+  })
+
+  it('should delete updateNoticeAccounts thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      noticeAccounts: {
+        data: [],
+        meta: {},
+      },
+      noticeAccount: {
+        isSuccess: false,
+      },
+      config: {},
+    }
+    const thunk = updateNoticeAccounts()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual(
+      'noticeAccounts/updateNoticeAccounts/pending',
+    )
+    expect(calls[1][0].type).toEqual(
+      'noticeAccounts/updateNoticeAccounts/rejected',
     )
   })
 

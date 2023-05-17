@@ -82,7 +82,6 @@ const CreateNoticeAccount = () => {
           text='Crear cuenta de notificaciones'
         />
       </Box>
-
       <Grid container marginTop='2rem' spacing='2rem'>
         <Grid item lg={4} md={6} xs={12}>
           <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Nombre*' />
@@ -241,7 +240,7 @@ const CreateNoticeAccount = () => {
               <GeneralTitle
                 fontSize='.75rem'
                 lineHeight='1rem'
-                text={`${key}`}
+                text={input?.description}
               />
               <Controller
                 control={control}

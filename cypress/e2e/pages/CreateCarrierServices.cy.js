@@ -13,7 +13,7 @@ describe('Create carrier services view', () => {
   })
 
   it('Show errors validations form', () => {
-    cy.get('.MuiBox-root > .MuiButtonBase-root').click()
+    cy.get('[data-testid="create-carrierService-button"]').click()
     cy.get('[data-testid="error-message-name-carrierService"]').should(
       'contain',
       'El nombre del carrier service es requerido',
@@ -36,6 +36,18 @@ describe('Create carrier services view', () => {
     cy.get('[data-testid="error-message-category-carrierService"]').should(
       'contain',
       'La categoría es requerida',
+    )
+    cy.get('[data-testid="error-message-carrier-carrierService"]').should(
+      'contain',
+      'El carrier es requerido',
+    )
+    cy.get('[data-testid="error-message-name-key"]').should(
+      'contain',
+      'El campo no puede estar vació',
+    )
+    cy.get('[data-testid="error-message-name-value"]').should(
+      'contain',
+      'El campo no puede estar vació',
     )
   })
 
@@ -70,6 +82,16 @@ describe('Create carrier services view', () => {
     cy.get('[data-testid="error-message-category-carrierService"]').should(
       'not.have.value',
       'La categoría es requerida',
+    )
+    cy.get('#key').type('bamba')
+    cy.get('[data-testid="error-message-name-key"]').should(
+      'not.have.value',
+      'El campo es requerido',
+    )
+    cy.get('#value').type('service')
+    cy.get('[data-testid="error-message-name-value"]').should(
+      'not.have.value',
+      'El campo es requerido',
     )
   })
 })

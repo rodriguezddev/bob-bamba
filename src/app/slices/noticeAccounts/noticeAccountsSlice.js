@@ -89,6 +89,32 @@ export const createNoticeAccounts = createAsyncThunk(
   },
 )
 
+export const updateNoticeAccounts = createAsyncThunk(
+  'noticeAccounts/updateNoticeAccounts',
+  async (values, thunkAPI) => {
+    const { data, id } = values
+    const messageSuccess = {
+      title: '¡Actualizado!',
+      subtitle: 'La cuenta se actualizó correctamente',
+    }
+
+    try {
+      const response = await httpService.patch(
+        `${apiConstants.ADMIN_URL}/notice-account/${id}`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const noticeAccountsSlice = createSlice({
   name: 'noticeAccounts',
   initialState,
@@ -118,6 +144,16 @@ export const noticeAccountsSlice = createSlice({
       state.noticeAccounts.data = state.noticeAccounts.data.filter(
         (noticeAccount) => noticeAccount.id !== action.payload.id,
       )
+    })
+
+    builder.addCase(updateNoticeAccounts.fulfilled, (state, action) => {
+      const noticeAccounts = state.noticeAccounts.data.filter(
+        (noticesAccount) => noticesAccount.id !== action.payload.data.id,
+      )
+      state.noticeAccounts = {
+        ...state.noticeAccounts,
+        data: [action.payload.data, ...noticeAccounts],
+      }
     })
   },
 })
