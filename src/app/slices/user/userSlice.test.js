@@ -1,8 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer, {
+  createUser,
   createUsers,
   getUser,
   getUsers,
+  resetCreateUser,
   resetCreateUsers,
   userSlice,
 } from './userSlice'
@@ -20,7 +22,12 @@ describe('UserSlice redux', () => {
         meta: {},
         createUsers: {},
       },
-      user: {},
+      user: {
+        createUser: {
+          isSuccess: false,
+        },
+        subscriptions: [],
+      },
     })
   })
 
@@ -283,5 +290,119 @@ describe('UserSlice redux', () => {
     const actualState = userReducer(state, resetCreateUsers())
 
     expect(actualState.users.createUsers).toEqual({})
+  })
+
+  it('should return created user', async () => {
+    const formData = {
+      cellphone: '2924962259',
+      lastname: 'Lester',
+      name: 'Mercedes Albert',
+      partner: '7a504aa4-ef25-4642-a9af-7982189c34cc',
+    }
+
+    const responseMock = {
+      data: {
+        id: '92422802-c2f7-44c7-a488-f7c016297ca9',
+        name: 'Mercedes Albert',
+        lastname: 'Lester',
+        second_lastname: null,
+        photo: null,
+        birthdate: null,
+        gender: null,
+        email: null,
+        cellphone: '2924962259',
+        tax_id: null,
+        personal_id: null,
+        metadata: null,
+        subscriptions: [],
+      },
+      code: 0,
+    }
+
+    const state = {
+      id: '92422802-c2f7-44c7-a488-f7c016297ca9',
+      name: 'Mercedes Albert',
+      lastname: 'Lester',
+      second_lastname: null,
+      photo: null,
+      birthdate: null,
+      gender: null,
+      email: null,
+      cellphone: '2924962259',
+      tax_id: null,
+      personal_id: null,
+      metadata: null,
+      subscriptions: [],
+      createUser: {
+        isSuccess: true,
+      },
+    }
+
+    jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
+    const store = configureStore({ reducer: userSlice.reducer })
+
+    await store.dispatch(createUser(formData))
+
+    const { user } = await store.getState()
+
+    expect(user).toEqual(state)
+  })
+
+  it('should create user thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      users: {
+        data: [],
+        meta: {},
+        createUsers: {},
+      },
+      user: {},
+    }
+
+    const thunk = createUser()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('create/user/pending')
+    expect(calls[1][0].type).toEqual('create/user/rejected')
+  })
+
+  it('should handle resetCreateUse', () => {
+    const state = {
+      users: {
+        data: [],
+        meta: {},
+        createUsers: {},
+      },
+      user: {
+        id: '92422802-c2f7-44c7-a488-f7c016297ca9',
+        name: 'Mercedes Albert',
+        lastname: 'Lester',
+        second_lastname: null,
+        photo: null,
+        birthdate: null,
+        gender: null,
+        email: null,
+        cellphone: '2924962259',
+        tax_id: null,
+        personal_id: null,
+        metadata: null,
+        subscriptions: [],
+        createUser: {
+          isSuccess: true,
+        },
+      },
+    }
+    const resetState = {
+      createUser: {
+        isSuccess: false,
+      },
+      subscriptions: [],
+    }
+
+    const actualState = userReducer(state, resetCreateUser())
+
+    expect(actualState.user).toEqual(resetState)
   })
 })

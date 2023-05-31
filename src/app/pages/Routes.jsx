@@ -24,6 +24,7 @@ import NoticeAccounts from './notifications/noticeAccounts'
 import CreateNoticeAccount from './notifications/noticeAccounts/createNoticeAccount'
 import { GlobalSpinner } from '../components/spinners'
 import { AlertError, AlertSuccess } from '../components/modals'
+import CreateUsers from './users/createUsers'
 
 const Routes = () => (
   <>
@@ -41,6 +42,7 @@ const Routes = () => (
           element={<CreateUsersWithSubscription />}
         />
         <Route path='/users' element={<Users />} />
+        <Route path='/users/create' element={<CreateUsers />} />
         <Route path='/users/details/:id' element={<UserDetails />} />
         <Route path='/admin-users' element={<AdminUsers />} />
         <Route path='/admin-users/create' element={<CreateAdminUser />} />

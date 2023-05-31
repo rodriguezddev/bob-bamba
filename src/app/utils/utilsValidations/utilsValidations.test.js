@@ -176,4 +176,20 @@ describe('Test function in utils', () => {
       ),
     ).toBe(false)
   })
+
+  it('accepts valid curp', () => {
+    expect(
+      new RegExp(utilsValidations.getCurpPattern(dummyTFunction).value).test(
+        'GORD820625HDFYDN02',
+      ),
+    ).toBe(true)
+  })
+
+  it('should valid date age', () => {
+    const currentDate = new Date('2023-05-29')
+    const expectedDate = new Date('2005-05-29')
+    const subtractedDate = utilsValidations.validationLegalAge(currentDate)
+
+    expect(subtractedDate).toEqual(expectedDate)
+  })
 })

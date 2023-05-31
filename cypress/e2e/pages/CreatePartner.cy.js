@@ -15,10 +15,6 @@ describe('create partner view', () => {
       'contain',
       'El nombre es requerido',
     )
-    cy.get('[data-testid="error-message-code"]').should(
-      'contain',
-      'El código es requerido',
-    )
     cy.get('[data-testid="error-message-partnerType"]').should(
       'contain',
       'El tipo de partner es requerido',
@@ -39,6 +35,7 @@ describe('create partner view', () => {
       'contain',
       'El email es requerido',
     )
+    cy.get(':nth-child(5) > .MuiTypography-body1').should('contain', 'RFC')
   })
 
   it('remove error form', () => {
@@ -46,11 +43,6 @@ describe('create partner view', () => {
     cy.get('[data-testid="error-message-name"]').should(
       'not.have.value',
       'El nombre es requerido',
-    )
-    cy.get('#code').type('Bamba-mx')
-    cy.get('[data-testid="error-message-code"]').should(
-      'not.have.value',
-      'El código es requerido',
     )
     cy.get('#partnerType').click()
     cy.get('[data-value="AGGREGATOR"]').click()

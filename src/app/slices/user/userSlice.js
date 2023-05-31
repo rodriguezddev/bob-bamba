@@ -9,7 +9,12 @@ const initialState = {
     meta: {},
     createUsers: {},
   },
-  user: {},
+  user: {
+    createUser: {
+      isSuccess: false,
+    },
+    subscriptions: [],
+  },
 }
 
 export const getUsers = createAsyncThunk(
@@ -65,12 +70,33 @@ export const createUsers = createAsyncThunk(
   },
 )
 
+export const createUser = createAsyncThunk(
+  'create/user',
+  async (params, thunkAPI) => {
+    try {
+      const response = await httpService.post(
+        `${apiConstants.ADMIN_URL}/user`,
+        params,
+      )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const userSlice = createSlice({
   name: 'getUsers',
   initialState,
   reducers: {
     resetCreateUsers(state) {
       state.users.createUsers = {}
+    },
+    resetCreateUser(state) {
+      state.user = initialState.user
     },
   },
 
@@ -90,11 +116,16 @@ export const userSlice = createSlice({
     builder.addCase(createUsers.fulfilled, (state, action) => {
       state.users.createUsers = { ...action.payload.data, isSuccess: true }
     })
+    builder.addCase(createUser.fulfilled, (state, action) => {
+      state.users.data = [...state.users.data, action.payload.data]
+      state.user = action.payload.data
+      state.user.createUser = { isSuccess: true }
+    })
   },
 })
 
 export const user = (state) => state.users
 
-export const { resetCreateUsers } = userSlice.actions
+export const { resetCreateUsers, resetCreateUser } = userSlice.actions
 
 export default userSlice.reducer

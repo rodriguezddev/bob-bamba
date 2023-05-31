@@ -33,6 +33,10 @@ describe('List users view', () => {
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(6)').should(
       'contain',
+      'Partner',
+    )
+    cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(7)').should(
+      'contain',
       'Acciones',
     )
   })
@@ -43,11 +47,11 @@ describe('List users view', () => {
     cy.intercept('/admin/api/v1/users').as('getUsers')
     cy.wait('@getUsers')
     cy.get('[data-testid="FilterAltIcon"] > path').click()
-    cy.get('#email').type('prueba2@gmail.com')
+    cy.get('#email').type('testcypress@hotmail.com')
     cy.get('[data-testid="button-filter-search"]').click()
     cy.get(':nth-child(1) > :nth-child(1) > .css-bns4tv > .MuiBox-root').should(
       'contain',
-      'Alex Prueba',
+      'Cypress Test',
     )
   })
 

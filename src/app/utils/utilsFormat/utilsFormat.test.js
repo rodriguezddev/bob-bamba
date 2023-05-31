@@ -6,4 +6,10 @@ describe('test functions utils translate', () => {
     const dateFormatType = 'en-GB'
     expect(utilsFormat.formatDate(date, dateFormatType)).toBe('09/12/2022')
   })
+
+  it('get formatted code partner', () => {
+    const code = 'TEST CODE NÁME @BAMBA'
+
+    expect(utilsFormat.formatCodePartner(code)).toBe('TEST-CODE-NAME-BAMBA')
+  })
 })

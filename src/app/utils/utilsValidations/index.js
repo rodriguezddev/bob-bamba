@@ -1,3 +1,5 @@
+import { subYears } from 'date-fns'
+
 export const getEmailPattern = () => {
   const emailAddressRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
@@ -55,7 +57,7 @@ export const getCodePattern = () => {
 
   return {
     value: regEx,
-    message: 'El código no debe contener espacios ej. mi-codigo-partner',
+    message: 'El código no debe contener espacios ej. MI-CODIGO-PARTNER',
   }
 }
 
@@ -67,6 +69,17 @@ export const getSkuProduct = () => {
     message: 'El sku debe tener el siguiente formato ej. BAMBA-SEGURO',
   }
 }
+
+export const getCurpPattern = () => {
+  const curpRegex = /^[A-Z]{4}\d{6}[H,M][A-Z]{5}[A-Z0-9]{2}$/
+
+  return {
+    value: curpRegex,
+    message: 'Ingresa un CURP válido',
+  }
+}
+
+export const validationLegalAge = (date) => subYears(date, 18)
 
 export const defaultResetInput = {
   keepErrors: true,

@@ -12,6 +12,7 @@ import {
   getCodePattern,
   getEmailPattern,
   getPhonePattern,
+  getRfcPattern,
 } from '../../../utils/utilsValidations'
 import {
   createPartner,
@@ -19,6 +20,7 @@ import {
 } from '../../../slices/partner/partnerSlice'
 import { countryConstants } from '../../../slices/constants/countryConstants'
 import Alert from '../../../components/modals/Alert/Alert'
+import { formatCodePartner } from '../../../utils/utilsFormat'
 
 const CreatePartners = () => {
   const dispatch = useDispatch()
@@ -26,18 +28,37 @@ const CreatePartners = () => {
   const { partner } = useSelector((state) => state.partner)
   const { isLoading } = useSelector((state) => state.loading)
   const [showAlert, setShowAlert] = useState(false)
-  const { control, handleSubmit } = useForm()
+  const {
+    control, handleSubmit, setValue, watch,
+  } = useForm()
+  const nameType = watch('name', '')
+  const [code, setCode] = useState('')
+
+  const handleNameInputChange = (event) => {
+    const { value } = event.target
+
+    setValue('name', value)
+    setCode(formatCodePartner(value))
+  }
+
+  const handleCodeInputChange = (event) => {
+    const { value } = event.target
+
+    setValue('code', formatCodePartner(value))
+    setCode(formatCodePartner(value))
+  }
 
   const onSubmit = (dataForm) => {
     const values = {
       name: dataForm.name,
-      code: dataForm.code.toUpperCase(),
+      code: code.toUpperCase(),
       type: dataForm.partnerType,
       company: {
         name: dataForm.nameCompany,
         email: dataForm.email,
         phone_number: dataForm.phone,
         country_code: dataForm.countryCode,
+        ...(dataForm.taxId && { tax_id: dataForm.taxId }),
       },
     }
     dispatch(createPartner(values))
@@ -83,7 +104,7 @@ const CreatePartners = () => {
               required: 'El nombre es requerido',
             }}
             render={({
-              field: { onChange, value },
+              field: { value },
               fieldState: { error: errorInput },
             }) => (
               <Grid container flexDirection='column' marginTop='.5rem'>
@@ -91,7 +112,7 @@ const CreatePartners = () => {
                   error={!!errorInput}
                   hiddenIcon
                   id='name'
-                  onChange={onChange}
+                  onChange={handleNameInputChange}
                   placeholder=''
                   radius='.5rem'
                   type='text'
@@ -115,11 +136,10 @@ const CreatePartners = () => {
             defaultValue=''
             name='code'
             rules={{
-              required: 'El código es requerido',
               pattern: getCodePattern(),
             }}
             render={({
-              field: { onChange, value },
+              field: { value },
               fieldState: { error: errorInput },
             }) => (
               <Grid container flexDirection='column' marginTop='.5rem'>
@@ -127,7 +147,7 @@ const CreatePartners = () => {
                   error={!!errorInput}
                   hiddenIcon
                   id='code'
-                  onChange={onChange}
+                  onChange={handleCodeInputChange}
                   placeholder=''
                   radius='.5rem'
                   sx={{
@@ -136,7 +156,9 @@ const CreatePartners = () => {
                     },
                   }}
                   type='text'
-                  value={value}
+                  value={
+                    formatCodePartner(value) || formatCodePartner(nameType)
+                  }
                 />
                 <Typography
                   color='error.main'
@@ -343,6 +365,45 @@ const CreatePartners = () => {
                 <Typography
                   color='error.main'
                   data-testid='error-message-email'
+                  variant='caption'
+                >
+                  {errorInput?.message}
+                </Typography>
+              </Grid>
+            )}
+          />
+        </Grid>
+        <Grid item lg={4} md={6} xs={12}>
+          <GeneralTitle
+            fontSize='.75rem'
+            lineHeight='1rem'
+            text='RFC de la compañía (opcional)'
+          />
+          <Controller
+            control={control}
+            defaultValue=''
+            name='taxId'
+            rules={{
+              pattern: getRfcPattern(),
+            }}
+            render={({
+              field: { onChange, value },
+              fieldState: { error: errorInput },
+            }) => (
+              <Grid container flexDirection='column' marginTop='.5rem'>
+                <MainInput
+                  error={!!errorInput}
+                  hiddenIcon
+                  id='taxId'
+                  onChange={onChange}
+                  placeholder=''
+                  radius='.5rem'
+                  type='text'
+                  value={value}
+                />
+                <Typography
+                  color='error.main'
+                  data-testid='error-message-rfc'
                   variant='caption'
                 >
                   {errorInput?.message}
