@@ -33,6 +33,10 @@ describe('Carrier services view', () => {
       'contain',
       'Habilitado',
     )
+    cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(8)').should(
+      'contain',
+      'Metadatos',
+    )
   })
 
   it('use filters carrier services', () => {
@@ -43,6 +47,15 @@ describe('Carrier services view', () => {
       'contain',
       'insurance',
     )
+  })
+
+  it('show details', () => {
+    cy.get(':nth-child(1) > :nth-child(8) > .MuiTypography-root > u').click()
+    cy.get('[data-testid="title-alert-Metadatos"]').should(
+      'contain',
+      'Metadatos',
+    )
+    cy.get('[data-testid="close-button-alert"]').click()
   })
 
   it('check pagination', () => {

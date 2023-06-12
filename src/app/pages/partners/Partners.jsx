@@ -7,8 +7,8 @@ import {
 } from '@mui/material'
 import { CSVLink } from 'react-csv'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
-import UploadFileIcon from '@mui/icons-material/UploadFile'
 import VisibilityIcon from '@mui/icons-material/Visibility'
+import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { ActionAlert, Alert } from '../../components/modals'
 import { GeneralTitle } from '../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
@@ -24,9 +24,9 @@ import { MainButton } from '../../components/buttons'
 import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
 import ProductContainer from './components/ProductContainer'
-import UploadUserBatch from './components/UploadUserBatch/UploadUserBatch'
 import ProductsByPartnerContainer from './components/ProductsByPartnerContainer/ProductsByPartnerContainer'
 import useRowsPerPage from '../../hooks/useRowsPerPage'
+import UpdatePartner from './components/UpdatePartner'
 
 const Partners = () => {
   const [page, setPage] = useState(0)
@@ -42,6 +42,8 @@ const Partners = () => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [isShowAssignedConfirmationAlert, setIsShowAssignedConfirmationAlert] = useState(false)
   const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getPartners)
+  const [isShowDialogUpdate, setIsShowDialogUpdate] = useState(false)
+  const [selectedPartner, setSelectedPartner] = useState({})
 
   useEffect(() => {
     dispatch(getPartners())
@@ -113,6 +115,15 @@ const Partners = () => {
     navigate(`/partners/create-users/${partnerId}`)
   }
 
+  const handleShowDialogUpdate = () => {
+    setIsShowDialogUpdate(!isShowDialogUpdate)
+  }
+
+  const handleUpdate = (partner) => {
+    handleShowDialogUpdate()
+    setSelectedPartner(partner)
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
@@ -167,17 +178,18 @@ const Partners = () => {
                     </IconButton>
                   </Tooltip>
                 </Grid>
-                <Grid item>
-                  <UploadUserBatch
-                    icon={<UploadFileIcon sx={{ fontSize: '1.25rem' }} />}
-                    partner={partner}
-                  />
+                <Grid item onClick={() => handleUpdate(partner)}>
+                  <Tooltip title='Editar partner'>
+                    <IconButton color='primary' sx={{ padding: 0 }}>
+                      <BorderColorIcon sx={{ fontSize: '1.25rem' }} />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
                 <Grid
                   item
                   onClick={() => handleNavigateToCreateUsers(partner.id)}
                 >
-                  <Tooltip title='Carga de usuarios con suscripción'>
+                  <Tooltip title='Carga de usuarios'>
                     <IconButton color='primary' sx={{ padding: 0 }}>
                       <GroupAddIcon sx={{ fontSize: '1.25rem' }} />
                     </IconButton>
@@ -208,9 +220,16 @@ const Partners = () => {
           </TableRow>
         ))}
       </GeneralTable>
+      {isShowDialogUpdate && (
+        <UpdatePartner
+          dialogUpdate={handleShowDialogUpdate}
+          isShowDialogUpdate={isShowDialogUpdate}
+          partner={selectedPartner}
+        />
+      )}
       {isShowAssignProductsAlert && (
         <ActionAlert
-          actionAlertContentText='Elige uno o mas productos para asignar a este partner'
+          actionAlertContentText='Elige uno o más productos para asignar a este partner'
           actionAlertTextButton='Cerrar'
           actionAlertTitle={`Asignar productos a ${partnerActionAlert.name}`}
           isOpen={isShowAssignProductsAlert}

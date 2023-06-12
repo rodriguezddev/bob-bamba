@@ -19,6 +19,7 @@ import errorReducer from './slices/error/errorSlice'
 import loadingReducer from './slices/loading/loadingSlice'
 import notificationReducer from './slices/notifications/notificationsSlice'
 import noticeAccountsReducer from './slices/noticeAccounts/noticeAccountsSlice'
+import noticeAccountTemplateReducer from './slices/noticeAccountTemplate/noticeAccountTemplateSlice'
 import partnerReducer from './slices/partner/partnerSlice'
 import productReducer from './slices/product/productSlice'
 import subscriptionsReducer from './slices/subscriptions/subscriptionsSlice'
@@ -37,6 +38,7 @@ const reducers = combineReducers({
   loading: loadingReducer,
   notification: notificationReducer,
   noticeAccount: noticeAccountsReducer,
+  noticeAccountTemplate: noticeAccountTemplateReducer,
   partner: partnerReducer,
   product: productReducer,
   recoveryMessage: recoveryMessageReducer,

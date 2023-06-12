@@ -85,7 +85,7 @@ describe('FormAlert components', () => {
       )
     })
 
-    const textTitle = screen.getByText(/Cuentas de WhatsApp*/)
+    const textTitle = screen.getByText(/Cuentas*/)
 
     expect(textTitle).toBeInTheDocument()
   })

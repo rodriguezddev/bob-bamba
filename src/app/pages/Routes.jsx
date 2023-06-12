@@ -17,14 +17,16 @@ import Carriers from './carriers/carriers'
 import CreateCarriers from './carriers/carriers/createCarriers'
 import Campaigns from './campaigns'
 import CreateCampaigns from './campaigns/createCampaigns'
-import CreateUsersWithSubscription from './partners/createUsersWithSubscription'
 import Notifications from './notifications'
 import CreateNotification from './notifications/createNotification'
 import NoticeAccounts from './notifications/noticeAccounts'
+import NoticeAccountTemplate from './notifications/noticeAccounts/noticeAccountTemplate'
 import CreateNoticeAccount from './notifications/noticeAccounts/createNoticeAccount'
+import CreateNoticeAccountTemplate from './notifications/noticeAccounts/createNoticeAccountTemplate'
 import { GlobalSpinner } from '../components/spinners'
 import { AlertError, AlertSuccess } from '../components/modals'
 import CreateUsers from './users/createUsers'
+import CreateUsersInBatch from './partners/createUsersInBatch'
 
 const Routes = () => (
   <>
@@ -39,7 +41,7 @@ const Routes = () => (
         <Route path='/partners/create' element={<CreatePartners />} />
         <Route
           path='/partners/create-users/:id'
-          element={<CreateUsersWithSubscription />}
+          element={<CreateUsersInBatch />}
         />
         <Route path='/users' element={<Users />} />
         <Route path='/users/create' element={<CreateUsers />} />
@@ -63,6 +65,14 @@ const Routes = () => (
         <Route
           path='/notice-account/create'
           element={<CreateNoticeAccount />}
+        />
+        <Route
+          path='/notice-account/templates'
+          element={<NoticeAccountTemplate />}
+        />
+        <Route
+          path='/notice-account/templates/create'
+          element={<CreateNoticeAccountTemplate />}
         />
       </Route>
     </ReactRoutes>

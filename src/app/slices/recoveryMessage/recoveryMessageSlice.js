@@ -8,25 +8,7 @@ const initialState = {
     isSuccess: false,
   },
   templates: {},
-  whatsAppAccounts: [],
 }
-
-export const getWhatsAppAccounts = createAsyncThunk(
-  'recoveryMessage/whatsAppAccounts',
-  async (thunkAPI) => {
-    try {
-      const response = await httpService.get(
-        `${apiConstants.ADMIN_URL}/notice-accounts?provider=WHATSAPP`,
-      )
-
-      return response
-    } catch (error) {
-      const message = error
-
-      return thunkAPI.rejectWithValue(message)
-    }
-  },
-)
 
 export const getTemplates = createAsyncThunk(
   'recoveryMessage/template',
@@ -80,9 +62,6 @@ export const recoveryMessageSlice = createSlice({
     })
     builder.addCase(sendRecoveryMessage.fulfilled, (state) => {
       state.message.isSuccess = true
-    })
-    builder.addCase(getWhatsAppAccounts.fulfilled, (state, action) => {
-      state.whatsAppAccounts = action?.payload
     })
   },
 })

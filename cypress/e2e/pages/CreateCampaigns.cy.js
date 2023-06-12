@@ -35,6 +35,9 @@ describe('Create campaigns view', () => {
   })
 
   it('Remove errors form', () => {
+    cy.get('#provider').click()
+    cy.wait(2000)
+    cy.get('[data-value="WHATSAPP"]').click()
     cy.get('#accountId').click()
     cy.wait(2000)
     cy.get('[data-value="50e6cbd4-6a13-4cf7-ab8b-063c314362fc"]').click()
@@ -47,7 +50,7 @@ describe('Create campaigns view', () => {
       'El nombre de la cuenta es requerido',
     )
 
-    cy.get(':nth-child(2) > .MuiGrid-root > .MuiFormControl-root').type(
+    cy.get(':nth-child(3) > .MuiGrid-root > .MuiFormControl-root').type(
       '2023-11-01 12:00',
     )
     cy.get('[data-testid="error-message-send-date-campaigns"]').should(

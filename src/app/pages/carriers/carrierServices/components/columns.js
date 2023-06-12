@@ -37,4 +37,9 @@ export const columns = [
     id: 'status',
     label: 'Habilitado',
   },
+  {
+    align: 'center',
+    id: 'details',
+    label: 'Metadatos',
+  },
 ]

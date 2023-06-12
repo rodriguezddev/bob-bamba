@@ -4,12 +4,14 @@ import partnerReducer, {
   createPartner,
   createSubscriptionBatch,
   createUserBatch,
+  createUsersWithFile,
   getPartners,
   handleSubscriptionIsSuccess,
   partnerSlice,
   resetPartner,
   resetResultSubscriptionFile,
   resetUsersBatch,
+  updatePartner,
 } from './partnerSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -27,6 +29,9 @@ describe('PartnerSlice redux', () => {
       },
       partner: {},
       resultSubscriptionFile: {
+        isSuccess: false,
+      },
+      usersWithFile: {
         isSuccess: false,
       },
       usersBatch: {
@@ -603,5 +608,177 @@ describe('PartnerSlice redux', () => {
     expect(calls).toHaveLength(2)
     expect(calls[0][0].type).toEqual('partner/userBatch/pending')
     expect(calls[1][0].type).toEqual('partner/userBatch/rejected')
+  })
+
+  it('should return resultUploadUserFile', async () => {
+    const stateResultUploadFile = {
+      rows_total: 1,
+      processed_total: 0,
+      failed_data: [
+        {
+          row: {
+            nombre: 'Juan',
+            primer_apellido: 'Perez',
+            segundo_apellido: 'Gomez',
+            id: null,
+            email: 'e@gmail.com',
+            sexo_f_m: 'M',
+            fecha_de_nacimiento_ddmmaaaa: '36469',
+            celular: '1234567890',
+            rfc: 'GORD820625GR6',
+            sku: null,
+            movimiento_alta_baja: 'ALTA',
+            fecha_de_movimiento_ddmmaaaa: null,
+          },
+          errors: ['user_belong_to_partner'],
+        },
+      ],
+      isSuccess: true,
+    }
+
+    const responseMock = {
+      code: 0,
+      data: {
+        rows_total: 1,
+        processed_total: 0,
+        failed_data: [
+          {
+            row: {
+              nombre: 'Juan',
+              primer_apellido: 'Perez',
+              segundo_apellido: 'Gomez',
+              id: null,
+              email: 'e@gmail.com',
+              sexo_f_m: 'M',
+              fecha_de_nacimiento_ddmmaaaa: '36469',
+              celular: '1234567890',
+              rfc: 'GORD820625GR6',
+              sku: null,
+              movimiento_alta_baja: 'ALTA',
+              fecha_de_movimiento_ddmmaaaa: null,
+            },
+            errors: ['user_belong_to_partner'],
+          },
+        ],
+      },
+    }
+
+    jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: partnerSlice.reducer })
+    await store.dispatch(createUsersWithFile({ partner: 'Bamba' }))
+
+    const { usersWithFile } = await store.getState()
+    expect(usersWithFile).toEqual(stateResultUploadFile)
+  })
+
+  it('should createUsersBatchWithFile thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      resultSubscriptionFile: {
+        isSuccess: false,
+      },
+      usersWithFile: {
+        isSuccess: false,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+    }
+    const thunk = createUsersWithFile()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/users/pending')
+    expect(calls[1][0].type).toEqual('partner/users/rejected')
+  })
+
+  it('should return update partner state', async () => {
+    const responseMock = {
+      data: {
+        id: '623e7d13-03a0-4233-9865-ec9613d221dd',
+        name: 'April Woods',
+        code: 'UT-QUIA',
+        type: 'AGGREGATOR',
+        meta: null,
+        company: {
+          id: '59e6222d-9b28-4917-a3c8-5b7a875fd3ad',
+          name: 'Harrison Love Trading',
+          email: 'myga@mailinator.com',
+          phone_number: '2281297310',
+          tax_id: null,
+          country_code: 'MX',
+        },
+      },
+      code: 0,
+    }
+
+    const state = {
+      data: [
+        {
+          id: '623e7d13-03a0-4233-9865-ec9613d221dd',
+          name: 'April Woods',
+          code: 'UT-QUIA',
+          type: 'AGGREGATOR',
+          meta: null,
+          company: {
+            id: '59e6222d-9b28-4917-a3c8-5b7a875fd3ad',
+            name: 'Harrison Love Trading',
+            email: 'myga@mailinator.com',
+            phone_number: '2281297310',
+            tax_id: null,
+            country_code: 'MX',
+          },
+        },
+      ],
+      meta: {},
+      products: {},
+    }
+
+    jest.spyOn(httpService, 'put').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({
+      reducer: partnerSlice.reducer,
+    })
+    await store.dispatch(
+      updatePartner({
+        id: 'dac3e',
+        data: {},
+      }),
+    )
+
+    const { partners } = await store.getState()
+
+    expect(partners).toEqual(state)
+  })
+
+  it('should update noticeAccountTemplate thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      noticeAccounts: {
+        data: [],
+        meta: {},
+      },
+      noticeAccount: {
+        isSuccess: false,
+      },
+      config: {},
+    }
+    const thunk = updatePartner()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('update/updatePartner/pending')
+    expect(calls[1][0].type).toEqual('update/updatePartner/rejected')
   })
 })

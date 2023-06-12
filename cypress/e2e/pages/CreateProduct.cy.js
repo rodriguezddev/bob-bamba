@@ -59,7 +59,7 @@ describe('Create product view', () => {
       'El periodo de expiración es requerido',
     )
     cy.get('#category-product').click()
-    cy.get('[data-value="504b73dc-1073-492f-b9ee-975fa8c31f62"]').click()
+    cy.get('[data-value="931b7435-403d-439f-90c3-d6ee8d11de84"]').click()
     cy.get('[data-testid="error-message-category-product"]').should(
       'not.have.value',
       'La categoría es requerida',

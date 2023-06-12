@@ -23,4 +23,8 @@ export const errorsConstants = {
   invalid_sku_for_partner: 'El SKU es inválido para el partner',
   non_existing_product: 'El producto no existente',
   invalid_user_action: 'La acción para el usuario no es válida',
+  user_belong_to_partner: 'El usuario ya pertenece al partner',
+  user_already_subscribed: 'Usuario ya suscrito',
+  non_existent_product: 'Producto inexistente',
+  invalid_fiscal_id_for_sku: 'RFC no válido para el sku',
 }

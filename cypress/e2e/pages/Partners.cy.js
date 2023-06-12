@@ -50,7 +50,7 @@ describe('Partner view', () => {
       'contain',
       'Productos disponibles',
     )
-    cy.get('[data-testid="card-bamba-test"] > .MuiButtonBase-root').click()
+    cy.get('[data-testid="card-CONSULTA-ESPECIALISTA-2"]').click()
     cy.get(
       ':nth-child(5) > .MuiDialog-container > .MuiPaper-root > #alert-dialog-title',
     ).should('contain', 'Precio del producto')
@@ -88,10 +88,6 @@ describe('Partner view', () => {
     )
   })
 
-  it('check input file', () => {
-    cy.get('input[type=file]').first().should('be.hidden')
-  })
-
   it('check pagination', () => {
     cy.get('[data-testid="drawer-item-Partners"]').first().click()
     cy.get('[data-testid="button-filter-clean"]').click()
@@ -108,10 +104,25 @@ describe('Partner view', () => {
     cy.get(
       '[data-testid="icon-button-Aliada"] > [data-testid="VisibilityIcon"] > path',
     ).click()
-    cy.get('[data-testid="details-button-seguro de mayores"]').click()
-    cy.get('[data-testid="title-alert-seguro de mayores"]').should(
+    cy.get(
+      '[data-testid="details-button-Seguro de Accidentes que paga hasta $100,000"]',
+    ).click()
+    cy.get(
+      '[data-testid="title-alert-Seguro de Accidentes que paga hasta $100,000"]',
+    ).should('contain', 'Seguro de Accidentes')
+  })
+
+  it('show update partner', () => {
+    cy.login('admin@vivebamba.com', 'Password')
+    cy.get('[data-testid="drawer-item-Partners"]').first().click()
+    cy.get(
+      ':nth-child(1) > .MuiTableCell-alignCenter > .MuiGrid-container > :nth-child(2) > .MuiButtonBase-root > [data-testid="BorderColorIcon"]',
+    ).click()
+    cy.get('#alert-dialog-title').should('contain', 'Actualizar partner')
+    cy.get('#alert-dialog-description').should(
       'contain',
-      'seguro de mayores',
+      'Se actualizará el partner Aliada',
     )
+    cy.get('[data-testid="close-button-action-alert"]').click()
   })
 })

@@ -7,15 +7,14 @@ import {
 } from '@mui/material'
 import { BackButton, MainButton } from '../../../components/buttons'
 import { GeneralTitle } from '../../../components/texts'
-import {
-  getTemplates,
-  getWhatsAppAccounts,
-} from '../../../slices/recoveryMessage/recoveryMessageSlice'
+import { getTemplates } from '../../../slices/recoveryMessage/recoveryMessageSlice'
 import { SelectInput } from '../../../components/inputs'
 import { resetTemplates } from '../../../slices/campaigns/campaignsSlice'
 import { handleTextClipping } from '../../../utils/UtilsTranslate'
 import ContainerUsersCreationFile from '../components/ContainerUsersCreationFile/ContainerUsersCreationFile'
 import { createSubscriptionBatch } from '../../../slices/partner/partnerSlice'
+import { getNoticeAccounts } from '../../../slices/noticeAccounts/noticeAccountsSlice'
+import { noticeProviders } from '../../../constants/noticeProvider'
 
 const CreateUsersWithSubscription = () => {
   const { id } = useParams()
@@ -23,17 +22,19 @@ const CreateUsersWithSubscription = () => {
   const {
     control, handleSubmit, watch, reset,
   } = useForm()
-  const { templates, whatsAppAccounts } = useSelector(
-    (state) => state.recoveryMessage,
-  )
+  const { templates } = useSelector((state) => state.recoveryMessage)
+  const { noticeAccounts } = useSelector((state) => state.noticeAccount)
   const { isLoading } = useSelector((state) => state.loading)
   const [templateMessage, setTemplateMessage] = useState('')
   const [fileForm, setFileForm] = useState(null)
   const accountType = watch('account') || ''
+  const provider = watch('provider') || ''
 
   useEffect(() => {
-    dispatch(getWhatsAppAccounts())
-  }, [])
+    if (provider) {
+      dispatch(getNoticeAccounts(`?provider=${provider}`))
+    }
+  }, [provider])
 
   useEffect(() => {
     if (accountType) {
@@ -87,6 +88,52 @@ const CreateUsersWithSubscription = () => {
               text='Mensaje de notificación (opcional)'
             />
           </Grid>
+          <Grid item lg={4} mb={2} md={6} xs={12}>
+            <GeneralTitle
+              fontSize='.75rem'
+              lineHeight='1rem'
+              text='Proveedor'
+            />
+            <Controller
+              control={control}
+              defaultValue=''
+              name='provider'
+              rules={{
+                required: 'El proveedor es requerido',
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error: errorInput },
+              }) => (
+                <Grid container flexDirection='column' marginTop='.5rem'>
+                  <SelectInput
+                    error={!!errorInput}
+                    id='provider'
+                    onChange={onChange}
+                    value={value}
+                  >
+                    <MenuItem value=''>Seleccionar</MenuItem>
+                    {noticeProviders.map((noticeProvider) => (
+                      <MenuItem
+                        key={noticeProvider.name}
+                        value={noticeProvider.name}
+                      >
+                        {noticeProvider.name}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
+                  <Typography
+                    color='error.main'
+                    data-testid='error-message-expiration-period-product'
+                    mt={1}
+                    variant='caption'
+                  >
+                    {errorInput?.message}
+                  </Typography>
+                </Grid>
+              )}
+            />
+          </Grid>
           <Grid item mb={2} md={6} xs={12}>
             <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Cuenta' />
             <Controller
@@ -105,12 +152,12 @@ const CreateUsersWithSubscription = () => {
                     value={value}
                   >
                     <MenuItem value=''>Seleccionar</MenuItem>
-                    {whatsAppAccounts?.data?.map((whatsAppAccount) => (
+                    {noticeAccounts?.data?.map((noticeAccount) => (
                       <MenuItem
-                        key={whatsAppAccount.id}
-                        value={`${whatsAppAccount.id}`}
+                        key={noticeAccount.id}
+                        value={`${noticeAccount.id}`}
                       >
-                        {whatsAppAccount.name}
+                        {noticeAccount.name}
                       </MenuItem>
                     ))}
                   </SelectInput>

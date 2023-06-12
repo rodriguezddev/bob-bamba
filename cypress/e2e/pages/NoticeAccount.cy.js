@@ -4,11 +4,12 @@ describe('List notice accounts view', () => {
   it('display list admin users success', () => {
     cy.clearLocalStorage()
     cy.login('admin@vivebamba.com', 'Password')
-    cy.get('[data-testid="drawer-item-Administradores"]').should(
+    cy.get('[data-testid="drawer-item-Notificaciones"] ').should(
       'contain',
-      'Administradores',
+      'Notificaciones',
     )
-    cy.visit('/notice-account')
+    cy.get('[data-testid="drawer-item-Notificaciones"] ').first().click()
+    cy.get('[data-testid="button-redirect-noticeAccount"]').click()
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(1)').should(
       'contain',
       'Nombre',

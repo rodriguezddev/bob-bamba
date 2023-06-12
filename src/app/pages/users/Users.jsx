@@ -97,6 +97,7 @@ const Users = () => {
             <TableCell align='center'>{user?.tax_id ?? '-'}</TableCell>
             <TableCell align='center'>{user?.personal_id ?? '-'}</TableCell>
             <TableCell align='center'>{user?.birthdate}</TableCell>
+            <TableCell align='center'>{user?.partner?.name}</TableCell>
             <TableCell align='center'>
               <Grid
                 alignItems='center'

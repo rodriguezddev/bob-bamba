@@ -21,6 +21,7 @@ import {
   updateNoticeAccounts,
 } from '../../../slices/noticeAccounts/noticeAccountsSlice'
 import NoticeAccountsForm from './components/NoticeAccountForm'
+import theme from '../../../theme'
 
 const NoticeAccount = () => {
   const navigate = useNavigate()
@@ -63,6 +64,10 @@ const NoticeAccount = () => {
 
   const handleCreateNoticeAccount = () => {
     navigate('/notice-account/create')
+  }
+
+  const handleNavigateToNoticeAccountTemplate = () => {
+    navigate('/notice-account/templates')
   }
 
   const handleShowDialogDeleteNoticeAccount = (accountInfo) => {
@@ -128,17 +133,34 @@ const NoticeAccount = () => {
       <BackButton />
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
         <GeneralTitle text='Cuenta de Notificaciones' />
-        <MainButton
-          color='primary'
-          data-testid='button-create-notice-account'
-          fontSize='0.85rem'
-          height='3rem'
-          onClick={handleCreateNoticeAccount}
-          radius='0.62rem'
-          width='15rem'
-        >
-          Crear cuenta de notificaciones
-        </MainButton>
+        <Box display='flex' flexDirection='column'>
+          <MainButton
+            color='primary'
+            data-testid='button-create-notice-account'
+            fontSize='0.85rem'
+            height='3rem'
+            onClick={handleCreateNoticeAccount}
+            radius='0.62rem'
+            width='15rem'
+          >
+            Crear cuenta de notificaciones
+          </MainButton>
+          <Box my={2}>
+            <MainButton
+              background={theme.palette.background.blueLight}
+              color='primary'
+              data-testid='button-redirect-noticeAccount-template'
+              fontSize='1rem'
+              height='3rem'
+              onClick={handleNavigateToNoticeAccountTemplate}
+              radius='0.62rem'
+              type='secondary'
+              width='15rem'
+            >
+              Plantillas de las cuentas
+            </MainButton>
+          </Box>
+        </Box>
       </Box>
       <MainFilter fieldDetails={filters} handleSearch={handleSearch} />
       <GeneralTable
@@ -214,7 +236,7 @@ const NoticeAccount = () => {
       )}
       {isShowDialogUpdate && (
         <ActionAlert
-          actionAlertContentText={`Se actualizara la cuenta de ${account?.name}`}
+          actionAlertContentText={`Se actualizará la cuenta de ${account?.name}`}
           actionAlertTextButton='Cerrar'
           actionAlertTitle='Actualizar Cuenta de notificación'
           isOpen={isShowDialogUpdate}
@@ -229,9 +251,9 @@ const NoticeAccount = () => {
       {isShowConfirmDialogUpdate && (
         <Alert
           actionButton={onSubmit}
-          alertContentText='La información se actualizara con los nuevos valores'
+          alertContentText='La información se actualizará con los nuevos valores'
           alertTextButton='Cancelar'
-          alertTitle={`¿Quieres actualizarla cuenta ${account?.name}?`}
+          alertTitle={`¿Quieres actualizar la cuenta ${account?.name}?`}
           isShowPrimaryButton
           isOpen={isShowConfirmDialogUpdate}
           primaryButtonTextAlert='Actualizar'

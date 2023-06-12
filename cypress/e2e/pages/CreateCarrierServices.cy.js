@@ -13,6 +13,7 @@ describe('Create carrier services view', () => {
   })
 
   it('Show errors validations form', () => {
+    cy.get('[data-testid="AddIcon"]').click()
     cy.get('[data-testid="create-carrierService-button"]').click()
     cy.get('[data-testid="error-message-name-carrierService"]').should(
       'contain',
@@ -72,16 +73,17 @@ describe('Create carrier services view', () => {
       '[data-testid="error-message-cost-per-month-carrierService"]',
     ).should('not.have.value', 'El costo por mes es requerido')
     cy.get('#category-carrierService').click()
-    cy.get('[data-value="504b73dc-1073-492f-b9ee-975fa8c31f62"]').click()
-    cy.get('[data-testid="error-message-carrier-carrierService"]').should(
-      'not.have.value',
-      'El carrier es requerido',
-    )
-    cy.get('#carrier-carrierService').click()
-    cy.get('[data-value="6c024359-72bd-49e7-a6fc-610edb84e20d"]').click()
+    cy.get('[data-value="931b7435-403d-439f-90c3-d6ee8d11de84"]').click()
     cy.get('[data-testid="error-message-category-carrierService"]').should(
       'not.have.value',
       'La categoría es requerida',
+    )
+
+    cy.get('#carrier-carrierService').click()
+    cy.get('[data-value="6c024359-72bd-49e7-a6fc-610edb84e20d"]').click()
+    cy.get('[data-testid="error-message-carrier-carrierService"]').should(
+      'not.have.value',
+      'El carrier es requerido',
     )
     cy.get('#key').type('bamba')
     cy.get('[data-testid="error-message-name-key"]').should(

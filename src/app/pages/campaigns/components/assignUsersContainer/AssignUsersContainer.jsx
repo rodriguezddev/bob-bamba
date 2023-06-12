@@ -38,7 +38,7 @@ const AssignUsersContainer = ({ assignUsers, setUserFile }) => {
           )}
         </Grid>
       </Grid>
-      <Grid item lg={4} md={6} marginY='1rem' xs={12}>
+      <Grid item lg={4} md={6} my='1rem' xs={12}>
         <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Partner*' />
         <Controller
           control={control}

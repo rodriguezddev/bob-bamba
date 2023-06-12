@@ -102,11 +102,11 @@ const Notifications = () => {
           >
             Crear notificación
           </MainButton>
-          <Box marginY={2}>
+          <Box my={2}>
             <MainButton
               background={theme.palette.background.blueLight}
               color='primary'
-              data-testid='button-redirect-carrier'
+              data-testid='button-redirect-noticeAccount'
               fontSize='1rem'
               height='3rem'
               onClick={handleNavigateToNoticeAccount}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Box } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { getCarrierServices } from '../../../slices/carriers/carrierSlice'
 import { GeneralTitle } from '../../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../../components/tables'
@@ -11,6 +11,7 @@ import { filters } from './components/filters'
 import { MainFilter } from '../../../components/filters'
 import theme from '../../../theme'
 import useRowsPerPage from '../../../hooks/useRowsPerPage'
+import { Alert } from '../../../components/modals'
 
 const CarrierServices = () => {
   const navigate = useNavigate()
@@ -19,6 +20,8 @@ const CarrierServices = () => {
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCarrierServices)
+  const [showDetailsCarrierService, setShowDetailsCarrierService] = useState(false)
+  const [details, setDetails] = useState({})
 
   useEffect(() => {
     dispatch(getCarrierServices())
@@ -49,6 +52,21 @@ const CarrierServices = () => {
     setPage(newPage)
   }
 
+  const handleDescription = (description) => {
+    setShowDetailsCarrierService(!showDetailsCarrierService)
+    setDetails(
+      Object.entries(description).map(([key, template]) => (
+        <Box align='left' key={key}>
+          <Typography fontWeight={600} variant='span'>
+            {`${key}:`}
+            {' '}
+          </Typography>
+          {template}
+        </Box>
+      )),
+    )
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
@@ -65,7 +83,7 @@ const CarrierServices = () => {
           >
             Crear carrier service
           </MainButton>
-          <Box marginY={2}>
+          <Box my={2}>
             <MainButton
               background={theme.palette.background.blueLight}
               color='primary'
@@ -111,9 +129,30 @@ const CarrierServices = () => {
             <TableCell align='center'>
               {carrierService?.is_enabled ? 'Si' : 'No'}
             </TableCell>
+            <TableCell align='center'>
+              {carrierService?.meta ? (
+                <Typography
+                  onClick={() => handleDescription(carrierService?.meta)}
+                  sx={{ cursor: 'pointer' }}
+                >
+                  <u>Ver metadatos</u>
+                </Typography>
+              ) : (
+                '-'
+              )}
+            </TableCell>
           </TableRow>
         ))}
       </GeneralTable>
+      {showDetailsCarrierService && (
+        <Alert
+          alertTitle='Metadatos'
+          alertTextButton='Cerrar'
+          alertContentText={details}
+          isOpen={showDetailsCarrierService}
+          setIsOpen={setShowDetailsCarrierService}
+        />
+      )}
     </Box>
   )
 }

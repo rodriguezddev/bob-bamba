@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
+import { handleSetSuccessMessage } from '../successMessage/successMessageSlice'
 
 const initialState = {
   partners: {
@@ -10,6 +11,9 @@ const initialState = {
   },
   partner: {},
   resultSubscriptionFile: {
+    isSuccess: false,
+  },
+  usersWithFile: {
     isSuccess: false,
   },
   usersBatch: {
@@ -91,6 +95,26 @@ export const createSubscriptionBatch = createAsyncThunk(
   },
 )
 
+export const createUsersWithFile = createAsyncThunk(
+  'partner/users',
+  async (params, thunkAPI) => {
+    const { data } = params
+    try {
+      const response = await httpService.post(
+        `${apiConstants.ADMIN_URL}/users/import`,
+        data,
+        true,
+      )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const createUserBatch = createAsyncThunk(
   'partner/userBatch',
   async (params, thunkAPI) => {
@@ -101,6 +125,32 @@ export const createUserBatch = createAsyncThunk(
         data,
         true,
       )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const updatePartner = createAsyncThunk(
+  'update/updatePartner',
+  async (values, thunkAPI) => {
+    const { data, id } = values
+    const messageSuccess = {
+      title: '¡Actualizado!',
+      subtitle: 'El partner se actualizó correctamente',
+    }
+
+    try {
+      const response = await httpService.put(
+        `${apiConstants.ADMIN_URL}/partner/${id}`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
 
       return response
     } catch (error) {
@@ -133,11 +183,15 @@ export const partnerSlice = createSlice({
         isSuccess: false,
       }
     },
+    resetUsersWithFile: (state) => {
+      state.usersWithFile = initialState.usersWithFile
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getPartners.fulfilled, (state, action) => {
       state.partners = action.payload
     })
+
     builder.addCase(createPartner.fulfilled, (state, action) => {
       state.partners = {
         ...state.partners,
@@ -145,20 +199,40 @@ export const partnerSlice = createSlice({
       }
       state.partner = action.payload.data
     })
+
     builder.addCase(assignProducts.fulfilled, (state, action) => {
       state.partners.products = { ...action.payload, isSuccess: true }
     })
+
     builder.addCase(createSubscriptionBatch.fulfilled, (state, action) => {
       state.resultSubscriptionFile = {
         ...action.payload.data,
         isSuccess: true,
       }
     })
+
+    builder.addCase(createUsersWithFile.fulfilled, (state, action) => {
+      state.usersWithFile = {
+        ...action.payload.data,
+        isSuccess: true,
+      }
+    })
+
     builder.addCase(createUserBatch.fulfilled, (state, action) => {
       state.usersBatch = {
         errors: action.payload.data.errors,
         isSuccess: true,
         rowsProcessed: action.payload.data.total_rows,
+      }
+    })
+
+    builder.addCase(updatePartner.fulfilled, (state, action) => {
+      const partners = state.partners.data.filter(
+        (partner) => partner.id !== action.payload.data.id,
+      )
+      state.partners = {
+        ...state.partners,
+        data: [action.payload.data, ...partners],
       }
     })
   },
@@ -172,6 +246,7 @@ export const {
   resetsAssignProductsIsSuccess,
   resetResultSubscriptionFile,
   resetUsersBatch,
+  resetUsersWithFile,
 } = partnerSlice.actions
 
 export default partnerSlice.reducer

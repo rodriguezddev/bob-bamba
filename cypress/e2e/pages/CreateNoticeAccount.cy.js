@@ -4,11 +4,12 @@ describe('Create notice account view', () => {
   it('Show create product page', () => {
     cy.clearLocalStorage()
     cy.login('admin@vivebamba.com', 'Password')
-    cy.get('[data-testid="drawer-item-Administradores"]').should(
+    cy.get('[data-testid="drawer-item-Notificaciones"] ').should(
       'contain',
-      'Administradores',
+      'Notificaciones',
     )
-    cy.visit('/notice-account')
+    cy.get('[data-testid="drawer-item-Notificaciones"] ').first().click()
+    cy.get('[data-testid="button-redirect-noticeAccount"]').click()
     cy.get('[data-testid="button-create-notice-account"]').click()
     cy.get('[data-testid="title-create-account-name"]').should(
       'contain',

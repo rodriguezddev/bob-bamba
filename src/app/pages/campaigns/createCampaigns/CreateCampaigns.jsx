@@ -18,7 +18,6 @@ import {
   resetCampaign,
 } from '../../../slices/campaigns/campaignsSlice'
 import {
-  getWhatsAppAccounts,
   getTemplates,
   resetTemplates,
 } from '../../../slices/recoveryMessage/recoveryMessageSlice'
@@ -26,6 +25,8 @@ import UploadUsersCampaignButton from '../components/uploadUsersCampaignButton'
 import { Alert } from '../../../components/modals'
 import { handleTextClipping } from '../../../utils/UtilsTranslate'
 import { getPartners } from '../../../slices/partner/partnerSlice'
+import { getNoticeAccounts } from '../../../slices/noticeAccounts/noticeAccountsSlice'
+import { noticeProviders } from '../../../constants/noticeProvider'
 
 const CreateCampaigns = () => {
   const dispatch = useDispatch()
@@ -38,17 +39,22 @@ const CreateCampaigns = () => {
   const [userFile, setUserFile] = useState('')
   const { campaign } = useSelector((state) => state.campaign)
   const { partners } = useSelector((state) => state.partner)
-  const { templates, whatsAppAccounts } = useSelector(
-    (state) => state.recoveryMessage,
-  )
+  const { templates } = useSelector((state) => state.recoveryMessage)
+  const { noticeAccounts } = useSelector((state) => state.noticeAccount)
   const [showCreateSuccessAlert, setShowCreateSuccessAlert] = useState(false)
 
   const accountId = watch('accountId') || ''
+  const provider = watch('provider') || ''
 
   useEffect(() => {
-    dispatch(getWhatsAppAccounts())
     dispatch(getPartners('?limit=100'))
   }, [])
+
+  useEffect(() => {
+    if (provider) {
+      dispatch(getNoticeAccounts(`?provider=${provider}`))
+    }
+  }, [provider])
 
   useEffect(() => {
     if (accountId) {
@@ -109,12 +115,55 @@ const CreateCampaigns = () => {
         />
       </Box>
       <Grid container direction='row' marginTop='2rem' spacing='2rem'>
-        <Grid item lg={4} md={6} xs={12}>
-          <GeneralTitle
-            fontSize='.75rem'
-            lineHeight='1rem'
-            text='Cuentas de WhatsApp*'
+        <Grid item lg={4} mb={2} md={6} xs={12}>
+          <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Proveedor' />
+          <Controller
+            control={control}
+            defaultValue=''
+            name='provider'
+            rules={{
+              required: 'El proveedor es requerido',
+            }}
+            render={({
+              field: { onChange, value },
+              fieldState: { error: errorInput },
+            }) => (
+              <Grid
+                container
+                flexDirection='column'
+                marginTop='.5rem'
+                width='16rem'
+              >
+                <SelectInput
+                  error={!!errorInput}
+                  id='provider'
+                  onChange={onChange}
+                  value={value}
+                >
+                  <MenuItem value=''>Seleccionar</MenuItem>
+                  {noticeProviders.map((noticeProvider) => (
+                    <MenuItem
+                      key={noticeProvider.name}
+                      value={noticeProvider.name}
+                    >
+                      {noticeProvider.name}
+                    </MenuItem>
+                  ))}
+                </SelectInput>
+                <Typography
+                  color='error.main'
+                  data-testid='error-message-expiration-period-product'
+                  mt={1}
+                  variant='caption'
+                >
+                  {errorInput?.message}
+                </Typography>
+              </Grid>
+            )}
           />
+        </Grid>
+        <Grid item lg={4} md={6} xs={12}>
+          <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Cuentas*' />
           <Controller
             control={control}
             defaultValue=''
@@ -133,18 +182,19 @@ const CreateCampaigns = () => {
                 width='16rem'
               >
                 <SelectInput
+                  disabled={provider === ''}
                   error={!!errorInput}
                   id='accountId'
                   onChange={onChange}
                   value={value}
                 >
                   <MenuItem value=''>Seleccionar</MenuItem>
-                  {whatsAppAccounts?.data?.map((whatsAppAccount) => (
+                  {noticeAccounts?.data?.map((noticeAccount) => (
                     <MenuItem
-                      key={whatsAppAccount?.id}
-                      value={`${whatsAppAccount?.id}`}
+                      key={noticeAccount?.id}
+                      value={`${noticeAccount?.id}`}
                     >
-                      {whatsAppAccount?.name}
+                      {noticeAccount?.name}
                     </MenuItem>
                   ))}
                 </SelectInput>
@@ -261,11 +311,11 @@ const CreateCampaigns = () => {
           <Grid container flexDirection='column'>
             <UploadUsersCampaignButton setUserFile={setUserFile} />
             {userFile !== '' ? (
-              <Typography marginY='1rem' variant='caption'>
+              <Typography my='1rem' variant='caption'>
                 *Tienes 1 archivo cargado*
               </Typography>
             ) : (
-              <Typography marginY='1rem' variant='caption'>
+              <Typography my='1rem' variant='caption'>
                 No es obligatorio agregar los usuarios
               </Typography>
             )}
@@ -321,7 +371,7 @@ const CreateCampaigns = () => {
                   {errorInput?.message}
                 </Typography>
                 {accountId === '' && (
-                  <Typography marginY='1rem' variant='caption'>
+                  <Typography my='1rem' variant='caption'>
                     Selecciona una cuenta de WhatsApp para ver los templates
                     disponibles
                   </Typography>

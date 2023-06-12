@@ -270,7 +270,7 @@ describe('noticeAccountsSlice redux', () => {
     expect(noticeAccounts).toEqual(state)
   })
 
-  it('should delete updateNoticeAccounts thunk request', async () => {
+  it('should updateNoticeAccounts thunk request', async () => {
     const dispatch = jest.fn()
     const state = {
       noticeAccounts: {

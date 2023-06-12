@@ -26,6 +26,11 @@ export const columns = [
   },
   {
     align: 'center',
+    id: 'partner',
+    label: 'Partner',
+  },
+  {
+    align: 'center',
     id: 'actions',
     label: 'Acciones',
   },

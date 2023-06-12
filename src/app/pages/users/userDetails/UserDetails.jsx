@@ -61,7 +61,7 @@ const UserDetails = () => {
         )}
       </Grid>
       <form>
-        <Grid container marginY='2rem' spacing='2rem'>
+        <Grid container my='2rem' spacing='2rem'>
           <Grid item lg={4} md={6} xs={12}>
             <GeneralTitle
               fontSize='.75rem'
@@ -190,6 +190,18 @@ const UserDetails = () => {
                 placeholder=''
                 radius='.5rem'
                 value={user.cellphone || '-'}
+              />
+            </Grid>
+          </Grid>
+          <Grid item lg={4} md={6} xs={12}>
+            <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Partner' />
+            <Grid marginTop='.5rem'>
+              <MainInput
+                disabled
+                hiddenIcon
+                placeholder=''
+                radius='.5rem'
+                value={user?.partner?.name || '-'}
               />
             </Grid>
           </Grid>

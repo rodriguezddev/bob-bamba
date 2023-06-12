@@ -9,7 +9,7 @@ const CustomTextField = styled(InputBase)(
     border: `0.13rem solid ${theme.palette.common.greyLight}`,
     borderRadius: radius,
     boxSizing: 'border-box',
-    color: theme.palette.common.black,
+    color: theme.palette.primary.main,
     fontSize: `${fontSize}`,
     height: `${height}`,
     padding: '0.75rem 1rem',

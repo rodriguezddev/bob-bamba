@@ -16,27 +16,30 @@ import { SelectInput } from '../../../../../components/inputs'
 import theme from '../../../../../theme'
 import {
   getTemplates,
-  getWhatsAppAccounts,
   resetTemplates,
   sendRecoveryMessage,
 } from '../../../../../slices/recoveryMessage/recoveryMessageSlice'
 import { handleTextClipping } from '../../../../../utils/UtilsTranslate'
+import { noticeProviders } from '../../../../../constants/noticeProvider'
+import { getNoticeAccounts } from '../../../../../slices/noticeAccounts/noticeAccountsSlice'
 
 const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
   const {
     control, handleSubmit, watch, reset,
   } = useForm()
   const { isLoading } = useSelector((state) => state.loading)
-  const { templates, whatsAppAccounts } = useSelector(
-    (state) => state.recoveryMessage,
-  )
+  const { templates } = useSelector((state) => state.recoveryMessage)
+  const { noticeAccounts } = useSelector((state) => state.noticeAccount)
   const [templateMessage, setTemplateMessage] = useState('')
   const dispatch = useDispatch()
   const accountType = watch('account') || ''
+  const provider = watch('provider') || ''
 
   useEffect(() => {
-    dispatch(getWhatsAppAccounts())
-  }, [])
+    if (provider) {
+      dispatch(getNoticeAccounts(`?provider=${provider}`))
+    }
+  }, [provider])
 
   useEffect(() => {
     if (accountType) {
@@ -84,6 +87,53 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
           justifyContent='center'
         >
           <Grid item lg={4} mb={2} md={6} xs={12}>
+            <GeneralTitle
+              fontSize='.75rem'
+              lineHeight='1rem'
+              text='Proveedor'
+            />
+            <Controller
+              control={control}
+              defaultValue=''
+              name='provider'
+              rules={{
+                required: 'El proveedor es requerido',
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error: errorInput },
+              }) => (
+                <Grid container flexDirection='column' marginTop='.5rem'>
+                  <SelectInput
+                    error={!!errorInput}
+                    height='3rem'
+                    id='provider'
+                    onChange={onChange}
+                    value={value}
+                  >
+                    <MenuItem value=''>Seleccionar</MenuItem>
+                    {noticeProviders.map((noticeProvider) => (
+                      <MenuItem
+                        key={noticeProvider.name}
+                        value={noticeProvider.name}
+                      >
+                        {noticeProvider.name}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
+                  <Typography
+                    color='error.main'
+                    data-testid='error-message-expiration-period-product'
+                    mt={1}
+                    variant='caption'
+                  >
+                    {errorInput?.message}
+                  </Typography>
+                </Grid>
+              )}
+            />
+          </Grid>
+          <Grid item lg={4} mb={2} md={6} xs={12}>
             <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Cuenta' />
             <Controller
               control={control}
@@ -98,6 +148,7 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
               }) => (
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <SelectInput
+                    disabled={provider === ''}
                     error={!!errorInput}
                     height='3rem'
                     id='account'
@@ -105,12 +156,12 @@ const RecoveryMessageForm = ({ handleShowForm, open, user }) => {
                     value={value}
                   >
                     <MenuItem value=''>Seleccionar</MenuItem>
-                    {whatsAppAccounts?.data?.map((whatsAppAccount) => (
+                    {noticeAccounts?.data?.map((noticeAccount) => (
                       <MenuItem
-                        key={whatsAppAccount?.id}
-                        value={`${whatsAppAccount?.id}`}
+                        key={noticeAccount?.id}
+                        value={`${noticeAccount?.id}`}
                       >
-                        {whatsAppAccount.name}
+                        {noticeAccount.name}
                       </MenuItem>
                     ))}
                   </SelectInput>

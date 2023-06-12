@@ -4,7 +4,6 @@ import recoveryMessageReducer, {
   sendRecoveryMessage,
   recoveryMessageSlice,
   resetRecoveryMessage,
-  getWhatsAppAccounts,
 } from './recoveryMessageSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -15,7 +14,6 @@ describe('recoveryMessageSlice redux', () => {
       isSuccess: false,
     },
     templates: {},
-    whatsAppAccounts: [],
   }
   afterEach(() => {
     jest.restoreAllMocks()
@@ -112,43 +110,5 @@ describe('recoveryMessageSlice redux', () => {
     const actualState = recoveryMessageReducer(state, resetRecoveryMessage())
 
     expect(actualState.message).toEqual({ data: {}, isSuccess: false })
-  })
-
-  it('should response getWhatsAppAccounts', async () => {
-    const formData = {}
-    const responseMock = {}
-    const state = {
-      message: {
-        data: {},
-        isSuccess: false,
-      },
-      templates: {},
-      whatsAppAccounts: [],
-    }
-
-    jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
-
-    const store = configureStore({ reducer: recoveryMessageSlice.reducer })
-
-    await store.dispatch(getWhatsAppAccounts(formData))
-
-    const { whatsAppAccounts } = await store.getState()
-
-    expect(whatsAppAccounts).toEqual(state.whatsAppAccounts)
-  })
-
-  it('should get whatsApp accounts thunk request', async () => {
-    const dispatch = jest.fn()
-    const thunk = getWhatsAppAccounts()
-
-    await thunk(dispatch, () => initialState, undefined)
-
-    const { calls } = dispatch.mock
-
-    expect(calls).toHaveLength(2)
-    expect(calls[0][0].type).toEqual('recoveryMessage/whatsAppAccounts/pending')
-    expect(calls[1][0].type).toEqual(
-      'recoveryMessage/whatsAppAccounts/rejected',
-    )
   })
 })
