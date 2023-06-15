@@ -14,6 +14,7 @@ import { handleTextClipping } from '../../../utils/UtilsTranslate'
 import { createUsersWithFile } from '../../../slices/partner/partnerSlice'
 import ContainerUsersCreationFile from './components/ContainerUsersCreationFile/ContainerUsersCreationFile'
 import { getNoticeAccounts } from '../../../slices/noticeAccounts/noticeAccountsSlice'
+import { noticeProviders } from '../../../constants/noticeProvider'
 
 const CreateUsersInBatch = () => {
   const { id } = useParams()
@@ -31,7 +32,7 @@ const CreateUsersInBatch = () => {
 
   useEffect(() => {
     if (provider) {
-      dispatch(getNoticeAccounts('?provider=WHATSAPP'))
+      dispatch(getNoticeAccounts(`?provider=${provider}`))
     }
   }, [provider])
 
@@ -103,6 +104,52 @@ const CreateUsersInBatch = () => {
               text='Mensaje de notificación (opcional)'
             />
           </Grid>
+          <Grid item lg={4} mb={2} md={6} xs={12}>
+            <GeneralTitle
+              fontSize='.75rem'
+              lineHeight='1rem'
+              text='Proveedor'
+            />
+            <Controller
+              control={control}
+              defaultValue=''
+              name='provider'
+              rules={{
+                required: 'El proveedor es requerido',
+              }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error: errorInput },
+              }) => (
+                <Grid container flexDirection='column' marginTop='.5rem'>
+                  <SelectInput
+                    error={!!errorInput}
+                    id='provider'
+                    onChange={onChange}
+                    value={value}
+                  >
+                    <MenuItem value=''>Seleccionar</MenuItem>
+                    {noticeProviders.map((noticeProvider) => (
+                      <MenuItem
+                        key={noticeProvider.name}
+                        value={noticeProvider.name}
+                      >
+                        {noticeProvider.name}
+                      </MenuItem>
+                    ))}
+                  </SelectInput>
+                  <Typography
+                    color='error.main'
+                    data-testid='error-message-provider-users-upload'
+                    mt={1}
+                    variant='caption'
+                  >
+                    {errorInput?.message}
+                  </Typography>
+                </Grid>
+              )}
+            />
+          </Grid>
           <Grid item mb={2} md={6} xs={12}>
             <GeneralTitle fontSize='.75rem' lineHeight='1rem' text='Cuenta' />
             <Controller
@@ -115,6 +162,7 @@ const CreateUsersInBatch = () => {
               }) => (
                 <Grid container flexDirection='column' marginTop='.5rem'>
                   <SelectInput
+                    disabled={provider === ''}
                     error={!!errorInput}
                     id='account'
                     onChange={onChange}
@@ -132,7 +180,7 @@ const CreateUsersInBatch = () => {
                   </SelectInput>
                   <Typography
                     color='error.main'
-                    data-testid='error-message-expiration-period-product'
+                    data-testid='error-message-account-users-upload'
                     mt={1}
                     variant='caption'
                   >
@@ -186,7 +234,7 @@ const CreateUsersInBatch = () => {
                   </SelectInput>
                   <Typography
                     color='error.main'
-                    data-testid='error-message-expiration-period-product'
+                    data-testid='error-message-template-users-upload'
                     mt={1}
                     variant='caption'
                   >
@@ -195,17 +243,17 @@ const CreateUsersInBatch = () => {
                 </Grid>
               )}
             />
+            {templateMessage ?? (
+              <Grid container flexDirection='column' marginTop='.5rem'>
+                <GeneralTitle
+                  fontSize='.75rem'
+                  lineHeight='1rem'
+                  text='Mensaje'
+                />
+                <Grid item>{templateMessage}</Grid>
+              </Grid>
+            )}
           </Grid>
-          {templateMessage ?? (
-            <Grid container flexDirection='column' marginTop='.5rem'>
-              <GeneralTitle
-                fontSize='.75rem'
-                lineHeight='1rem'
-                text='Mensaje'
-              />
-              <Grid item>{templateMessage}</Grid>
-            </Grid>
-          )}
         </Grid>
       </Box>
       <Box display='flex' my={4} sx={{ justifyContent: 'flex-end' }}>
