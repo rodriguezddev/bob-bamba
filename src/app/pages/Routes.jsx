@@ -27,6 +27,8 @@ import { GlobalSpinner } from '../components/spinners'
 import { AlertError, AlertSuccess } from '../components/modals'
 import CreateUsers from './users/createUsers'
 import CreateUsersInBatch from './partners/createUsersInBatch'
+import CreateMessages from './messages/createMessages'
+import Message from './messages'
 
 const Routes = () => (
   <>
@@ -74,6 +76,8 @@ const Routes = () => (
           path='/notice-account/templates/create'
           element={<CreateNoticeAccountTemplate />}
         />
+        <Route path='/messages' element={<Message />} />
+        <Route path='/messages/create' element={<CreateMessages />} />
       </Route>
     </ReactRoutes>
   </>

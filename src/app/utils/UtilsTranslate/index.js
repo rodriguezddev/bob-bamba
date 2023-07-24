@@ -74,3 +74,20 @@ export const handleTextClipping = (text, maxLength) => (text && text.length > ma
   : text)
 
 export const handleSentCampaign = (status) => (status ? 'Enviada' : 'Pendiente')
+
+export const getMessageKey = (type) => {
+  const typePartner = {
+    welcome: 'Bienvenida',
+    show_benefits: 'Mostrar beneficios',
+  }
+
+  return typePartner[type]
+}
+
+export const getMessageType = (type) => {
+  const typePartner = {
+    welcome: 'Bienvenida',
+  }
+
+  return typePartner[type]
+}

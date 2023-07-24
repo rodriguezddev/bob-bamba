@@ -102,4 +102,16 @@ describe('test functions utils translate', () => {
 
     expect(croppedText).toEqual('¡Hola! Hoy es un gran día.')
   })
+
+  it('get message key', () => {
+    const period = 'welcome'
+
+    expect(utilsTranslate.getMessageKey(period)).toBe('Bienvenida')
+  })
+
+  it('get message type', () => {
+    const period = 'welcome'
+
+    expect(utilsTranslate.getMessageType(period)).toBe('Bienvenida')
+  })
 })

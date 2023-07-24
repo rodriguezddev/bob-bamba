@@ -21,6 +21,7 @@ const initialState = {
     isSuccess: false,
     rowsProcessed: 0,
   },
+  assignedAccount: {},
 }
 
 export const getPartners = createAsyncThunk(
@@ -66,6 +67,32 @@ export const assignProducts = createAsyncThunk(
         `${apiConstants.ADMIN_URL}/partner/${values.partnerId}/products`,
         values.product,
       )
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const assignAccount = createAsyncThunk(
+  'partner/assignAccount',
+  async (values, thunkAPI) => {
+    const { data } = values
+
+    try {
+      const messageSuccess = {
+        title: 'Asignada!',
+        subtitle: 'La cuenta se ha asignado',
+      }
+
+      const response = await httpService.put(
+        `${apiConstants.ADMIN_URL}/partner/${values.partnerId}/notice-account`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
       return response
     } catch (error) {
       const message = error
@@ -202,6 +229,10 @@ export const partnerSlice = createSlice({
 
     builder.addCase(assignProducts.fulfilled, (state, action) => {
       state.partners.products = { ...action.payload, isSuccess: true }
+    })
+
+    builder.addCase(assignAccount.fulfilled, (state, action) => {
+      state.assignedAccount = action.payload
     })
 
     builder.addCase(createSubscriptionBatch.fulfilled, (state, action) => {

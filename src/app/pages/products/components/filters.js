@@ -29,7 +29,7 @@ export const filters = [
     type: 'text',
   },
   {
-    id: 'partner',
+    id: 'partner_name',
     name: 'Partner',
     placeholder: 'Partner',
     type: 'text',

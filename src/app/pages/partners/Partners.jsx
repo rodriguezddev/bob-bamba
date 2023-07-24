@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import PlaylistAddCircleIcon from '@mui/icons-material/PlaylistAddCircle'
 import { useNavigate } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
 import {
   Box, Grid, IconButton, Tooltip, Typography,
 } from '@mui/material'
 import { CSVLink } from 'react-csv'
 import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import AddAlertIcon from '@mui/icons-material/AddAlert'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { ActionAlert, Alert } from '../../components/modals'
@@ -14,6 +16,7 @@ import { GeneralTitle } from '../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
 import { columns } from './components/columns'
 import {
+  assignAccount,
   assignProducts,
   getPartners,
   resetsAssignProductsIsSuccess,
@@ -27,12 +30,15 @@ import ProductContainer from './components/ProductContainer'
 import ProductsByPartnerContainer from './components/ProductsByPartnerContainer/ProductsByPartnerContainer'
 import useRowsPerPage from '../../hooks/useRowsPerPage'
 import UpdatePartner from './components/UpdatePartner'
+import AssignAccountForm from './components/assignAccountForm'
 
 const Partners = () => {
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
+  const accountFormHook = useForm()
+  const { handleSubmit, reset } = accountFormHook
   const { partners, usersBatch } = useSelector((state) => state.partner)
   const [partnerActionAlert, setPartnerActionAlert] = useState({})
   const [partnerInfo, setPartnerInfo] = useState({})
@@ -43,6 +49,7 @@ const Partners = () => {
   const [isShowAssignedConfirmationAlert, setIsShowAssignedConfirmationAlert] = useState(false)
   const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getPartners)
   const [isShowDialogUpdate, setIsShowDialogUpdate] = useState(false)
+  const [showAssignAccountAlert, setShowAssignAccountAlert] = useState(false)
   const [selectedPartner, setSelectedPartner] = useState({})
 
   useEffect(() => {
@@ -124,6 +131,21 @@ const Partners = () => {
     setSelectedPartner(partner)
   }
 
+  const handleAssignAccount = (partner) => {
+    setShowAssignAccountAlert(!showAssignAccountAlert)
+    setSelectedPartner(partner)
+  }
+
+  const onSubmit = (dataForm) => {
+    const data = {
+      notice_account_id: dataForm.accountId,
+    }
+
+    dispatch(assignAccount({ data, partnerId: selectedPartner.id }))
+    reset()
+    setShowAssignAccountAlert(!showAssignAccountAlert)
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
@@ -192,6 +214,13 @@ const Partners = () => {
                   <Tooltip title='Carga de usuarios'>
                     <IconButton color='primary' sx={{ padding: 0 }}>
                       <GroupAddIcon sx={{ fontSize: '1.25rem' }} />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item onClick={() => handleAssignAccount(partner)}>
+                  <Tooltip title='Asignar cuenta de notificaciones'>
+                    <IconButton color='primary' sx={{ padding: 0 }}>
+                      <AddAlertIcon sx={{ fontSize: '1.25rem' }} />
                     </IconButton>
                   </Tooltip>
                 </Grid>
@@ -276,6 +305,21 @@ const Partners = () => {
           isOpen={showSuccessAlert}
           setIsOpen={setShowSuccessAlert}
         />
+      )}
+      {showAssignAccountAlert && (
+        <ActionAlert
+          actionAlertContentText=''
+          actionAlertTextButton='Cerrar'
+          actionAlertTitle={`Asignar cuenta a ${selectedPartner?.name}`}
+          isOpen={showAssignAccountAlert}
+          isShowPrimaryButton
+          maxWidth='sm'
+          onClick={handleSubmit(onSubmit)}
+          primaryButtonTextAlert='Asignar'
+          setActionsIsOpen={setShowAssignAccountAlert}
+        >
+          <AssignAccountForm accountFormHook={accountFormHook} />
+        </ActionAlert>
       )}
       {usersBatch?.isSuccess && (
         <Alert

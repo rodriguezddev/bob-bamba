@@ -42,4 +42,9 @@ export const columns = [
     id: 'details',
     label: 'Metadatos',
   },
+  {
+    align: 'center',
+    id: 'actions',
+    label: 'Acciones',
+  },
 ]

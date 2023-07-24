@@ -8,7 +8,7 @@ import campaignsReducer, {
   assignUsers,
   updateCampaign,
   getCampaign,
-} from './campaignsSlice'
+} from './campaignSlice'
 import httpService from '../../services/api_services/HttpService'
 
 describe('CampaignSlice redux', () => {
@@ -404,7 +404,7 @@ describe('CampaignSlice redux', () => {
     expect(calls[1][0].type).toEqual('assignUsers/campaign/rejected')
   })
 
-  it('should return delete admin state', async () => {
+  it('should return delete campaign state', async () => {
     const state = {
       data: [],
       meta: {},

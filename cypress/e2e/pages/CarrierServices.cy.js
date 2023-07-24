@@ -58,6 +58,18 @@ describe('Carrier services view', () => {
     cy.get('[data-testid="close-button-alert"]').click()
   })
 
+  it('show modal to update', () => {
+    cy.login('admin@vivebamba.com', 'Password')
+    cy.get('[data-testid="drawer-item-Carriers"]').should('contain', 'Carriers')
+    cy.get('[data-testid="drawer-item-Carriers"]').first().click()
+    cy.get(':nth-child(1) > :nth-child(9) > .MuiGrid-root').click()
+    cy.get('#alert-dialog-title').should(
+      'contain',
+      'Actualizar carrier service',
+    )
+    cy.get('[data-testid="close-button-action-alert"]').click()
+  })
+
   it('check pagination', () => {
     cy.get('[aria-label="first page"]').should('be.disabled')
   })

@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import partnerReducer, {
+  assignAccount,
   assignProducts,
   createPartner,
   createSubscriptionBatch,
@@ -39,6 +40,7 @@ describe('PartnerSlice redux', () => {
         isSuccess: false,
         rowsProcessed: 0,
       },
+      assignedAccount: {},
     })
   })
 
@@ -374,7 +376,7 @@ describe('PartnerSlice redux', () => {
     expect(partners.products).toEqual(state)
   })
 
-  it('should assignProducts thunk request', async () => {
+  it('should assigned products thunk request', async () => {
     const dispatch = jest.fn()
     const state = {
       partners: {
@@ -391,6 +393,73 @@ describe('PartnerSlice redux', () => {
     expect(calls).toHaveLength(2)
     expect(calls[0][0].type).toEqual('partner/assignProducts/pending')
     expect(calls[1][0].type).toEqual('partner/assignProducts/rejected')
+  })
+
+  it('should return assigned account to partner state', async () => {
+    const statePartnerProducts = {
+      notice_account_id: 'f4bc41f7-926d-479f-8a86-484a876fd0a8',
+    }
+
+    const responseMock = {
+      data: {
+        id: '99918a84-3ce1-489c-8506-af22de94d0b9',
+        name: 'fake company',
+        code: 'FAKE-COMPANY',
+        type: 'SPONSOR',
+        meta: {
+          notice_account: {
+            id: 'f4bc41f7-926d-479f-8a86-484a876fd0a8',
+            assigned: true,
+          },
+        },
+      },
+      code: 0,
+    }
+
+    const state = {
+      data: {
+        id: '99918a84-3ce1-489c-8506-af22de94d0b9',
+        name: 'fake company',
+        code: 'FAKE-COMPANY',
+        type: 'SPONSOR',
+        meta: {
+          notice_account: {
+            id: 'f4bc41f7-926d-479f-8a86-484a876fd0a8',
+            assigned: true,
+          },
+        },
+      },
+      code: 0,
+    }
+
+    jest.spyOn(httpService, 'put').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: partnerSlice.reducer })
+    await store.dispatch(assignAccount(statePartnerProducts))
+
+    const { assignedAccount } = await store.getState()
+
+    expect(assignedAccount).toEqual(state)
+  })
+
+  it('should assigned account thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      assignedAccount: {},
+    }
+    const thunk = assignAccount()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/assignAccount/pending')
+    expect(calls[1][0].type).toEqual('partner/assignAccount/rejected')
   })
 
   it('should return resultSubscriptionFile', async () => {

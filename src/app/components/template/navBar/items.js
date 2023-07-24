@@ -39,6 +39,11 @@ const items = [
     icon: 'notification',
     title: 'Notificaciones',
   },
+  {
+    href: '/messages',
+    icon: 'messages',
+    title: 'Mensajes',
+  },
 ]
 
 export default items

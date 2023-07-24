@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
-  Box, Grid, IconButton, Tooltip, Typography,
+  Box, Grid, IconButton, Link, Tooltip, Typography,
 } from '@mui/material'
 import { CSVLink } from 'react-csv'
 import { useForm } from 'react-hook-form'
@@ -25,7 +25,7 @@ import {
   updateCampaign,
   assignUsers,
   resetCampaign,
-} from '../../slices/campaigns/campaignsSlice'
+} from '../../slices/campaigns/campaignSlice'
 import { ActionAlert, Alert } from '../../components/modals'
 import useRowsPerPage from '../../hooks/useRowsPerPage'
 import { handleSentCampaign } from '../../utils/UtilsTranslate'
@@ -125,7 +125,7 @@ const Campaigns = () => {
     setPage(newPage)
   }
 
-  const navigateToCreateUser = () => {
+  const navigateToCreateCampaign = () => {
     navigate('/campaigns/create')
   }
 
@@ -183,17 +183,34 @@ const Campaigns = () => {
     <Box sx={{ width: '100%' }}>
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
         <GeneralTitle text='Campañas' />
-        <MainButton
-          color='primary'
-          data-testid='button-create-campaigns'
-          fontSize='0.85rem'
-          height='3rem'
-          onClick={navigateToCreateUser}
-          radius='0.62rem'
-          width='15rem'
-        >
-          Crear campaña
-        </MainButton>
+        <Box display='flex' flexDirection='column' alignItems='flex-end'>
+          <MainButton
+            color='primary'
+            data-testid='button-create-campaigns'
+            fontSize='0.85rem'
+            height='3rem'
+            onClick={navigateToCreateCampaign}
+            radius='0.62rem'
+            width='15rem'
+          >
+            Crear campaña
+          </MainButton>
+          <Link
+            color='primary'
+            data-testid='button-redirect-carrier'
+            fontSize='0.85rem'
+            href={process.env.REACT_APP_API_USER_CAMPAIGN_TEMPLATE_FILE}
+            mt={3}
+            rel='noopener noreferrer'
+            sx={{
+              textDecoration: 'underline',
+            }}
+            textAlign='end'
+            target='_blank'
+          >
+            Descargar plantilla de carga de usuarios
+          </Link>
+        </Box>
       </Box>
       <MainFilter fieldDetails={filters} handleSearch={handleSearch} />
       <GeneralTable

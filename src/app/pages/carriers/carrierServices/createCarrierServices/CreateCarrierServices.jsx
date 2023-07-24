@@ -31,6 +31,7 @@ const CreateCarrierServices = () => {
   const [page, setPage] = useState(0)
   const { control, handleSubmit } = useForm()
   const [contentValues, setContentValues] = useState([])
+  const [metaContent, setMetaContent] = useState([])
 
   useEffect(() => {
     dispatch(getCategories())
@@ -41,12 +42,12 @@ const CreateCarrierServices = () => {
     const values = {
       name: dataForm.name,
       sku: dataForm.sku.toUpperCase(),
-      cost_per_year: dataForm.cost_per_year,
-      cost_per_month: dataForm.cost_per_month,
-      is_enabled: dataForm.is_enabled,
-      carrier_id: dataForm.carrier_id,
-      category_id: dataForm.category_id,
-      meta: contentValues,
+      cost_per_year: dataForm.costPerYear,
+      cost_per_month: dataForm.costPerMonth,
+      is_enabled: dataForm.isEnabled,
+      carrier_id: dataForm.carrierId,
+      category_id: dataForm.categoryId,
+      meta: metaContent,
     }
 
     dispatch(createCarrierService(values))
@@ -64,10 +65,20 @@ const CreateCarrierServices = () => {
   }
 
   const handleChangeContent = (index, event) => {
-    const newContentValues = [...contentValues]
+    const updatedContentValues = [...contentValues]
+    const updatedContentItem = { ...updatedContentValues[index] }
 
-    newContentValues[index][event.target.name] = event.target.value
-    setContentValues(newContentValues)
+    updatedContentItem[event.target.name] = event.target.value
+    updatedContentValues[index] = updatedContentItem
+
+    setMetaContent(
+      updatedContentValues.reduce((convertedValues, item) => {
+        convertedValues[item.key] = item.value
+        return convertedValues
+      }, {}),
+    )
+
+    setContentValues(updatedContentValues)
   }
 
   const handleAddInput = () => {
@@ -113,7 +124,7 @@ const CreateCarrierServices = () => {
             defaultValue=''
             name='name'
             rules={{
-              required: 'El nombre del carrier service es requerido',
+              required: 'El nombre es requerido',
             }}
             render={({
               field: { onChange, value },
@@ -123,7 +134,7 @@ const CreateCarrierServices = () => {
                 <MainInput
                   error={!!errorInput}
                   hiddenIcon
-                  id='name-carrierService'
+                  id='nameCarrierService'
                   onChange={onChange}
                   placeholder=''
                   radius='.5rem'
@@ -161,7 +172,7 @@ const CreateCarrierServices = () => {
                 <MainInput
                   error={!!errorInput}
                   hiddenIcon
-                  id='sku-carrierService'
+                  id='skuCarrierService'
                   onChange={onChange}
                   placeholder=''
                   radius='.5rem'
@@ -203,7 +214,7 @@ const CreateCarrierServices = () => {
           <Controller
             control={control}
             defaultValue=''
-            name='cost_per_year'
+            name='costPerYear'
             rules={{
               required: 'El costo por año es requerido',
             }}
@@ -215,7 +226,7 @@ const CreateCarrierServices = () => {
                 <MainInput
                   error={!!errorInput}
                   hiddenIcon
-                  id='cost-per-year-carrierService'
+                  id='costPerYearCarrierService'
                   onChange={onChange}
                   placeholder=''
                   radius='.5rem'
@@ -242,7 +253,7 @@ const CreateCarrierServices = () => {
           <Controller
             control={control}
             defaultValue=''
-            name='cost_per_month'
+            name='costPerMonth'
             rules={{
               required: 'El costo por mes es requerido',
             }}
@@ -254,7 +265,7 @@ const CreateCarrierServices = () => {
                 <MainInput
                   error={!!errorInput}
                   hiddenIcon
-                  id='cost-per-month-carrierService'
+                  id='costPerMonthCarrierService'
                   onChange={onChange}
                   placeholder=''
                   radius='.5rem'
@@ -277,7 +288,7 @@ const CreateCarrierServices = () => {
           <Controller
             control={control}
             defaultValue=''
-            name='category_id'
+            name='categoryId'
             rules={{
               required: 'La categoría es requerida',
             }}
@@ -288,7 +299,7 @@ const CreateCarrierServices = () => {
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <SelectInput
                   error={!!errorInput}
-                  id='category-carrierService'
+                  id='categoryCarrierService'
                   onChange={onChange}
                   value={value}
                 >
@@ -316,7 +327,7 @@ const CreateCarrierServices = () => {
             <Controller
               control={control}
               defaultValue=''
-              name='carrier_id'
+              name='carrierId'
               rules={{
                 required: 'El carrier es requerido',
               }}
@@ -333,7 +344,7 @@ const CreateCarrierServices = () => {
                   <SelectInput
                     displayEmpty
                     error={!!errorInput}
-                    id='carrier-carrierService'
+                    id='carrierCarrierService'
                     onChange={onChange}
                     value={value}
                   >
@@ -373,7 +384,7 @@ const CreateCarrierServices = () => {
           <Controller
             control={control}
             defaultValue={false}
-            name='is_enabled'
+            name='isEnabled'
             render={({ field: { onChange, value } }) => (
               <Grid container flexDirection='column' marginTop='.5rem'>
                 <Grid>
@@ -384,7 +395,7 @@ const CreateCarrierServices = () => {
                     No
                   </Typography>
                   <Switch
-                    id='enabled-carrierService'
+                    id='enabledCarrierService'
                     value={value}
                     onChange={onChange}
                   />
@@ -415,7 +426,7 @@ const CreateCarrierServices = () => {
           />
           <GeneralTitle
             fontSize='.65rem'
-            fontWeight={500}
+            fontWeight='500'
             lineHeight='1rem'
             marginBottom='1.5rem'
             text='Esta sección no es obligatoria'

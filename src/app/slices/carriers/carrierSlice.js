@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
+import { handleSetSuccessMessage } from '../successMessage/successMessageSlice'
 
 const initialState = {
   carrierServices: {
@@ -41,6 +42,31 @@ export const createCarrierService = createAsyncThunk(
         `${apiConstants.ADMIN_URL}/carrier-services`,
         values,
       )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const updateCarrierService = createAsyncThunk(
+  'update/createCarrierService',
+  async (values, thunkAPI) => {
+    const { data } = values
+    try {
+      const messageSuccess = {
+        title: '¡Actualización exitosa!',
+        subtitle: 'Se actualizo el carrier service',
+      }
+      const response = await httpService.patch(
+        `${apiConstants.ADMIN_URL}/carrier-services/${values.carrierServiceId}`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
 
       return response
     } catch (error) {
@@ -121,6 +147,17 @@ export const carrierSlice = createSlice({
       state.carrierServices = {
         ...state.carrierServices,
         data: [action.payload.data, ...state.carrierServices.data],
+      }
+
+      state.carrierService = action.payload.data
+    })
+    builder.addCase(updateCarrierService.fulfilled, (state, action) => {
+      const carrierServices = state.carrierServices.data.filter(
+        (carrierService) => carrierService.id !== action.payload.data.id,
+      )
+      state.carrierServices = {
+        ...state.carrierServices,
+        data: [action.payload.data, ...carrierServices],
       }
 
       state.carrierService = action.payload.data

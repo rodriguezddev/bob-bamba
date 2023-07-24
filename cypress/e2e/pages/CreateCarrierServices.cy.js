@@ -17,7 +17,7 @@ describe('Create carrier services view', () => {
     cy.get('[data-testid="create-carrierService-button"]').click()
     cy.get('[data-testid="error-message-name-carrierService"]').should(
       'contain',
-      'El nombre del carrier service es requerido',
+      'El nombre es requerido',
     )
     cy.get('[data-testid="error-message-sku-carrierService"]').should(
       'contain',
@@ -53,33 +53,33 @@ describe('Create carrier services view', () => {
   })
 
   it('Remove errors form', () => {
-    cy.get('#name-carrierService').type('prueba')
+    cy.get('#nameCarrierService').type('prueba')
     cy.get('[data-testid="error-message-name-carrierService"]').should(
       'not.have.value',
       'El nombre es requerido',
     )
-    cy.get('#sku-carrierService').type('bamba-serv')
+    cy.get('#skuCarrierService').type('bamba-serv')
     cy.get('[data-testid="error-message-sku-carrierService"]').should(
       'not.have.value',
       'El SKU es requerido',
     )
-    cy.get('#cost-per-year-carrierService').type('1')
+    cy.get('#costPerYearCarrierService').type('1')
     cy.get('[data-testid="error-message-cost-per-year-carrierService"]').should(
       'not.have.value',
       'El costo por año es requerido',
     )
-    cy.get('#cost-per-month-carrierService').type('1')
+    cy.get('#costPerMonthCarrierService').type('1')
     cy.get(
       '[data-testid="error-message-cost-per-month-carrierService"]',
     ).should('not.have.value', 'El costo por mes es requerido')
-    cy.get('#category-carrierService').click()
+    cy.get('#categoryCarrierService').click()
     cy.get('[data-value="931b7435-403d-439f-90c3-d6ee8d11de84"]').click()
     cy.get('[data-testid="error-message-category-carrierService"]').should(
       'not.have.value',
       'La categoría es requerida',
     )
 
-    cy.get('#carrier-carrierService').click()
+    cy.get('#carrierCarrierService').click()
     cy.get('[data-value="6c024359-72bd-49e7-a6fc-610edb84e20d"]').click()
     cy.get('[data-testid="error-message-carrier-carrierService"]').should(
       'not.have.value',

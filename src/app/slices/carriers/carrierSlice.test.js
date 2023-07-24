@@ -6,6 +6,7 @@ import carrierServiceReducer, {
   getCarriers,
   createCarrier,
   updateCarrier,
+  updateCarrierService,
 } from './carrierSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -216,6 +217,95 @@ describe('carrierServiceSlice redux', () => {
     expect(calls).toHaveLength(2)
     expect(calls[0][0].type).toEqual('create/createCarrierService/pending')
     expect(calls[1][0].type).toEqual('create/createCarrierService/rejected')
+  })
+
+  it('should return update carrier services', async () => {
+    const formData = {
+      name: 'prueba 6',
+      sku: 'PRUEBA-6',
+      cost_per_year: 1,
+      cost_per_month: 1,
+      is_enabled: false,
+      carrier_id: 'a406f848-65f4-40d7-971b-519cbd6bb28c',
+      category_id: '335869e3-907a-4ca6-bb40-3f3fafc57ec7',
+    }
+
+    const responseMock = {
+      data: {
+        id: '409630dd-3be0-4eb1-b495-bc3bcbf65111',
+        name: 'prueba 6',
+        sku: 'PRUEBA-6',
+        cost_per_year: 1,
+        cost_per_month: 1,
+        is_enabled: true,
+        carrier: {
+          id: 'a406f848-65f4-40d7-971b-519cbd6bb28c',
+          name: 'BAMBA',
+          code: 'BAMBA',
+          is_enabled: false,
+        },
+        category: {
+          id: '335869e3-907a-4ca6-bb40-3f3fafc57ec7',
+          name: 'insurance',
+          code: 'INSURANCE',
+        },
+      },
+      code: 0,
+    }
+
+    const state = {
+      id: '409630dd-3be0-4eb1-b495-bc3bcbf65111',
+      name: 'prueba 6',
+      sku: 'PRUEBA-6',
+      cost_per_year: 1,
+      cost_per_month: 1,
+      is_enabled: true,
+      carrier: {
+        id: 'a406f848-65f4-40d7-971b-519cbd6bb28c',
+        name: 'BAMBA',
+        code: 'BAMBA',
+        is_enabled: false,
+      },
+      category: {
+        id: '335869e3-907a-4ca6-bb40-3f3fafc57ec7',
+        name: 'insurance',
+        code: 'INSURANCE',
+      },
+    }
+
+    jest.spyOn(httpService, 'patch').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: carrierSlice.reducer })
+    await store.dispatch(updateCarrierService(formData))
+
+    const { carrierService } = await store.getState()
+
+    expect(carrierService).toEqual(state)
+  })
+
+  it('should update carrier thunk request', async () => {
+    const dispatch = jest.fn()
+
+    const state = {
+      carrierServices: {
+        data: [],
+        meta: {},
+      },
+      carrierService: {},
+      carriers: {
+        data: [],
+        meta: {},
+      },
+      carrier: {},
+    }
+
+    const thunk = updateCarrierService()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('update/createCarrierService/pending')
+    expect(calls[1][0].type).toEqual('update/createCarrierService/rejected')
   })
 
   it('should return carrier state', async () => {

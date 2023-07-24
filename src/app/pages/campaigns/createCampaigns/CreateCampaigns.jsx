@@ -16,7 +16,7 @@ import { BackButton, MainButton } from '../../../components/buttons'
 import {
   createCampaign,
   resetCampaign,
-} from '../../../slices/campaigns/campaignsSlice'
+} from '../../../slices/campaigns/campaignSlice'
 import {
   getTemplates,
   resetTemplates,

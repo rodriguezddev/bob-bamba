@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Typography } from '@mui/material'
-import { getCarrierServices } from '../../../slices/carriers/carrierSlice'
+import { useForm } from 'react-hook-form'
+import {
+  Box, Grid, IconButton, Tooltip, Typography,
+} from '@mui/material'
+import BorderColorIcon from '@mui/icons-material/BorderColor'
+import {
+  getCarrierServices,
+  updateCarrierService,
+} from '../../../slices/carriers/carrierSlice'
 import { GeneralTitle } from '../../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../../components/tables'
 import { columns } from './components/columns'
@@ -11,17 +18,32 @@ import { filters } from './components/filters'
 import { MainFilter } from '../../../components/filters'
 import theme from '../../../theme'
 import useRowsPerPage from '../../../hooks/useRowsPerPage'
-import { Alert } from '../../../components/modals'
+import { ActionAlert, Alert } from '../../../components/modals'
+import CarrierServicesForm from './components/carrierServicesForm/CarrierServicesForm'
 
 const CarrierServices = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const carrierServicesForm = useForm()
+  const { handleSubmit, reset } = carrierServicesForm
   const { carrierServices } = useSelector((state) => state.carrier)
   const [page, setPage] = useState(0)
   const [search, setSearch] = useState('')
   const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCarrierServices)
   const [showDetailsCarrierService, setShowDetailsCarrierService] = useState(false)
+  const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
   const [details, setDetails] = useState({})
+  const [carrierService, setCarrierService] = useState({})
+  const [metaValues, setMetaValues] = useState([])
+
+  useEffect(() => {
+    if (carrierService) {
+      reset({
+        name: carrierService?.name || '',
+        sku: carrierService?.sku || '',
+      })
+    }
+  }, [carrierService])
 
   useEffect(() => {
     dispatch(getCarrierServices())
@@ -50,6 +72,28 @@ const CarrierServices = () => {
     )
 
     setPage(newPage)
+  }
+
+  const handleShowUpdateAlert = (carrierServiceInfo) => {
+    setCarrierService(carrierServiceInfo)
+    setIsShowUpdateAlert(!isShowUpdateAlert)
+  }
+
+  const onSubmit = (dataForm) => {
+    const data = {
+      name: dataForm.name,
+      sku: dataForm.sku.toUpperCase(),
+      cost_per_year: dataForm.costPerYear,
+      cost_per_month: dataForm.costPerMonth,
+      is_enabled: dataForm.isEnabled,
+      carrier_id: dataForm.carrierId,
+      category_id: dataForm.categoryId,
+      meta: metaValues,
+    }
+    const carrierServiceId = carrierService.id
+
+    dispatch(updateCarrierService({ data, carrierServiceId }))
+    setIsShowUpdateAlert(!isShowUpdateAlert)
   }
 
   const handleDescription = (description) => {
@@ -112,27 +156,29 @@ const CarrierServices = () => {
           native: true,
         }}
       >
-        {carrierServices?.data?.map((carrierService) => (
-          <TableRow key={carrierService?.id}>
-            <TableCell align='left'>{carrierService?.name}</TableCell>
-            <TableCell align='left'>{carrierService?.sku}</TableCell>
+        {carrierServices?.data?.map((carrierServiceInfo) => (
+          <TableRow key={carrierServiceInfo?.id}>
+            <TableCell align='left'>{carrierServiceInfo?.name}</TableCell>
+            <TableCell align='left'>{carrierServiceInfo?.sku}</TableCell>
             <TableCell align='center'>
-              {carrierService?.carrier?.name}
+              {carrierServiceInfo?.carrier?.name}
             </TableCell>
-            <TableCell align='right'>{carrierService?.cost_per_year}</TableCell>
             <TableCell align='right'>
-              {carrierService?.cost_per_month}
+              {carrierServiceInfo?.cost_per_year}
+            </TableCell>
+            <TableCell align='right'>
+              {carrierServiceInfo?.cost_per_month}
             </TableCell>
             <TableCell align='center'>
-              {carrierService?.category?.name}
+              {carrierServiceInfo?.category?.name}
             </TableCell>
             <TableCell align='center'>
-              {carrierService?.is_enabled ? 'Si' : 'No'}
+              {carrierServiceInfo?.is_enabled ? 'Si' : 'No'}
             </TableCell>
             <TableCell align='center'>
-              {carrierService?.meta ? (
+              {carrierServiceInfo?.meta ? (
                 <Typography
-                  onClick={() => handleDescription(carrierService?.meta)}
+                  onClick={() => handleDescription(carrierServiceInfo?.meta)}
                   sx={{ cursor: 'pointer' }}
                 >
                   <u>Ver metadatos</u>
@@ -140,6 +186,18 @@ const CarrierServices = () => {
               ) : (
                 '-'
               )}
+            </TableCell>
+            <TableCell align='center'>
+              <Grid
+                item
+                onClick={() => handleShowUpdateAlert(carrierServiceInfo)}
+              >
+                <Tooltip title='Actualizar carrier service'>
+                  <IconButton color='primary' sx={{ padding: 0 }}>
+                    <BorderColorIcon sx={{ fontSize: '1.25rem' }} />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
             </TableCell>
           </TableRow>
         ))}
@@ -152,6 +210,23 @@ const CarrierServices = () => {
           isOpen={showDetailsCarrierService}
           setIsOpen={setShowDetailsCarrierService}
         />
+      )}
+      {isShowUpdateAlert && (
+        <ActionAlert
+          actionAlertContentText=''
+          actionAlertTextButton='Cerrar'
+          actionAlertTitle='Actualizar carrier service'
+          isOpen={isShowUpdateAlert}
+          isShowPrimaryButton
+          onClick={handleSubmit(onSubmit)}
+          primaryButtonTextAlert='Actualizar'
+          setActionsIsOpen={setIsShowUpdateAlert}
+        >
+          <CarrierServicesForm
+            carrierServicesForm={carrierServicesForm}
+            setMetaValues={setMetaValues}
+          />
+        </ActionAlert>
       )}
     </Box>
   )

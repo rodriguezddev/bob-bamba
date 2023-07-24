@@ -14,9 +14,10 @@ import adminReducer from './slices/adminUsers/adminSlice'
 import authReducer from './slices/auth/authSlice'
 import categoryReducer from './slices/category/categorySlice'
 import carrierReducer from './slices/carriers/carrierSlice'
-import campaignsReducer from './slices/campaigns/campaignsSlice'
+import campaignsReducer from './slices/campaigns/campaignSlice'
 import errorReducer from './slices/error/errorSlice'
 import loadingReducer from './slices/loading/loadingSlice'
+import messageReducer from './slices/messages/messageSlice'
 import notificationReducer from './slices/notifications/notificationsSlice'
 import noticeAccountsReducer from './slices/noticeAccounts/noticeAccountsSlice'
 import noticeAccountTemplateReducer from './slices/noticeAccountTemplate/noticeAccountTemplateSlice'
@@ -36,6 +37,7 @@ const reducers = combineReducers({
   campaign: campaignsReducer,
   error: errorReducer,
   loading: loadingReducer,
+  message: messageReducer,
   notification: notificationReducer,
   noticeAccount: noticeAccountsReducer,
   noticeAccountTemplate: noticeAccountTemplateReducer,
