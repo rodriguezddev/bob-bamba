@@ -114,9 +114,6 @@ const CreateUsersInBatch = () => {
               control={control}
               defaultValue=''
               name='provider'
-              rules={{
-                required: 'El proveedor es requerido',
-              }}
               render={({
                 field: { onChange, value },
                 fieldState: { error: errorInput },
@@ -138,14 +135,6 @@ const CreateUsersInBatch = () => {
                       </MenuItem>
                     ))}
                   </SelectInput>
-                  <Typography
-                    color='error.main'
-                    data-testid='error-message-provider-users-upload'
-                    mt={1}
-                    variant='caption'
-                  >
-                    {errorInput?.message}
-                  </Typography>
                 </Grid>
               )}
             />
