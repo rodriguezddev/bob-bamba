@@ -31,6 +31,7 @@ import ProductsByPartnerContainer from './components/ProductsByPartnerContainer/
 import useRowsPerPage from '../../hooks/useRowsPerPage'
 import UpdatePartner from './components/UpdatePartner'
 import AssignAccountForm from './components/assignAccountForm'
+import { resetProductsByPartners } from '../../slices/product/productSlice'
 
 const Partners = () => {
   const [page, setPage] = useState(0)
@@ -144,6 +145,11 @@ const Partners = () => {
     dispatch(assignAccount({ data, partnerId: selectedPartner.id }))
     reset()
     setShowAssignAccountAlert(!showAssignAccountAlert)
+  }
+
+  const handleCloseDialogShowProducts = () => {
+    dispatch(resetProductsByPartners())
+    setIsShowProducts(false)
   }
 
   return (
@@ -280,7 +286,7 @@ const Partners = () => {
           actionAlertTitle={`Productos asignados a ${partnerInfo?.name}`}
           isOpen={isShowProducts}
           onClick={handleProductAssigned}
-          setActionsIsOpen={setIsShowProducts}
+          setActionsIsOpen={handleCloseDialogShowProducts}
         >
           <ProductsByPartnerContainer partner={partnerInfo} />
         </ActionAlert>

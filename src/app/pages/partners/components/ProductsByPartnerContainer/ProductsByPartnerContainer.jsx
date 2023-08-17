@@ -18,7 +18,9 @@ const ProductsByPartnerContainer = ({ partner }) => {
   const [productId, setProductId] = useState('')
 
   useEffect(() => {
-    dispatch(getProductsByPartners({ partner: partner.name }))
+    dispatch(
+      getProductsByPartners({ partner: partner.name, limit: '&limit=100' }),
+    )
   }, [])
 
   useEffect(() => {
@@ -28,15 +30,17 @@ const ProductsByPartnerContainer = ({ partner }) => {
         (partnerByPrice) => partnerByPrice.partner === partner.name,
       )
 
-      newProductsByPartner = [
-        ...newProductsByPartner,
-        {
-          id: productByPartner?.id,
-          name: productByPartner?.name,
-          sku: productByPartner?.sku,
-          price: partnerIndex?.price,
-        },
-      ]
+      if (partnerIndex) {
+        newProductsByPartner = [
+          ...newProductsByPartner,
+          {
+            id: productByPartner?.id,
+            name: productByPartner?.name,
+            sku: productByPartner?.sku,
+            price: partnerIndex?.price,
+          },
+        ]
+      }
     })
 
     setProductWithPrice(newProductsByPartner)

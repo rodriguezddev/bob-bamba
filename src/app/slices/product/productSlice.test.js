@@ -6,6 +6,7 @@ import productReducer, {
   getProductDetails,
   getProductsNotActive,
   productSlice,
+  resetProductsByPartners,
 } from './productSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -472,5 +473,21 @@ describe('ProductSlice redux', () => {
     expect(calls).toHaveLength(2)
     expect(calls[0][0].type).toEqual('list/productsByPartner/pending')
     expect(calls[1][0].type).toEqual('list/productsByPartner/rejected')
+  })
+
+  it('should handle resetSubscription', () => {
+    const state = {
+      productsByPartners: {
+        data: [],
+        meta: {},
+      },
+    }
+
+    const actualState = productReducer(state, resetProductsByPartners())
+
+    expect(actualState.productsByPartners).toEqual({
+      data: [],
+      meta: {},
+    })
   })
 })
