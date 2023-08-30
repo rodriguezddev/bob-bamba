@@ -4,6 +4,7 @@ import { apiConstants } from '../constants/apiConstants'
 import { handleSetSuccessMessage } from '../successMessage/successMessageSlice'
 
 const initialState = {
+  assignedAccount: {},
   partners: {
     data: [],
     meta: {},
@@ -13,6 +14,7 @@ const initialState = {
   resultSubscriptionFile: {
     isSuccess: false,
   },
+  scope: {},
   usersWithFile: {
     isSuccess: false,
   },
@@ -21,16 +23,15 @@ const initialState = {
     isSuccess: false,
     rowsProcessed: 0,
   },
-  assignedAccount: {},
 }
 
 export const getPartners = createAsyncThunk(
   'list/partners',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(`${apiConstants.ADMIN_URL}/partners${params}`)
-        : await httpService.get(`${apiConstants.ADMIN_URL}/partners`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/partners${params || ''}`,
+      )
 
       return response
     } catch (error) {
@@ -83,7 +84,7 @@ export const assignAccount = createAsyncThunk(
 
     try {
       const messageSuccess = {
-        title: 'Asignada!',
+        title: '¡Asignada!',
         subtitle: 'La cuenta se ha asignado',
       }
 
@@ -93,6 +94,7 @@ export const assignAccount = createAsyncThunk(
       )
 
       thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
       return response
     } catch (error) {
       const message = error
@@ -188,6 +190,97 @@ export const updatePartner = createAsyncThunk(
   },
 )
 
+export const getPartner = createAsyncThunk(
+  'partner/getPartner',
+  async (values, thunkAPI) => {
+    try {
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/partner/${values}`,
+      )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const getScope = createAsyncThunk(
+  'partner/getScope',
+  async (thunkAPI) => {
+    try {
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/partner/webhook-scopes`,
+      )
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const createWebhookPartner = createAsyncThunk(
+  'partner/createWebhookPartner',
+  async (values, thunkAPI) => {
+    const { id, data } = values
+    try {
+      const messageSuccess = {
+        title: 'Creado!',
+        subtitle: 'El webhook se agregó correctamente',
+      }
+
+      const response = await httpService.put(
+        `${apiConstants.ADMIN_URL}/partner/${id}/webhook`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const createTokenPartner = createAsyncThunk(
+  'partner/createTokenPartner',
+  async (values, thunkAPI) => {
+    const { id, data } = values
+    try {
+      const messageSuccess = {
+        title:
+          data.action === 'CREATE'
+            ? '¡Token creado correctamente!'
+            : '¡Eliminado!',
+        ...(data.action === 'DELETE' && {
+          subtitle: 'El token se ha eliminado',
+        }),
+      }
+
+      const response = await httpService.post(
+        `${apiConstants.ADMIN_URL}/partner/${id}/oauth-token`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const partnerSlice = createSlice({
   name: 'partner',
   initialState,
@@ -217,6 +310,14 @@ export const partnerSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(getPartners.fulfilled, (state, action) => {
       state.partners = action.payload
+    })
+
+    builder.addCase(getScope.fulfilled, (state, action) => {
+      state.scope = action.payload
+    })
+
+    builder.addCase(getPartner.fulfilled, (state, action) => {
+      state.partner = action.payload.data
     })
 
     builder.addCase(createPartner.fulfilled, (state, action) => {
@@ -258,6 +359,16 @@ export const partnerSlice = createSlice({
     })
 
     builder.addCase(updatePartner.fulfilled, (state, action) => {
+      const partners = state.partners.data.filter(
+        (partner) => partner.id !== action.payload.data.id,
+      )
+      state.partners = {
+        ...state.partners,
+        data: [action.payload.data, ...partners],
+      }
+    })
+
+    builder.addCase(createWebhookPartner.fulfilled, (state, action) => {
       const partners = state.partners.data.filter(
         (partner) => partner.id !== action.payload.data.id,
       )

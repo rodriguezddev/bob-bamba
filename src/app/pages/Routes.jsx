@@ -29,6 +29,8 @@ import CreateUsers from './users/createUsers'
 import CreateUsersInBatch from './partners/createUsersInBatch'
 import CreateMessages from './messages/createMessages'
 import Message from './messages'
+import AdminPartnerUsers from './adminPartnerUsers/AdminPartnerUsers'
+import CreateAdminPartnerUser from './adminPartnerUsers/createAdminPartnerUser'
 
 const Routes = () => (
   <>
@@ -44,6 +46,11 @@ const Routes = () => (
         <Route
           path='/partners/create-users/:id'
           element={<CreateUsersInBatch />}
+        />
+        <Route path='/admin-partner-users' element={<AdminPartnerUsers />} />
+        <Route
+          path='/admin-partner-users/create'
+          element={<CreateAdminPartnerUser />}
         />
         <Route path='/users' element={<Users />} />
         <Route path='/users/create' element={<CreateUsers />} />

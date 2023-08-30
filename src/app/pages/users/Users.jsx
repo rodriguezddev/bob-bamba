@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -16,32 +16,22 @@ import useRowsPerPage from '../../hooks/useRowsPerPage'
 import { MainButton } from '../../components/buttons'
 
 const Users = () => {
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { users } = useSelector((state) => state.user)
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getUsers)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getUsers, dispatch)
 
   useEffect(() => {
-    dispatch(getUsers())
+    if (!users?.params) {
+      dispatch(getUsers())
+    }
   }, [])
-
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getUsers(path))
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getUsers(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-    setPage(newPage)
-  }
 
   const handleUserDetails = (userId) => {
     navigate(`/users/details/${userId}`)
@@ -67,7 +57,11 @@ const Users = () => {
           Crear Usuarios
         </MainButton>
       </Box>
-      <MainFilter fieldDetails={filters} handleSearch={handleSearch} />
+      <MainFilter
+        fieldDetails={filters}
+        handleSearch={handleSearch}
+        param={users?.params}
+      />
       <GeneralTable
         columns={columns}
         count={users?.meta?.total ?? 0}

@@ -138,6 +138,13 @@ const ContainerUsersCreationFile = ({ fileForm, partnerId }) => {
         <Alert
           alertContentText={(
             <>
+              <Typography component='div' variant='subtitle1'>
+                <b>
+                  Se le enviará un correo de confirmación para informarle que la
+                  carga se ha realizado correctamente
+                </b>
+              </Typography>
+              <br />
               <Typography component='span' variant='subtitle1'>
                 <b>Total de registros:&nbsp;</b>
                 {usersWithFile?.rows_total}

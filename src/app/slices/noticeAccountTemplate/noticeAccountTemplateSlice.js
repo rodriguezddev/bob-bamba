@@ -19,13 +19,9 @@ export const getNoticeAccountTemplate = createAsyncThunk(
   'list/NoticeAccountTemplate',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(
-          `${apiConstants.ADMIN_URL}/notice-account-templates${params}`,
-        )
-        : await httpService.get(
-          `${apiConstants.ADMIN_URL}/notice-account-templates`,
-        )
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/notice-account-templates${params || ''}`,
+      )
 
       return response
     } catch (error) {

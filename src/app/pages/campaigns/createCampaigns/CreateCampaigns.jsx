@@ -27,6 +27,7 @@ import { handleTextClipping } from '../../../utils/UtilsTranslate'
 import { getPartners } from '../../../slices/partner/partnerSlice'
 import { getNoticeAccounts } from '../../../slices/noticeAccounts/noticeAccountsSlice'
 import { noticeProviders } from '../../../constants/noticeProvider'
+import CampaignUploadMessage from '../components/campaignUploadMessage'
 
 const CreateCampaigns = () => {
   const dispatch = useDispatch()
@@ -87,7 +88,12 @@ const CreateCampaigns = () => {
   const handleCloseAlert = () => {
     dispatch(resetCampaign())
     setShowCreateSuccessAlert(false)
-    navigate('/campaigns')
+    if (
+      campaign?.users?.errors?.length === 0
+      || Array.isArray(campaign.users)
+    ) {
+      navigate('/campaigns')
+    }
   }
 
   useEffect(() => {
@@ -100,9 +106,15 @@ const CreateCampaigns = () => {
     <Box sx={{ width: '100%' }}>
       {showCreateSuccessAlert && (
         <Alert
-          alertContentText='Se creo la campaña'
+          alertContentText={
+            Array.isArray(campaign.users) ? (
+              'Se creo la campaña'
+            ) : (
+              <CampaignUploadMessage campaign={campaign} />
+            )
+          }
           alertTextButton='Cerrar'
-          alertTitle='¡Registro exitoso!'
+          alertTitle='¡Registro!'
           isOpen={showCreateSuccessAlert}
           setIsOpen={handleCloseAlert}
         />

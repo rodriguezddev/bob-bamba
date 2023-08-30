@@ -16,13 +16,17 @@ describe('Partner view', () => {
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(3)').should(
       'contain',
-      'Tipo',
+      'Webhook',
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(4)').should(
       'contain',
-      'Compañía',
+      'Tipo',
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(5)').should(
+      'contain',
+      'Compañía',
+    )
+    cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(6)').should(
       'contain',
       'Acciones',
     )
@@ -44,7 +48,7 @@ describe('Partner view', () => {
 
   it('should show modal to assign products to partner ', () => {
     cy.get(
-      ':nth-child(1) > :nth-child(5) > .MuiGrid-container > :nth-child(1) > .MuiButtonBase-root > [data-testid="PlaylistAddCircleIcon"]',
+      ':nth-child(2) > .MuiTableCell-alignCenter > .MuiGrid-container > :nth-child(1) > .MuiButtonBase-root > [data-testid="PlaylistAddCircleIcon"]',
     ).click()
     cy.get('[data-testid="products-available"]').should(
       'contain',
@@ -121,8 +125,18 @@ describe('Partner view', () => {
     cy.get('#alert-dialog-title').should('contain', 'Actualizar partner')
     cy.get('#alert-dialog-description').should(
       'contain',
-      'Se actualizará el partner Aliada',
+      'Se actualizará el partner Agente Bamba',
     )
     cy.get('[data-testid="close-button-action-alert"]').click()
+  })
+
+  it('should show modal to add webhook ', () => {
+    cy.get(
+      '[data-testid="icon-button-Agente Bamba"] > [data-testid="LanguageIcon"]',
+    ).click()
+    cy.get('#alert-dialog-title').should(
+      'contain',
+      'Agrega el webhook de Agente Bamba',
+    )
   })
 })

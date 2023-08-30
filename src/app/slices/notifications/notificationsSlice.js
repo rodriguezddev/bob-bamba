@@ -18,13 +18,9 @@ export const getNotifications = createAsyncThunk(
   'list/notifications',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(
-          `${apiConstants.ADMIN_URL}/notification-configurations${params}`,
-        )
-        : await httpService.get(
-          `${apiConstants.ADMIN_URL}/notification-configurations`,
-        )
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/notification-configurations${params || ''}`,
+      )
 
       return response
     } catch (error) {

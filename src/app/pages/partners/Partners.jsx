@@ -11,6 +11,8 @@ import GroupAddIcon from '@mui/icons-material/GroupAdd'
 import AddAlertIcon from '@mui/icons-material/AddAlert'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import BorderColorIcon from '@mui/icons-material/BorderColor'
+import KeyIcon from '@mui/icons-material/Key'
+import LanguageIcon from '@mui/icons-material/Language'
 import { ActionAlert, Alert } from '../../components/modals'
 import { GeneralTitle } from '../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
@@ -32,10 +34,10 @@ import useRowsPerPage from '../../hooks/useRowsPerPage'
 import UpdatePartner from './components/UpdatePartner'
 import AssignAccountForm from './components/assignAccountForm'
 import { resetProductsByPartners } from '../../slices/product/productSlice'
+import PartnerToken from './components/PartnerToken/PartnerToken'
+import PartnerWebHook from './components/partnerWebHook'
 
 const Partners = () => {
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const accountFormHook = useForm()
@@ -48,30 +50,22 @@ const Partners = () => {
   const [isShowProducts, setIsShowProducts] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
   const [isShowAssignedConfirmationAlert, setIsShowAssignedConfirmationAlert] = useState(false)
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getPartners)
   const [isShowDialogUpdate, setIsShowDialogUpdate] = useState(false)
   const [showAssignAccountAlert, setShowAssignAccountAlert] = useState(false)
   const [selectedPartner, setSelectedPartner] = useState({})
+  const [isShowToken, setIsShowToken] = useState(false)
+  const [isShowWebhook, setIsShowWebhook] = useState(false)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getPartners, dispatch)
 
   useEffect(() => {
     dispatch(getPartners())
   }, [])
-
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getPartners(path))
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getPartners(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-    setPage(newPage)
-  }
 
   const navigateToCreateUser = () => {
     navigate('/partners/create')
@@ -93,6 +87,11 @@ const Partners = () => {
   const handleProductsAssigned = (partner) => {
     setPartnerInfo(partner)
     setIsShowProducts(true)
+  }
+
+  const handleWebhook = (partner) => {
+    setSelectedPartner(partner)
+    setIsShowWebhook(true)
   }
 
   const handleProductAssigned = () => {
@@ -137,6 +136,11 @@ const Partners = () => {
     setSelectedPartner(partner)
   }
 
+  const handlePartnerToken = (partner) => {
+    setIsShowToken(!isShowToken)
+    setSelectedPartner(partner)
+  }
+
   const onSubmit = (dataForm) => {
     const data = {
       notice_account_id: dataForm.accountId,
@@ -150,6 +154,10 @@ const Partners = () => {
   const handleCloseDialogShowProducts = () => {
     dispatch(resetProductsByPartners())
     setIsShowProducts(false)
+  }
+
+  const handleShowDialogTokenPartner = () => {
+    setIsShowToken(false)
   }
 
   return (
@@ -184,6 +192,7 @@ const Partners = () => {
           <TableRow key={partner.id}>
             <TableCell align='left'>{partner.name}</TableCell>
             <TableCell align='left'>{partner.code}</TableCell>
+            <TableCell align='left'>{partner.webhook_url}</TableCell>
             <TableCell align='left'>{getTypePartner(partner.type)}</TableCell>
             <TableCell align='left'>
               <Typography noWrap paragraph variant='caption'>
@@ -230,23 +239,36 @@ const Partners = () => {
                     </IconButton>
                   </Tooltip>
                 </Grid>
-              </Grid>
-            </TableCell>
-            <TableCell align='left'>
-              <Grid
-                alignItems='center'
-                container
-                direction='row'
-                justifyContent='center'
-                spacing={1}
-              >
+                <Grid item onClick={() => handlePartnerToken(partner)}>
+                  <Tooltip title='Token'>
+                    <IconButton
+                      color='primary'
+                      data-testid={`icon-button-${partner.name}`}
+                      sx={{ padding: 0 }}
+                    >
+                      <KeyIcon sx={{ fontSize: '1.25rem' }} />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
                 <Grid item onClick={() => handleProductsAssigned(partner)}>
                   <Tooltip title='Ver productos'>
                     <IconButton
                       color='primary'
                       data-testid={`icon-button-${partner.name}`}
+                      sx={{ padding: 0 }}
                     >
                       <VisibilityIcon sx={{ fontSize: '1.25rem' }} />
+                    </IconButton>
+                  </Tooltip>
+                </Grid>
+                <Grid item onClick={() => handleWebhook(partner)}>
+                  <Tooltip title='Webhook'>
+                    <IconButton
+                      color='primary'
+                      data-testid={`icon-button-${partner.name}`}
+                      sx={{ padding: 0 }}
+                    >
+                      <LanguageIcon sx={{ fontSize: '1.25rem' }} />
                     </IconButton>
                   </Tooltip>
                 </Grid>
@@ -290,6 +312,20 @@ const Partners = () => {
         >
           <ProductsByPartnerContainer partner={partnerInfo} />
         </ActionAlert>
+      )}
+      {isShowToken && (
+        <PartnerToken
+          handleDialog={handleShowDialogTokenPartner}
+          isShowToken={isShowToken}
+          selectedPartner={selectedPartner}
+        />
+      )}
+      {isShowWebhook && (
+        <PartnerWebHook
+          isShowWebhook={isShowWebhook}
+          setIsShowWebhook={setIsShowWebhook}
+          selectedPartner={selectedPartner}
+        />
       )}
       {isShowAssignedConfirmationAlert && (
         <Alert

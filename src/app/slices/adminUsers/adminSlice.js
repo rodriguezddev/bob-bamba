@@ -17,9 +17,10 @@ export const getAdmins = createAsyncThunk(
   'list/admins',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(`${apiConstants.ADMIN_URL}/admins${params}`)
-        : await httpService.get(`${apiConstants.ADMIN_URL}/admins`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/admins${params || ''}`,
+      )
+
       return response
     } catch (error) {
       const message = error

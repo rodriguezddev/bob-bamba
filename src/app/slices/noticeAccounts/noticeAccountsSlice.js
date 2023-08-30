@@ -18,11 +18,10 @@ export const getNoticeAccounts = createAsyncThunk(
   'list/noticeAccounts',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(
-          `${apiConstants.ADMIN_URL}/notice-accounts${params}`,
-        )
-        : await httpService.get(`${apiConstants.ADMIN_URL}/notice-accounts`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/notice-accounts${params || ''}`,
+      )
+
       return response
     } catch (error) {
       const message = error

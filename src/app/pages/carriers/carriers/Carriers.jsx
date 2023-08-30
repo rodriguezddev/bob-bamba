@@ -21,21 +21,20 @@ const Carriers = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { carriers } = useSelector((state) => state.carrier)
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
   const [carrierToUpdate, setCarrierToUpdate] = useState({})
   const [isShowConfirmAlert, setIsShowConfirmAlert] = useState(false)
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCarriers)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getCarriers, dispatch)
 
   useEffect(() => {
     dispatch(getCarriers())
   }, [])
-
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getCarriers(path))
-  }
 
   const handleCreateCarrier = () => {
     navigate('/carriers/create')
@@ -48,18 +47,6 @@ const Carriers = () => {
 
   const handleUpdatedCarrier = () => {
     setIsShowConfirmAlert(true)
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getCarriers(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-
-    setPage(newPage)
   }
 
   return (

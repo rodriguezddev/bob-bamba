@@ -18,36 +18,24 @@ import useRowsPerPage from '../../hooks/useRowsPerPage'
 import theme from '../../theme'
 
 const Notifications = () => {
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { notifications } = useSelector((state) => state.notification)
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getNotifications)
   const [notificationDelete, setNotificationDelete] = useState({})
   const [isShowAssignProductsAlert, setIsShowAssignProductsAlert] = useState(false)
   const [showAlert, setShowAlert] = useState(false)
   const [showSuccessAlert, setShowSuccessAlert] = useState(false)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getNotifications, dispatch)
 
   useEffect(() => {
     dispatch(getNotifications())
   }, [])
-
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getNotifications(path))
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getNotifications(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-    setPage(newPage)
-  }
 
   const navigateToCreateUser = () => {
     navigate('/notifications/create')

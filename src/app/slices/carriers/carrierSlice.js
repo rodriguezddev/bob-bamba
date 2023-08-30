@@ -20,11 +20,10 @@ export const getCarrierServices = createAsyncThunk(
   'list/carrierServices',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(
-          `${apiConstants.ADMIN_URL}/carrier-services${params}`,
-        )
-        : await httpService.get(`${apiConstants.ADMIN_URL}/carrier-services`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/carrier-services${params || ''}`,
+      )
+
       return response
     } catch (error) {
       const message = error
@@ -81,9 +80,10 @@ export const getCarriers = createAsyncThunk(
   'list/carrier',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(`${apiConstants.ADMIN_URL}/carriers${params}`)
-        : await httpService.get(`${apiConstants.ADMIN_URL}/carriers`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/carriers${params || ''}`,
+      )
+
       return response
     } catch (error) {
       const message = error

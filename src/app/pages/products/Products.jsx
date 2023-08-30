@@ -20,36 +20,24 @@ import useRowsPerPage from '../../hooks/useRowsPerPage'
 
 const Products = () => {
   const navigate = useNavigate()
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const dispatch = useDispatch()
   const { products } = useSelector((state) => state.product)
   const [showDetailsProduct, setShowDetailsProduct] = useState(false)
   const [details, setDetails] = useState({})
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getProducts)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getProducts, dispatch)
 
   useEffect(() => {
     dispatch(getProducts())
   }, [])
 
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getProducts(path))
-  }
-
   const handleCreateProduct = () => {
     navigate('/products/create')
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getProducts(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-    setPage(newPage)
   }
 
   const handleShowDetails = () => {

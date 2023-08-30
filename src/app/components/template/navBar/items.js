@@ -20,6 +20,11 @@ const items = [
     title: 'Partners',
   },
   {
+    href: '/admin-partner-users',
+    icon: 'adminPartner',
+    title: 'Usuarios admin partners',
+  },
+  {
     href: '/products',
     icon: 'product',
     title: 'Productos',

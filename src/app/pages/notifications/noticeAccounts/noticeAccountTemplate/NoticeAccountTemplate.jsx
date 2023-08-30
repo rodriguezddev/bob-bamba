@@ -34,13 +34,8 @@ const NoticeAccountTemplate = () => {
   const { noticeAccountTemplates } = useSelector(
     (state) => state.noticeAccountTemplate,
   )
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(
-    getNoticeAccountTemplate,
-  )
   const [showDetailsTemplate, setShowDetailsTemplate] = useState(false)
   const [details, setDetails] = useState('')
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const [isShowDialogDelete, setIsShowDialogDelete] = useState(false)
   const [isShowDialogUpdate, setIsShowDialogUpdate] = useState(false)
   const [isShowConfirmDialogUpdate, setIsShowConfirmDialogUpdate] = useState(false)
@@ -53,6 +48,13 @@ const NoticeAccountTemplate = () => {
     },
   })
   const { handleSubmit, reset } = templateForm
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getNoticeAccountTemplate, dispatch)
 
   useEffect(() => {
     dispatch(getNoticeAccountTemplate())
@@ -66,23 +68,6 @@ const NoticeAccountTemplate = () => {
       })
     }
   }, [template])
-
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getNoticeAccountTemplate(path))
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getNoticeAccountTemplate(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-
-    setPage(newPage)
-  }
 
   const handleDescription = (description) => {
     setDetails(description)

@@ -22,36 +22,24 @@ const Message = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { messages } = useSelector((state) => state.message)
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const [isShowDeleteAlert, setIsShowDeleteAlert] = useState(false)
   const [showDetailsMessage, setShowDetailsMessage] = useState(false)
   const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
   const [details, setDetails] = useState({})
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getMessages)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getMessages, dispatch)
 
   useEffect(() => {
     dispatch(getMessages())
   }, [])
 
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getMessages(path))
-  }
-
   const navigateToCreateWelcomeMessage = () => {
     navigate('/messages/create')
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getMessages(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-    setPage(newPage)
   }
 
   const handleActionsMessage = (messageData, value = 'delete') => {

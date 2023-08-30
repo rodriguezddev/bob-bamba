@@ -4,9 +4,13 @@ import partnerReducer, {
   assignProducts,
   createPartner,
   createSubscriptionBatch,
+  createTokenPartner,
   createUserBatch,
   createUsersWithFile,
+  createWebhookPartner,
+  getPartner,
   getPartners,
+  getScope,
   handleSubscriptionIsSuccess,
   partnerSlice,
   resetPartner,
@@ -41,6 +45,7 @@ describe('PartnerSlice redux', () => {
         rowsProcessed: 0,
       },
       assignedAccount: {},
+      scope: {},
     })
   })
 
@@ -849,5 +854,283 @@ describe('PartnerSlice redux', () => {
     expect(calls).toHaveLength(2)
     expect(calls[0][0].type).toEqual('update/updatePartner/pending')
     expect(calls[1][0].type).toEqual('update/updatePartner/rejected')
+  })
+
+  it('should return partner state', async () => {
+    const responseMock = {
+      data: {
+        id: 'dd793c62-0d2c-4f32-8d25-c96c085cf4c3',
+        name: 'Xplica',
+        code: 'XPLICABO',
+        type: 'SPONSOR',
+        company: {
+          id: '274457ee-7a79-42ba-822a-a4319de08fc3',
+          name: 'Mcintosh and Cross Associates',
+          email: 'lifudubu@mailinator.com',
+          phone_number: '5520599661',
+          tax_id: null,
+          country_code: 'MX',
+        },
+        meta: null,
+        oauth_clients: [],
+      },
+      code: 0,
+    }
+
+    const state = {
+      id: 'dd793c62-0d2c-4f32-8d25-c96c085cf4c3',
+      name: 'Xplica',
+      code: 'XPLICABO',
+      type: 'SPONSOR',
+      company: {
+        id: '274457ee-7a79-42ba-822a-a4319de08fc3',
+        name: 'Mcintosh and Cross Associates',
+        email: 'lifudubu@mailinator.com',
+        phone_number: '5520599661',
+        tax_id: null,
+        country_code: 'MX',
+      },
+      meta: null,
+      oauth_clients: [],
+    }
+
+    jest.spyOn(httpService, 'get').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: partnerSlice.reducer })
+    await store.dispatch(getPartner())
+
+    const { partner } = await store.getState()
+
+    expect(partner).toEqual(state)
+  })
+
+  it('should update getPartner thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      resultSubscriptionFile: {
+        isSuccess: false,
+      },
+      usersWithFile: {
+        isSuccess: false,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+      assignedAccount: {},
+      scope: {},
+    }
+    const thunk = getPartner()
+
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/getPartner/pending')
+    expect(calls[1][0].type).toEqual('partner/getPartner/rejected')
+  })
+
+  it('should update createTokenPartner thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      resultSubscriptionFile: {
+        isSuccess: false,
+      },
+      usersWithFile: {
+        isSuccess: false,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+      assignedAccount: {},
+      scope: {},
+    }
+    const thunk = createTokenPartner()
+
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/createTokenPartner/pending')
+    expect(calls[1][0].type).toEqual('partner/createTokenPartner/rejected')
+  })
+
+  it('should update getScope thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      resultSubscriptionFile: {
+        isSuccess: false,
+      },
+      usersWithFile: {
+        isSuccess: false,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+      assignedAccount: {},
+      scope: {},
+    }
+    const thunk = getScope()
+
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/getScope/pending')
+    expect(calls[1][0].type).toEqual('partner/getScope/rejected')
+  })
+
+  it('should update getScope thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      resultSubscriptionFile: {
+        isSuccess: false,
+      },
+      usersWithFile: {
+        isSuccess: false,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+      assignedAccount: {},
+      scope: {},
+    }
+    const thunk = getScope()
+
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/getScope/pending')
+    expect(calls[1][0].type).toEqual('partner/getScope/rejected')
+  })
+
+  it('should return createWebhookPartner state', async () => {
+    const statePartner = {
+      data: [
+        {
+          id: 'd5491660-4b64-4628-9fdd-76a4f4197a6b',
+          name: 'Test Corregido3',
+          code: 'Test-Corregido3',
+          type: 'SPONSOR',
+          meta: {
+            type: 'collective',
+            policy: 'C000BA018XX',
+          },
+          webhook_url: null,
+          company: {
+            id: 'fcda2bbc-f1db-4cca-82bf-e65222ee8631',
+            name: 'corregido5',
+            email: 'corregido5@fake-company.com',
+            phone_number: '5212131415',
+            tax_id: 'FAKE981105M05',
+            country_code: 'MX',
+          },
+        },
+      ],
+      meta: {},
+      products: {},
+    }
+
+    const responseMock = {
+      data: {
+        id: 'd5491660-4b64-4628-9fdd-76a4f4197a6b',
+        name: 'Test Corregido3',
+        code: 'Test-Corregido3',
+        type: 'SPONSOR',
+        meta: {
+          type: 'collective',
+          policy: 'C000BA018XX',
+        },
+        webhook_url: null,
+        company: {
+          id: 'fcda2bbc-f1db-4cca-82bf-e65222ee8631',
+          name: 'corregido5',
+          email: 'corregido5@fake-company.com',
+          phone_number: '5212131415',
+          tax_id: 'FAKE981105M05',
+          country_code: 'MX',
+        },
+      },
+      code: 0,
+    }
+
+    jest.spyOn(httpService, 'put').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: partnerSlice.reducer })
+    await store.dispatch(createWebhookPartner({}))
+
+    const { partners } = await store.getState()
+
+    expect(partners).toEqual(statePartner)
+  })
+
+  it('should update createWebhookPartner thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      assignedAccount: {},
+      partners: {
+        data: [],
+        meta: {},
+        products: {},
+      },
+      partner: {},
+      resultSubscriptionFile: {
+        isSuccess: false,
+      },
+      scope: {},
+      usersWithFile: {
+        isSuccess: false,
+      },
+      usersBatch: {
+        errors: [],
+        isSuccess: false,
+        rowsProcessed: 0,
+      },
+    }
+    const thunk = createWebhookPartner()
+
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('partner/createWebhookPartner/pending')
+    expect(calls[1][0].type).toEqual('partner/createWebhookPartner/rejected')
   })
 })

@@ -23,9 +23,10 @@ export const getProducts = createAsyncThunk(
   'list/products',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(`${apiConstants.ADMIN_URL}/products${params}`)
-        : await httpService.get(`${apiConstants.ADMIN_URL}/products`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/products${params || ''}`,
+      )
+
       return response
     } catch (error) {
       const message = error

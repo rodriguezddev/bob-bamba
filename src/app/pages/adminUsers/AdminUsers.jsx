@@ -19,30 +19,18 @@ const AdminUsers = () => {
   const navigate = useNavigate()
   const { admins } = useSelector((state) => state.admin)
   const [adminAlert, setAdminAlert] = useState({})
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const [showAlert, setShowAlert] = useState(false)
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getAdmins)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getAdmins, dispatch)
 
   useEffect(() => {
     dispatch(getAdmins())
   }, [])
-
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getAdmins(path))
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getAdmins(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-    setPage(newPage)
-  }
 
   const handleCreateUserAdmin = () => {
     navigate('/admin-users/create')

@@ -1,18 +1,44 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
-const useRowsPerPage = (getMethods) => {
-  const dispatch = useDispatch()
+const useRowsPerPage = (getMethods, dispatch) => {
   const [rowsPerPage, setRowsPerPage] = useState(10)
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(0)
 
   const handleChangeRowsPerPage = (event) => {
-    dispatch(getMethods(`?limit=${parseInt(event.target.value, 10)}`))
+    dispatch(
+      getMethods(
+        `${search ? `${search}&` : '?'}limit=${parseInt(
+          event.target.value,
+          10,
+        )}`,
+      ),
+    )
     setRowsPerPage(parseInt(event.target.value, 10))
   }
 
+  const onPageChange = (event, newPage) => {
+    dispatch(
+      getMethods(
+        `${search ? `${search}&` : '?'}${
+          rowsPerPage ? `limit=${rowsPerPage}&` : ''
+        }page=${newPage + 1}`,
+      ),
+    )
+    setPage(newPage)
+  }
+
+  const handleSearch = (path) => {
+    setSearch(path)
+    dispatch(getMethods(path))
+  }
+
   return {
-    rowsPerPage,
     handleChangeRowsPerPage,
+    handleSearch,
+    onPageChange,
+    rowsPerPage,
+    page,
   }
 }
 

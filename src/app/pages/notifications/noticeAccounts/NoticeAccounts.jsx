@@ -27,14 +27,11 @@ const NoticeAccount = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const { config, noticeAccounts } = useSelector((state) => state.noticeAccount)
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const [isShowDialogDelete, setIsShowDialogDelete] = useState(false)
   const [isShowDialogUpdate, setIsShowDialogUpdate] = useState(false)
   const [account, setAccount] = useState({})
   const [updateData, setUpdateData] = useState({})
   const [isShowConfirmDialogUpdate, setIsShowConfirmDialogUpdate] = useState(false)
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getNoticeAccounts)
   const noticeAccountUseForm = useForm({
     defaultValues: {
       name: '',
@@ -44,6 +41,13 @@ const NoticeAccount = () => {
   const accountName = watch('accountName') || ''
   const providerName = watch('provider') || ''
   const keyTypes = config[accountName]?.providers[providerName]?.key_types || {}
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getNoticeAccounts, dispatch)
 
   useEffect(() => {
     dispatch(getNoticeAccounts())
@@ -56,11 +60,6 @@ const NoticeAccount = () => {
       })
     }
   }, [account])
-
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getNoticeAccounts(path))
-  }
 
   const handleCreateNoticeAccount = () => {
     navigate('/notice-account/create')
@@ -89,18 +88,6 @@ const NoticeAccount = () => {
     dispatch(updateNoticeAccounts({ id: account.id, data: updateData }))
     setIsShowConfirmDialogUpdate(false)
     setIsShowDialogUpdate(false)
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getNoticeAccounts(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-
-    setPage(newPage)
   }
 
   const handleKeysFields = (types, form) => {

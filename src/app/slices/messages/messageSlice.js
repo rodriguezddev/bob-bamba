@@ -19,13 +19,9 @@ export const getMessages = createAsyncThunk(
   'list/message',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(
-          `${apiConstants.ADMIN_URL}/configurable-messages${params}`,
-        )
-        : await httpService.get(
-          `${apiConstants.ADMIN_URL}/configurable-messages`,
-        )
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/configurable-messages${params || ''}`,
+      )
       return response
     } catch (error) {
       const message = error

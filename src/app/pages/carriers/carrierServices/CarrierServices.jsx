@@ -27,14 +27,18 @@ const CarrierServices = () => {
   const carrierServicesForm = useForm()
   const { handleSubmit, reset } = carrierServicesForm
   const { carrierServices } = useSelector((state) => state.carrier)
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCarrierServices)
   const [showDetailsCarrierService, setShowDetailsCarrierService] = useState(false)
   const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
   const [details, setDetails] = useState({})
   const [carrierService, setCarrierService] = useState({})
   const [metaValues, setMetaValues] = useState([])
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getCarrierServices, dispatch)
 
   useEffect(() => {
     if (carrierService) {
@@ -49,29 +53,12 @@ const CarrierServices = () => {
     dispatch(getCarrierServices())
   }, [])
 
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getCarrierServices(path))
-  }
-
   const handleCreateCarrierService = () => {
     navigate('/carrier-services/create')
   }
 
   const handleNavigateToCarriers = () => {
     navigate('/carriers')
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getCarrierServices(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-
-    setPage(newPage)
   }
 
   const handleShowUpdateAlert = (carrierServiceInfo) => {

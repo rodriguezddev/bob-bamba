@@ -26,6 +26,8 @@ describe('List admin users view', () => {
     cy.get('[data-testid="FilterAltIcon"] > path').click()
     cy.get('#email').type('admin@vivebamba.com')
     cy.get('[data-testid="button-filter-search"]').click()
+    cy.get('[data-testid="close-button-alert"]').click()
+    cy.get('[data-testid="button-filter-search"]').click()
     cy.get(':nth-child(1) > :nth-child(1) > .css-bns4tv > .MuiBox-root').should(
       'contain',
       'Bamba Admin',

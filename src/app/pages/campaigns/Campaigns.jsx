@@ -31,6 +31,7 @@ import useRowsPerPage from '../../hooks/useRowsPerPage'
 import { handleSentCampaign } from '../../utils/UtilsTranslate'
 import AssignUsersContainer from './components/assignUsersContainer/AssignUsersContainer'
 import CampaignsForm from './components/campaignsForm'
+import CampaignUploadMessage from './components/campaignUploadMessage'
 
 const Campaigns = () => {
   const dispatch = useDispatch()
@@ -46,8 +47,6 @@ const Campaigns = () => {
     },
   })
   const { handleSubmit, reset } = campaignsForm
-  const [page, setPage] = useState(0)
-  const [search, setSearch] = useState('')
   const { campaigns, campaign, isUploadUsersCampaigns } = useSelector(
     (state) => state.campaign,
   )
@@ -58,9 +57,14 @@ const Campaigns = () => {
   const [isShowConfirmAlert, setIsShowConfirmAlert] = useState(false)
   const [isShowDownloadAlert, setIsShowDownloadAlert] = useState(false)
   const [isShowAssignUsersAlert, setIsShowAssignUsersAlert] = useState(false)
-  const [isOpenUsersSuccessAlert, setIsOpenUsersSuccessAlert] = useState(false)
   const [userFile, setUserFile] = useState('')
-  const { rowsPerPage, handleChangeRowsPerPage } = useRowsPerPage(getCampaigns)
+  const {
+    rowsPerPage,
+    handleChangeRowsPerPage,
+    handleSearch,
+    page,
+    onPageChange,
+  } = useRowsPerPage(getCampaigns, dispatch)
 
   useEffect(() => {
     dispatch(getCampaigns())
@@ -109,22 +113,6 @@ const Campaigns = () => {
     })
   }
 
-  const handleSearch = (path) => {
-    setSearch(path)
-    dispatch(getCampaigns(path))
-  }
-
-  const onPageChange = (event, newPage) => {
-    dispatch(
-      getCampaigns(
-        `${search ? `${search}&` : `?limit=${rowsPerPage}&`}page=${
-          newPage + 1
-        }`,
-      ),
-    )
-    setPage(newPage)
-  }
-
   const navigateToCreateCampaign = () => {
     navigate('/campaigns/create')
   }
@@ -166,18 +154,6 @@ const Campaigns = () => {
 
     return newUsers
   }
-
-  useEffect(() => {
-    if (isUploadUsersCampaigns) {
-      setIsOpenUsersSuccessAlert(isUploadUsersCampaigns)
-    }
-  }, [isUploadUsersCampaigns])
-
-  useEffect(() => {
-    if (!isOpenUsersSuccessAlert) {
-      dispatch(resetUploadUsersCampaigns())
-    }
-  }, [isOpenUsersSuccessAlert])
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -375,6 +351,21 @@ const Campaigns = () => {
           alertTitle='Descargar usuarios asignados'
           isOpen={isShowDownloadAlert}
           setIsOpen={setIsShowDownloadAlert}
+        />
+      )}
+      {isUploadUsersCampaigns && (
+        <Alert
+          alertContentText={
+            Array.isArray(campaign.users) ? (
+              'Se creo la campaña'
+            ) : (
+              <CampaignUploadMessage campaign={campaign} />
+            )
+          }
+          alertTextButton='Cerrar'
+          alertTitle='Descargar usuarios asignados'
+          isOpen={isUploadUsersCampaigns}
+          setIsOpen={() => dispatch(resetUploadUsersCampaigns())}
         />
       )}
     </Box>

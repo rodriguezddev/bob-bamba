@@ -321,55 +321,18 @@ describe('CampaignSlice redux', () => {
 
   it('should return assign users state', async () => {
     const responseMock = {
+      code: 0,
       data: {
-        id: '3c4323f8-ec51-400d-927b-8709cd55c244',
-        template: 'bienvenida_symplifica',
-        template_lang: 'es_MX',
-        account_name: 'bamba_attendance',
-        send_date: '2023-03-16T06:00:00.000000Z',
-        users: [
-          {
-            id: '85d6cbbe-43a9-4e91-81ba-32db51b1e270',
-            name: 'Conny',
-            lastname: 'Codee',
-            second_lastname: 'Tweedle',
-            photo: null,
-            birthdate: '01-01-2023',
-            gender: 'F',
-            email: 'ctweedle14@ehow.com',
-            cellphone: '7003792887',
-            tax_id: null,
-            personal_id: null,
-            metadata: null,
-            subscriptions: [],
-          },
-        ],
+        rows_total: 1,
+        processed_total: 1,
+        errors: [],
       },
     }
 
     const state = {
-      id: '3c4323f8-ec51-400d-927b-8709cd55c244',
-      template: 'bienvenida_symplifica',
-      template_lang: 'es_MX',
-      account_name: 'bamba_attendance',
-      send_date: '2023-03-16T06:00:00.000000Z',
-      users: [
-        {
-          id: '85d6cbbe-43a9-4e91-81ba-32db51b1e270',
-          name: 'Conny',
-          lastname: 'Codee',
-          second_lastname: 'Tweedle',
-          photo: null,
-          birthdate: '01-01-2023',
-          gender: 'F',
-          email: 'ctweedle14@ehow.com',
-          cellphone: '7003792887',
-          tax_id: null,
-          personal_id: null,
-          metadata: null,
-          subscriptions: [],
-        },
-      ],
+      rows_total: 1,
+      processed_total: 1,
+      errors: [],
     }
 
     jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
@@ -379,9 +342,10 @@ describe('CampaignSlice redux', () => {
       assignUsers({ campaignId: '3c4323f8-ec51-400d-927b-8709cd55c244' }),
     )
 
-    const { campaign } = await store.getState()
+    const { campaign, isUploadUsersCampaigns } = await store.getState()
 
-    expect(campaign).toEqual(state)
+    expect(campaign.users).toEqual(state)
+    expect(isUploadUsersCampaigns).toEqual(true)
   })
 
   it('should  assign users thunk request', async () => {

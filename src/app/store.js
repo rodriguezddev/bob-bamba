@@ -27,11 +27,13 @@ import subscriptionsReducer from './slices/subscriptions/subscriptionsSlice'
 import userReducer from './slices/user/userSlice'
 import recoveryMessageReducer from './slices/recoveryMessage/recoveryMessageSlice'
 import successMessageReducer from './slices/successMessage/successMessageSlice'
+import adminPartnerUsersReducer from './slices/adminPartnerUsers/adminPartnerUsersSlice'
 import { storeQueryLogger } from './slices/middlewares/middlewaresStore'
 
 const reducers = combineReducers({
   admin: adminReducer,
   auth: authReducer,
+  adminPartnerUser: adminPartnerUsersReducer,
   category: categoryReducer,
   carrier: carrierReducer,
   campaign: campaignsReducer,

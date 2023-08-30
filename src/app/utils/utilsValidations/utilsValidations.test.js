@@ -192,4 +192,20 @@ describe('Test function in utils', () => {
 
     expect(subtractedDate).toEqual(expectedDate)
   })
+
+  it('accepts valid url', () => {
+    expect(
+      new RegExp(utilsValidations.getUrlPattern(dummyTFunction).value).test(
+        'https://webhook.site/a8766ce2-9864-4247-8d3c-47d2ce9dd87b',
+      ),
+    ).toBe(true)
+  })
+
+  it('should not valid url', () => {
+    expect(
+      new RegExp(utilsValidations.getUrlPattern(dummyTFunction).value).test(
+        'webhook.site/a8766ce2-9864-4247-8d3c-47d2ce9dd87b',
+      ),
+    ).toBe(false)
+  })
 })

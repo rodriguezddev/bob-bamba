@@ -21,11 +21,11 @@ export const getUsers = createAsyncThunk(
   'list/users',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(`${apiConstants.ADMIN_URL}/users${params}`)
-        : await httpService.get(`${apiConstants.ADMIN_URL}/users`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/users${params || ''}`,
+      )
 
-      return response
+      return { ...response, params }
     } catch (error) {
       const message = error
 

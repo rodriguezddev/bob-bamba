@@ -11,6 +11,11 @@ export const columns = [
   },
   {
     align: 'center',
+    id: 'webhookUrl',
+    label: 'Webhook',
+  },
+  {
+    align: 'center',
     id: 'type',
     label: 'Tipo',
   },
@@ -23,10 +28,5 @@ export const columns = [
     align: 'center',
     id: 'actions',
     label: 'Acciones',
-  },
-  {
-    align: 'center',
-    id: 'products',
-    label: 'Productos',
   },
 ]

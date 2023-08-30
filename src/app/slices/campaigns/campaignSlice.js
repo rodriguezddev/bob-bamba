@@ -16,11 +16,9 @@ export const getCampaigns = createAsyncThunk(
   'list/campaigns',
   async (params, thunkAPI) => {
     try {
-      const response = params
-        ? await httpService.get(
-          `${apiConstants.ADMIN_URL}/newsletter-messages${params}`,
-        )
-        : await httpService.get(`${apiConstants.ADMIN_URL}/newsletter-messages`)
+      const response = await httpService.get(
+        `${apiConstants.ADMIN_URL}/newsletter-messages${params || ''}`,
+      )
 
       return response
     } catch (error) {
@@ -120,18 +118,11 @@ export const assignUsers = createAsyncThunk(
   async (values, thunkAPI) => {
     const { data } = values
     try {
-      const messageSuccess = {
-        title: '¡Usuarios cargados!',
-        subtitle: 'Los usuarios se han cargado con éxito',
-      }
-
       const response = await httpService.post(
         `${apiConstants.ADMIN_URL}/newsletter-message/${values.campaignId}/assign-users`,
         data,
         true,
       )
-
-      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
 
       return response
     } catch (error) {
@@ -150,7 +141,8 @@ export const campaignSlice = createSlice({
       state.campaign = {}
     },
     resetUploadUsersCampaigns: (state) => {
-      state.uploadUsers = false
+      state.campaign = {}
+      state.isUploadUsersCampaigns = false
     },
     resetTemplates: (state) => {
       state.templates = {}
@@ -166,7 +158,7 @@ export const campaignSlice = createSlice({
     builder.addCase(createCampaign.fulfilled, (state, action) => {
       state.campaigns = {
         ...state.campaigns,
-        data: [action.payload.data, ...state.campaigns.data],
+        data: [action.payload.data.newsletter, ...state.campaigns.data],
       }
       state.campaign = { ...action.payload.data, isSuccess: true }
     })
@@ -187,8 +179,8 @@ export const campaignSlice = createSlice({
       state.campaign = action.payload.data
     })
     builder.addCase(assignUsers.fulfilled, (state, action) => {
-      state.uploadUsers = true
-      state.campaign = action.payload.data
+      state.isUploadUsersCampaigns = true
+      state.campaign.users = action.payload.data
     })
   },
 })

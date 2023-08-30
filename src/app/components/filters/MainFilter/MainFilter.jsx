@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
 import { Controller, useForm } from 'react-hook-form'
@@ -11,10 +11,26 @@ import theme from '../../../theme'
 import FieldFilter from '../FieldFilter/FieldFilter'
 import { resetResultSubscriptionFile } from '../../../slices/partner/partnerSlice'
 
-const MainFilter = ({ fieldDetails, handleSearch }) => {
+const MainFilter = ({ fieldDetails, handleSearch, param }) => {
   const dispatch = useDispatch()
   const [isShowForm, setIsShowForm] = useState(false)
   const { control, handleSubmit, reset } = useForm()
+
+  useEffect(() => {
+    setIsShowForm(param)
+
+    const searchParams = new URLSearchParams(param)
+    const fields = {}
+
+    searchParams.forEach((value, key) => {
+      const fieldMatch = fieldDetails.find((field) => field.id === key)
+      if (fieldMatch) {
+        fields[key] = value
+      }
+    })
+
+    reset(fields)
+  }, [param])
 
   const handleShowForm = () => {
     setIsShowForm(!isShowForm)
@@ -135,6 +151,11 @@ MainFilter.propTypes = {
     }),
   ).isRequired,
   handleSearch: PropTypes.func.isRequired,
+  param: PropTypes.string,
+}
+
+MainFilter.defaultProps = {
+  param: null,
 }
 
 export default MainFilter
