@@ -16,13 +16,17 @@ describe('Partner view', () => {
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(3)').should(
       'contain',
-      'Tipo',
+      'Webhook',
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(4)').should(
       'contain',
-      'Compañía',
+      'Tipo',
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(5)').should(
+      'contain',
+      'Compañía',
+    )
+    cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(6)').should(
       'contain',
       'Acciones',
     )

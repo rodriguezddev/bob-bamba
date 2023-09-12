@@ -75,7 +75,7 @@ const PartnerWebHookForm = ({ webhookPartnerForm }) => {
           defaultValue={[]}
           name='scope'
           rules={{
-            required: 'El nombre de la cuenta es requerido',
+            required: 'El alcance es requerido',
           }}
           render={({
             field: { onChange, value },
@@ -94,7 +94,9 @@ const PartnerWebHookForm = ({ webhookPartnerForm }) => {
                 onChange={onChange}
                 value={value}
               >
-                <MenuItem value=''>Seleccionar</MenuItem>
+                <MenuItem disabled value=''>
+                  Seleccionar
+                </MenuItem>
                 {scope?.data
                   && Object.entries(scope.data).map(([key, item]) => (
                     <MenuItem key={key} value={key}>

@@ -31,7 +31,7 @@ const CarrierServices = () => {
   const [isShowUpdateAlert, setIsShowUpdateAlert] = useState(false)
   const [details, setDetails] = useState({})
   const [carrierService, setCarrierService] = useState({})
-  const [metaValues, setMetaValues] = useState([])
+  const [metaValues, setMetaValues] = useState({})
   const {
     rowsPerPage,
     handleChangeRowsPerPage,
@@ -45,8 +45,14 @@ const CarrierServices = () => {
       reset({
         name: carrierService?.name || '',
         sku: carrierService?.sku || '',
+        costPerYear: carrierService?.cost_per_year || 0,
+        costPerMonth: carrierService?.cost_per_month || 0,
+        isEnabled: carrierService?.is_enabled || false,
+        carrierId: carrierService?.carrier?.id || '',
+        categoryId: carrierService?.category?.id || '',
       })
     }
+    setMetaValues(carrierService?.meta)
   }, [carrierService])
 
   useEffect(() => {
@@ -212,6 +218,7 @@ const CarrierServices = () => {
           <CarrierServicesForm
             carrierServicesForm={carrierServicesForm}
             setMetaValues={setMetaValues}
+            metaValues={metaValues}
           />
         </ActionAlert>
       )}

@@ -8,6 +8,7 @@ const CustomTextArea = styled(TextField)(({ fontSize, radius, theme }) => ({
   boxSizing: 'border-box',
   color: theme.palette.common.black,
   fontSize: `${fontSize}`,
+  padding: '0.4rem 0.8rem',
   '&.Mui-focused': {
     background: theme.palette.common.white,
   },

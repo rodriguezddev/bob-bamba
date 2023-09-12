@@ -41,7 +41,8 @@ describe('List notice accounts template view', () => {
   })
 
   it('show template delete', () => {
-    cy.get('.MuiButtonBase-root > img').click()
+    cy.wait(1000)
+    cy.get('[data-testid="delete-icon"]').click()
     cy.get(
       '[data-testid="title-alert-¿Quieres eliminar a Cypress test?"]',
     ).should('contain', '¿Quieres eliminar a Cypress test?')

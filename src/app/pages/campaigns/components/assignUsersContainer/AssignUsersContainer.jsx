@@ -9,12 +9,20 @@ import { SelectInput } from '../../../../components/inputs'
 import { GeneralTitle } from '../../../../components/texts'
 import UploadUsersCampaignButton from '../uploadUsersCampaignButton'
 import { getPartners } from '../../../../slices/partner/partnerSlice'
+import useRowsPerPage from '../../../../hooks/useRowsPerPage'
+import { Pagination } from '../../../../components/tables'
 
 const AssignUsersContainer = ({ assignUsers, setUserFile }) => {
   const dispatch = useDispatch()
   const { partners } = useSelector((state) => state.partner)
   const [file, setFile] = useState('')
   const { control } = assignUsers
+  const selectRowsPerPage = 100
+  const { page, onPageChange } = useRowsPerPage(
+    getPartners,
+    dispatch,
+    selectRowsPerPage,
+  )
 
   useEffect(() => {
     dispatch(getPartners('?limit=100'))
@@ -64,6 +72,19 @@ const AssignUsersContainer = ({ assignUsers, setUserFile }) => {
                     {partner?.name}
                   </MenuItem>
                 ))}
+                <Grid container display='flex' alignItems='center'>
+                  <Pagination
+                    count={partners?.meta?.total ?? 0}
+                    labelDisplayedRows={() => ''}
+                    onPageChange={onPageChange}
+                    page={page}
+                    rowsPerPage={selectRowsPerPage}
+                    rowsPerPageOptions={[0]}
+                    SelectProps={{
+                      native: true,
+                    }}
+                  />
+                </Grid>
               </SelectInput>
               <Typography
                 color='error.main'

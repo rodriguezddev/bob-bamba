@@ -1,22 +1,24 @@
 /// <reference types="cypress" />
 
-describe('Create product view', () => {
-  it('Show create product page', () => {
+describe('edit product view', () => {
+  it('Show Edit product page', () => {
     cy.login('admin@vivebamba.com', 'Password')
     cy.get('[data-testid="drawer-item-Productos"]').should(
       'contain',
       'Productos',
     )
     cy.get('[data-testid="drawer-item-Productos"]').first().click()
-    cy.get('[data-testid="button-create-product"]').click()
-    cy.get('[data-testid="title-create-product"]').should(
+    cy.get(
+      ':nth-child(1) > :nth-child(12) > .MuiGrid-root > .MuiButtonBase-root > [data-testid="BorderColorIcon"] > path',
+    ).click()
+    cy.get('[data-testid="title-edit-product"]').should(
       'contain',
-      'Crear producto',
+      'Actualizar producto',
     )
   })
 
   it('Show errors validations form', () => {
-    cy.get('[data-testid="create-product-button"]').click()
+    cy.get('[data-testid="edit-product-button"]').click()
     cy.get('[data-testid="error-message-name-product"]').should(
       'contain',
       'El nombre del producto es requerido',
@@ -59,19 +61,10 @@ describe('Create product view', () => {
       'El periodo de expiración es requerido',
     )
     cy.get('#category-product').click()
-    cy.get('[data-value="7dee5e61-4d79-4bd2-967c-f2738e6bcf7d"]').click()
-    cy.get('body').click();
+    cy.get('[data-value="931b7435-403d-439f-90c3-d6ee8d11de84"]').click()
     cy.get('[data-testid="error-message-category-product"]').should(
       'not.have.value',
       'La categoría es requerida',
-    )
-  })
-
-  it('show error empty carrier', () => {
-    cy.get('[data-testid="create-product-button"]').click()
-    cy.get('[data-testid="error-message-carrier-services"]').should(
-      'contain',
-      'Debe asignar carrier services',
     )
   })
 

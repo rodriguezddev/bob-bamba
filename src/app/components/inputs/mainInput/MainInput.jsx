@@ -44,7 +44,7 @@ MainInput.propTypes = {
   onChange: PropTypes.func,
   placeholder: PropTypes.string.isRequired,
   radius: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   width: PropTypes.string,
 }
 

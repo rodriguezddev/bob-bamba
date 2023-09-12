@@ -27,7 +27,6 @@ describe('Message view', () => {
   it('check pagination', () => {
     cy.get('[data-testid="drawer-item-Mensajes"]').first().click()
     cy.get('[data-testid="LastPageIcon"]').click()
-    cy.get('[data-testid="close-button-alert"]').click()
     cy.get('[aria-label="last page"]').should('be.disabled')
     cy.get('[aria-label="first page"]').click()
     cy.get('[aria-label="first page"]').should('be.disabled')

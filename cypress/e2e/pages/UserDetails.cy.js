@@ -53,7 +53,7 @@ describe('users details view', () => {
     cy.get('[data-testid="button-filter-search"]').click()
     cy.get('[data-testid="icon-button-TETC880214GR6"]').click()
     cy.get(
-      '[data-testid="button-to-show-product-DOCTOR-TELEFONO-247-details"]',
+      '[data-testid="button-to-show-product-DOC-PHONE-247-details"]',
     ).click()
     cy.get('#alert-dialog-title').should(
       'contain',

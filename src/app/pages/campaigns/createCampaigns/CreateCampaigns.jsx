@@ -28,6 +28,8 @@ import { getPartners } from '../../../slices/partner/partnerSlice'
 import { getNoticeAccounts } from '../../../slices/noticeAccounts/noticeAccountsSlice'
 import { noticeProviders } from '../../../constants/noticeProvider'
 import CampaignUploadMessage from '../components/campaignUploadMessage'
+import useRowsPerPage from '../../../hooks/useRowsPerPage'
+import { Pagination } from '../../../components/tables'
 
 const CreateCampaigns = () => {
   const dispatch = useDispatch()
@@ -43,7 +45,12 @@ const CreateCampaigns = () => {
   const { templates } = useSelector((state) => state.recoveryMessage)
   const { noticeAccounts } = useSelector((state) => state.noticeAccount)
   const [showCreateSuccessAlert, setShowCreateSuccessAlert] = useState(false)
-
+  const selectRowsPerPage = 100
+  const { page, onPageChange } = useRowsPerPage(
+    getPartners,
+    dispatch,
+    selectRowsPerPage,
+  )
   const accountId = watch('accountId') || ''
   const provider = watch('provider') || ''
 
@@ -306,6 +313,19 @@ const CreateCampaigns = () => {
                       {partner?.name}
                     </MenuItem>
                   ))}
+                  <Grid container display='flex' alignItems='center'>
+                    <Pagination
+                      count={partners?.meta?.total ?? 0}
+                      labelDisplayedRows={() => ''}
+                      onPageChange={onPageChange}
+                      page={page}
+                      rowsPerPage={selectRowsPerPage}
+                      rowsPerPageOptions={[0]}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    />
+                  </Grid>
                 </SelectInput>
                 <Typography
                   color='error.main'

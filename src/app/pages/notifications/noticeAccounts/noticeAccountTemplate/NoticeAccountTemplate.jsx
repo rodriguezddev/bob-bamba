@@ -182,6 +182,7 @@ const NoticeAccountTemplate = () => {
                     >
                       <img
                         alt='delete'
+                        data-testid='delete-icon'
                         height={20}
                         src={DeleteIcon}
                         width={20}

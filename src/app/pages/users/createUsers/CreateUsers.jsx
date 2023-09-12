@@ -23,6 +23,8 @@ import {
 import { getPartners } from '../../../slices/partner/partnerSlice'
 import { createUser, resetCreateUser } from '../../../slices/user/userSlice'
 import { Alert } from '../../../components/modals'
+import { Pagination } from '../../../components/tables'
+import useRowsPerPage from '../../../hooks/useRowsPerPage'
 
 const CreateUsers = () => {
   const dispatch = useDispatch()
@@ -31,6 +33,12 @@ const CreateUsers = () => {
   const { isLoading } = useSelector((state) => state.loading)
   const { partners } = useSelector((state) => state.partner)
   const { user } = useSelector((state) => state.user)
+  const selectRowsPerPage = 100
+  const { page, onPageChange } = useRowsPerPage(
+    getPartners,
+    dispatch,
+    selectRowsPerPage,
+  )
 
   const onSubmit = (dataForm) => {
     const data = {
@@ -213,6 +221,19 @@ const CreateUsers = () => {
                       {partner?.name}
                     </MenuItem>
                   ))}
+                  <Grid container display='flex' alignItems='center'>
+                    <Pagination
+                      count={partners?.meta?.total ?? 0}
+                      labelDisplayedRows={() => ''}
+                      onPageChange={onPageChange}
+                      page={page}
+                      rowsPerPage={selectRowsPerPage}
+                      rowsPerPageOptions={[0]}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    />
+                  </Grid>
                 </SelectInput>
                 <Typography
                   color='error.main'

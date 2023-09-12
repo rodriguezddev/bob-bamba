@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
-import { Box, Link, Typography } from '@mui/material'
+import {
+  Box, Grid, IconButton, Link, Tooltip, Typography,
+} from '@mui/material'
+import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { GeneralTitle } from '../../components/texts'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
 import { columns } from './components/columns'
@@ -38,6 +41,10 @@ const Products = () => {
 
   const handleCreateProduct = () => {
     navigate('/products/create')
+  }
+
+  const handleProductEdit = (productId) => {
+    navigate(`/products/edit/${productId}`)
   }
 
   const handleShowDetails = () => {
@@ -99,38 +106,38 @@ const Products = () => {
               <TableCell align='left'>
                 {product?.prices?.map((price) => (
                   <Typography
-                    key={price.partner}
+                    key={price?.partner}
                     noWrap
                     paragraph
                     variant='caption'
                   >
-                    {`Partner: ${price.partner}`}
+                    {`Partner: ${price?.partner}`}
                     <br />
-                    {`Precio: $${formatCurrency(price.price)}`}
+                    {`Precio: $${formatCurrency(price?.price)}`}
                     <br />
-                    {`Moneda: ${price.currency_code}`}
+                    {`Moneda: ${price?.currency_code}`}
                   </Typography>
                 ))}
               </TableCell>
             )}
             {product?.categories && (
               <TableCell align='left'>
-                {product?.categories.map((category) => (
+                {product?.categories?.map((category) => (
                   <Typography
                     display='block'
                     gutterBottom
-                    key={category}
+                    key={category?.id}
                     variant='caption'
                   >
-                    {category}
+                    {category?.name}
                   </Typography>
                 ))}
               </TableCell>
             )}
             <TableCell align='center'>
-              {product?.description ? (
+              {product?.meta?.description ? (
                 <Typography
-                  onClick={() => handleDescription(product?.description)}
+                  onClick={() => handleDescription(product?.meta?.description)}
                   sx={{ cursor: 'pointer' }}
                 >
                   <u>Ver Detalle</u>
@@ -139,13 +146,30 @@ const Products = () => {
                 '-'
               )}
             </TableCell>
-            <TableCell align='left'>{product?.brief}</TableCell>
+            <TableCell align='left'>
+              <Typography paragraph variant='caption'>
+                {product?.meta?.brief}
+              </Typography>
+            </TableCell>
             <TableCell align='center'>
-              {product?.terms && (
-                <Link href={product?.terms} target='_blank' rel='noreferrer'>
+              {product?.meta?.terms && (
+                <Link
+                  href={product?.meta?.terms}
+                  target='_blank'
+                  rel='noreferrer'
+                >
                   Ver
                 </Link>
               )}
+            </TableCell>
+            <TableCell align='center'>
+              <Grid item onClick={() => handleProductEdit(product?.id)}>
+                <Tooltip title='Editar producto'>
+                  <IconButton color='primary' sx={{ padding: 0 }}>
+                    <BorderColorIcon sx={{ fontSize: '1.25rem' }} />
+                  </IconButton>
+                </Tooltip>
+              </Grid>
             </TableCell>
           </TableRow>
         ))}

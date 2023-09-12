@@ -20,6 +20,8 @@ import {
   resetAdminPartnerUsers,
 } from '../../../slices/adminPartnerUsers/adminPartnerUsersSlice'
 import { Alert } from '../../../components/modals'
+import useRowsPerPage from '../../../hooks/useRowsPerPage'
+import { Pagination } from '../../../components/tables'
 
 const CreateAdminPartnerUser = () => {
   const dispatch = useDispatch()
@@ -30,6 +32,12 @@ const CreateAdminPartnerUser = () => {
   const { isLoading } = useSelector((state) => state.loading)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const selectRowsPerPage = 100
+  const { page, onPageChange } = useRowsPerPage(
+    getPartners,
+    dispatch,
+    selectRowsPerPage,
+  )
 
   useEffect(() => {
     dispatch(getPartners('?limit=100'))
@@ -330,6 +338,19 @@ const CreateAdminPartnerUser = () => {
                       {partner?.name}
                     </MenuItem>
                   ))}
+                  <Grid container display='flex' alignItems='center'>
+                    <Pagination
+                      count={partners?.meta?.total ?? 0}
+                      labelDisplayedRows={() => ''}
+                      onPageChange={onPageChange}
+                      page={page}
+                      rowsPerPage={selectRowsPerPage}
+                      rowsPerPageOptions={[0]}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    />
+                  </Grid>
                 </SelectInput>
                 <Typography
                   color='error.main'

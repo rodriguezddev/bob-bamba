@@ -7,6 +7,7 @@ import productReducer, {
   getProductsNotActive,
   productSlice,
   resetProductsByPartners,
+  updateProduct,
 } from './productSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -489,5 +490,127 @@ describe('ProductSlice redux', () => {
       data: [],
       meta: {},
     })
+  })
+
+  it('should return update product state', async () => {
+    const responseMock = {
+      data: {
+        id: 'a9b2f328-2140-40da-9d23-1bad8fea2342',
+        sku: 'SEGURO-ACCIDENT',
+        name: 'Seguro de Accidentes que paga hasta $100,000',
+        is_recurrent: true,
+        expiration_unit: 1,
+        expiration_period: 'MONTHLY',
+        status: 'ACTIVE',
+        meta: {
+          brief: 'saas brief',
+          saas_price: 18.9,
+        },
+        prices: [
+          {
+            partner: 'Cocodrilo',
+            price: 200,
+            currency_code: 'MXN',
+          },
+        ],
+        categories: [
+          {
+            id: '931b7435-403d-439f-90c3-d6ee8d11de84',
+            name: 'assistance',
+          },
+        ],
+        carrier_services: [
+          {
+            id: 'c36c002f-3a84-4dd8-962e-f3fc9d8af827',
+            name: 'Protección por Desempleo 10K',
+            sku: 'DESEMPLEO-IOK',
+            carrier: 'BAMBA',
+          },
+        ],
+      },
+      code: 0,
+    }
+
+    const state = {
+      data: [
+        {
+          id: 'a9b2f328-2140-40da-9d23-1bad8fea2342',
+          sku: 'SEGURO-ACCIDENT',
+          name: 'Seguro de Accidentes que paga hasta $100,000',
+          is_recurrent: true,
+          expiration_unit: 1,
+          expiration_period: 'MONTHLY',
+          status: 'ACTIVE',
+          meta: {
+            brief: 'saas brief',
+            saas_price: 18.9,
+          },
+          prices: [
+            {
+              partner: 'Cocodrilo',
+              price: 200,
+              currency_code: 'MXN',
+            },
+          ],
+          categories: [
+            {
+              id: '931b7435-403d-439f-90c3-d6ee8d11de84',
+              name: 'assistance',
+            },
+          ],
+          carrier_services: [
+            {
+              id: 'c36c002f-3a84-4dd8-962e-f3fc9d8af827',
+              name: 'Protección por Desempleo 10K',
+              sku: 'DESEMPLEO-IOK',
+              carrier: 'BAMBA',
+            },
+          ],
+        },
+      ],
+      meta: {},
+    }
+
+    jest.spyOn(httpService, 'patch').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({
+      reducer: productSlice.reducer,
+    })
+    await store.dispatch(
+      updateProduct({
+        id: 'dac3e',
+        data: {},
+      }),
+    )
+
+    const { products } = await store.getState()
+
+    expect(products).toEqual(state)
+  })
+
+  it('should update product thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      products: {
+        data: [],
+        meta: {},
+      },
+      product: {},
+      productsNotActive: {
+        data: [],
+      },
+      productsByPartners: {
+        data: [],
+        meta: {},
+      },
+      productDetails: {},
+    }
+    const thunk = updateProduct()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('product/updateProduct/pending')
+    expect(calls[1][0].type).toEqual('product/updateProduct/rejected')
   })
 })

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
 import { createSubscription } from '../subscriptions/subscriptionsSlice'
+import { handleSetSuccessMessage } from '../successMessage/successMessageSlice'
 
 const initialState = {
   products: {
@@ -109,6 +110,32 @@ export const createProduct = createAsyncThunk(
   },
 )
 
+export const updateProduct = createAsyncThunk(
+  'product/updateProduct',
+  async (values, thunkAPI) => {
+    const { data, id } = values
+    const messageSuccess = {
+      title: '¡Actualizado!',
+      subtitle: 'El producto se actualizó correctamente',
+    }
+
+    try {
+      const response = await httpService.patch(
+        `${apiConstants.ADMIN_URL}/product/${id}`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const productSlice = createSlice({
   name: 'product',
   initialState,
@@ -151,6 +178,15 @@ export const productSlice = createSlice({
       )
 
       state.productsNotActive.data = updatedProductsNotActive
+    })
+    builder.addCase(updateProduct.fulfilled, (state, action) => {
+      const products = state.products.data.filter(
+        (product) => product.id !== action.payload.data.id,
+      )
+      state.products = {
+        ...state.products,
+        data: [action.payload.data, ...products],
+      }
     })
   },
 })

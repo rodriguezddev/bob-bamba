@@ -57,4 +57,9 @@ export const columns = [
     id: 'terms',
     label: 'Términos y Condiciones',
   },
+  {
+    align: 'center',
+    id: 'actions',
+    label: 'Acciones',
+  },
 ]

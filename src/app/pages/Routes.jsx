@@ -31,6 +31,7 @@ import CreateMessages from './messages/createMessages'
 import Message from './messages'
 import AdminPartnerUsers from './adminPartnerUsers/AdminPartnerUsers'
 import CreateAdminPartnerUser from './adminPartnerUsers/createAdminPartnerUser'
+import EditProducts from './products/editProducts'
 
 const Routes = () => (
   <>
@@ -59,6 +60,7 @@ const Routes = () => (
         <Route path='/admin-users/create' element={<CreateAdminUser />} />
         <Route path='/products' element={<Products />} />
         <Route path='/products/create' element={<CreateProducts />} />
+        <Route path='/products/edit/:id' element={<EditProducts />} />
         <Route path='/carrier-services' element={<CarrierServices />} />
         <Route
           path='/carrier-services/create'

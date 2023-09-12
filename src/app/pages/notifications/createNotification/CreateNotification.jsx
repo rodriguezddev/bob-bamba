@@ -24,6 +24,8 @@ import {
 } from '../../../slices/notifications/notificationsSlice'
 import { getPartners } from '../../../slices/partner/partnerSlice'
 import { handleTextClipping } from '../../../utils/UtilsTranslate'
+import useRowsPerPage from '../../../hooks/useRowsPerPage'
+import { Pagination } from '../../../components/tables'
 
 const CreateNotification = () => {
   const dispatch = useDispatch()
@@ -46,6 +48,12 @@ const CreateNotification = () => {
   const templateName = watch('template') || ''
   const providers = config[actionType]?.providers || {}
   const meta = config[actionType]?.providers[providerName]?.meta_notification || {}
+  const selectRowsPerPage = 100
+  const { page, onPageChange } = useRowsPerPage(
+    getPartners,
+    dispatch,
+    selectRowsPerPage,
+  )
 
   useEffect(() => {
     dispatch(getNoticeAccountsConfig())
@@ -184,6 +192,19 @@ const CreateNotification = () => {
                       {partner?.name}
                     </MenuItem>
                   ))}
+                  <Grid container display='flex' alignItems='center'>
+                    <Pagination
+                      count={partners?.meta?.total ?? 0}
+                      labelDisplayedRows={() => ''}
+                      onPageChange={onPageChange}
+                      page={page}
+                      rowsPerPage={selectRowsPerPage}
+                      rowsPerPageOptions={[0]}
+                      SelectProps={{
+                        native: true,
+                      }}
+                    />
+                  </Grid>
                 </SelectInput>
                 <Typography
                   color='error.main'

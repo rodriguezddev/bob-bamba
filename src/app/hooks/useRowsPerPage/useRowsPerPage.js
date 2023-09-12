@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
-const useRowsPerPage = (getMethods, dispatch) => {
-  const [rowsPerPage, setRowsPerPage] = useState(10)
+const useRowsPerPage = (getMethods, dispatch, rowsPage = 10) => {
+  const [rowsPerPage, setRowsPerPage] = useState(rowsPage)
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(0)
 

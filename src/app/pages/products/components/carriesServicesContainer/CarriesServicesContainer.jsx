@@ -26,6 +26,10 @@ const CarriesServicesContainer = ({ assignedCarriesServices, carriers }) => {
   }, [])
 
   useEffect(() => {
+    assignedCarriesServices(selectedCarriesServices)
+  }, [])
+
+  useEffect(() => {
     if (carrierServices) {
       setCarrieServicesAvailable(
         handleAvailableProducts(carrierServices, selectedCarriesServices),
@@ -82,27 +86,48 @@ const CarriesServicesContainer = ({ assignedCarriesServices, carriers }) => {
                 padding: '1rem',
               }}
             >
-              {carrierServicesAvailable.map((value) => (
-                <Card
-                  key={value?.sku}
-                  sx={{
-                    margin: '.5rem 0',
-                    maxWidth: '27rem',
-                  }}
+              {carrierServicesAvailable?.length === 0 ? (
+                <Grid
+                  alignItems='center'
+                  container
+                  direction='row'
+                  height='16rem'
+                  justifyContent='center'
                 >
-                  <ListItemButton onClick={() => handleCarrierServices(value)}>
-                    <CardContent>
-                      <Typography
-                        sx={{
-                          margin: '.5rem',
-                        }}
-                      >
-                        {value.name}
-                      </Typography>
-                    </CardContent>
-                  </ListItemButton>
-                </Card>
-              ))}
+                  <Typography
+                    sx={{
+                      textAlign: 'center',
+                    }}
+                  >
+                    Ya están asignados los productos de esta pagina, ve a la
+                    siguiente
+                  </Typography>
+                </Grid>
+              ) : (
+                carrierServicesAvailable.map((value) => (
+                  <Card
+                    key={value?.sku}
+                    sx={{
+                      margin: '.5rem 0',
+                      maxWidth: '27rem',
+                    }}
+                  >
+                    <ListItemButton
+                      onClick={() => handleCarrierServices(value)}
+                    >
+                      <CardContent>
+                        <Typography
+                          sx={{
+                            margin: '.5rem',
+                          }}
+                        >
+                          {value.name}
+                        </Typography>
+                      </CardContent>
+                    </ListItemButton>
+                  </Card>
+                ))
+              )}
             </Box>
             <Pagination
               count={carrierServices?.meta?.total ?? 0}

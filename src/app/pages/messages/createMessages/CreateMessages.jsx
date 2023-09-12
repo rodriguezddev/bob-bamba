@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Box } from '@mui/material'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { BackButton, MainButton } from '../../../components/buttons'
 import { GeneralTitle } from '../../../components/texts'
-import { getPartners } from '../../../slices/partner/partnerSlice'
 import {
   createMessage,
   resetMessage,
@@ -20,10 +19,6 @@ const CreateMessages = () => {
   const { handleSubmit } = formMessageHook
   const { isLoading } = useSelector((state) => state.loading)
   const { message } = useSelector((state) => state.message)
-
-  useEffect(() => {
-    dispatch(getPartners('?limit=100'))
-  }, [])
 
   const onSubmit = (dataForm) => {
     const values = {
