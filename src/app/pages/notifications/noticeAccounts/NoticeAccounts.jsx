@@ -56,7 +56,16 @@ const NoticeAccount = () => {
   useEffect(() => {
     if (account) {
       reset({
+        accountName: account?.notification_type,
+        account_id: account?.keys?.account_id,
+        from_email: account?.keys?.from_email,
+        from_name: account?.keys?.from_name,
+        isEnabled: account?.is_enabled,
         name: account?.name,
+        phone_id: account?.keys?.phone_id,
+        phone_number: account?.keys?.phone_number,
+        provider: account?.provider,
+        token: account?.keys?.token,
       })
     }
   }, [account])
@@ -106,7 +115,7 @@ const NoticeAccount = () => {
     const data = {
       name: dataForm.name,
       keys: handleKeysFields(keyTypes, dataForm),
-      is_enabled: dataForm.is_enabled,
+      is_enabled: dataForm.isEnabled,
       provider: dataForm.provider,
       notification_type: dataForm.accountName,
     }

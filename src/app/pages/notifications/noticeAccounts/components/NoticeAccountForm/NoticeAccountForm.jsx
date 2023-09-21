@@ -154,7 +154,7 @@ const NoticeAccountsForm = ({ noticeAccountUseForm }) => {
         <Controller
           control={control}
           defaultValue={false}
-          name='is_enabled'
+          name='isEnabled'
           render={({ field: { onChange, value } }) => (
             <Grid container flexDirection='column' marginTop='.5rem'>
               <Grid>
@@ -164,7 +164,12 @@ const NoticeAccountsForm = ({ noticeAccountUseForm }) => {
                 >
                   No
                 </Typography>
-                <Switch id='is_enabled' value={value} onChange={onChange} />
+                <Switch
+                  checked={value}
+                  id='isEnabled'
+                  onChange={onChange}
+                  value={value}
+                />
                 <Typography
                   data-testid='message-is-enabled-accountName'
                   variant='caption'
