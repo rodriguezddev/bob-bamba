@@ -35,8 +35,18 @@ describe('List admin users view', () => {
     cy.get('[data-testid="button-filter-clean"]').click()
   })
 
+  it('check edit modal', () => {
+    cy.get('[data-testid="BorderColorIcon"] > path').click()
+    cy.get('#alert-dialog-title').should(
+      'contain',
+      'Actualizar administrador',
+    )
+    cy.get('[data-testid="close-button-action-alert"]').click()
+  })
+
   it('check pagination', () => {
     cy.get('[data-testid="button-filter-clean"]').click()
+    cy.get('[data-testid="close-button-alert"]').click()
     cy.get('[data-testid="LastPageIcon"]').click()
     cy.get('[aria-label="last page"]').should('be.disabled')
     cy.get('[aria-label="first page"]').click()

@@ -6,6 +6,7 @@ import userReducer, {
   getAdmins,
   resetAdmin,
   resetDeleteAdmin,
+  updateAdmin,
 } from './adminSlice'
 import httpService from '../../services/api_services/HttpService'
 
@@ -236,5 +237,67 @@ describe('UserSlice redux', () => {
     const actualState = userReducer(state, resetDeleteAdmin())
 
     expect(actualState.admins.deleteAdmin).toEqual({})
+  })
+
+  it('should return update admin state', async () => {
+    const responseMock = {
+      data: {
+        id: 'bf27b918-19eb-4bca-8bb6-8291428eca22',
+        name: 'Aarón',
+        lastname: 'Camacho',
+        email: 'aaron@vivebamba.com',
+        active: null,
+      },
+    }
+
+    const state = {
+      data: [
+        {
+          id: 'bf27b918-19eb-4bca-8bb6-8291428eca22',
+          name: 'Aarón',
+          lastname: 'Camacho',
+          email: 'aaron@vivebamba.com',
+          active: null,
+        },
+      ],
+      meta: {},
+      createAdmins: {},
+      deleteAdmin: {},
+    }
+
+    jest.spyOn(httpService, 'patch').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({
+      reducer: adminSlice.reducer,
+    })
+    await store.dispatch(
+      updateAdmin({
+        id: 'dac3e',
+        data: {},
+      }),
+    )
+
+    const { admins } = await store.getState()
+    expect(admins).toEqual(state)
+  })
+
+  it('should update admin thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      admins: {
+        data: [],
+        meta: {},
+        createAdmins: {},
+        deleteAdmin: {},
+      },
+      admin: {},
+    }
+    const thunk = updateAdmin()
+    await thunk(dispatch, () => state, undefined)
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('update/admin/pending')
+    expect(calls[1][0].type).toEqual('update/admin/rejected')
   })
 })

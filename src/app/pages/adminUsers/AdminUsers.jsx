@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Box, Grid, IconButton } from '@mui/material'
+import {
+  Box, Grid, IconButton, Tooltip,
+} from '@mui/material'
+import BorderColorIcon from '@mui/icons-material/BorderColor'
 import { Alert } from '../../components/modals'
 import { Avatar } from '../../components/avatar'
 import { GeneralTable, TableCell, TableRow } from '../../components/tables'
@@ -13,6 +16,7 @@ import { MainButton } from '../../components/buttons'
 import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
 import useRowsPerPage from '../../hooks/useRowsPerPage'
+import UpdateAdmin from './components/updateAdmin'
 
 const AdminUsers = () => {
   const dispatch = useDispatch()
@@ -20,6 +24,8 @@ const AdminUsers = () => {
   const { admins } = useSelector((state) => state.admin)
   const [adminAlert, setAdminAlert] = useState({})
   const [showAlert, setShowAlert] = useState(false)
+  const [isShowDialogUpdate, setIsShowDialogUpdate] = useState(false)
+  const [selectedAdmin, setSelectedAdmin] = useState({})
   const {
     rowsPerPage,
     handleChangeRowsPerPage,
@@ -54,6 +60,15 @@ const AdminUsers = () => {
     setShowAlert(true)
   }
 
+  const handleShowDialogUpdate = () => {
+    setIsShowDialogUpdate(!isShowDialogUpdate)
+  }
+
+  const handleUpdate = (admin) => {
+    handleShowDialogUpdate()
+    setSelectedAdmin(admin)
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box display='flex' my={4} sx={{ justifyContent: 'space-between' }}>
@@ -83,10 +98,10 @@ const AdminUsers = () => {
         }}
       >
         {admins?.data?.map((userAdmin) => (
-          <TableRow key={userAdmin.id}>
+          <TableRow key={userAdmin?.id}>
             <TableCell align='center'>
               <Box display='flex' sx={{ justifyContent: 'left' }}>
-                <Avatar gender={userAdmin.gender} />
+                <Avatar gender={userAdmin?.gender} />
                 <Box mt={2} ml='1.5rem'>
                   {userAdmin.name}
                   {' '}
@@ -101,12 +116,18 @@ const AdminUsers = () => {
                 container
                 direction='row'
                 justifyContent='center'
-                spacing={4}
               >
                 <Grid item>
                   <IconButton onClick={() => handleDeleteAdminUser(userAdmin)}>
                     <img src={DeleteIcon} alt='Editar' height={20} width={20} />
                   </IconButton>
+                </Grid>
+                <Grid item onClick={() => handleUpdate(userAdmin)}>
+                  <Tooltip title='Editar administrador'>
+                    <IconButton color='primary' sx={{ padding: 0 }}>
+                      <BorderColorIcon sx={{ fontSize: '1.25rem' }} />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
               </Grid>
             </TableCell>
@@ -118,10 +139,17 @@ const AdminUsers = () => {
           actionButton={handleAlertAction}
           alertContentText='La información se eliminará permanentemente'
           alertTextButton='Cancelar'
-          alertTitle={`¿Quieres eliminar a ${adminAlert.name} ${adminAlert.lastname}?`}
+          alertTitle={`¿Quieres eliminar a ${adminAlert?.name} ${adminAlert?.lastname}?`}
           setIsOpen={setShowAlert}
           isShowPrimaryButton
           isOpen={showAlert}
+        />
+      )}
+      {isShowDialogUpdate && (
+        <UpdateAdmin
+          admin={selectedAdmin}
+          dialogUpdate={handleShowDialogUpdate}
+          isShowDialogUpdate={isShowDialogUpdate}
         />
       )}
     </Box>

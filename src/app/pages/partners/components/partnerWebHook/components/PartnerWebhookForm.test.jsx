@@ -5,7 +5,7 @@ import PartnerWebhookForm from './PartnerWebhookForm'
 import '@testing-library/jest-dom/extend-expect'
 import { TestWrap } from '../../../../../components/TestWrap'
 
-test('renders PartnerForm', () => {
+test('renders PartnerWebhookForm', () => {
   const { result } = renderHook(() => useForm())
   const props = {
     webhookPartnerForm: result.current,

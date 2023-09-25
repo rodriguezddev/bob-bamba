@@ -71,6 +71,32 @@ export const deleteAdmins = createAsyncThunk(
   },
 )
 
+export const updateAdmin = createAsyncThunk(
+  'update/admin',
+  async (values, thunkAPI) => {
+    const { data, id } = values
+    const messageSuccess = {
+      title: '¡Actualizado!',
+      subtitle: 'El administrador se actualizó correctamente',
+    }
+
+    try {
+      const response = await httpService.patch(
+        `${apiConstants.ADMIN_URL}/admin/${id}/update`,
+        data,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const adminSlice = createSlice({
   name: 'admin',
   initialState,
@@ -101,6 +127,16 @@ export const adminSlice = createSlice({
         data: [action.payload.data, ...state.admins.data],
       }
       state.admin = action.payload.data
+    })
+
+    builder.addCase(updateAdmin.fulfilled, (state, action) => {
+      const admins = state.admins.data.filter(
+        (admin) => admin.id !== action.payload.data.id,
+      )
+      state.admins = {
+        ...state.admins,
+        data: [action.payload.data, ...admins],
+      }
     })
   },
 })

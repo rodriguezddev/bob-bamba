@@ -12,4 +12,30 @@ describe('test functions utils translate', () => {
 
     expect(utilsFormat.formatCodePartner(code)).toBe('TEST-CODE-NAME-BAMBA')
   })
+
+  it('get key type config', () => {
+    const config = {
+      EMAIL: {
+        providers: {
+          MANDRILL: {
+            key_types: {
+              from_email: {
+                description: 'Correo por el que se va mandar',
+                type: 'email',
+                required: true,
+              },
+              from_name: {
+                description: 'Nombre de la cuenta de correo',
+                type: 'string',
+                required: true,
+              },
+            },
+          },
+        },
+      },
+    }
+
+    expect(utilsFormat.getKeyTypes(config)).toHaveProperty('from_email')
+    expect(utilsFormat.getKeyTypes(config)).toHaveProperty('from_name')
+  })
 })

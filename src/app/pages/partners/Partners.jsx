@@ -196,11 +196,11 @@ const Partners = () => {
             <TableCell align='left'>{getTypePartner(partner.type)}</TableCell>
             <TableCell align='left'>
               <Typography noWrap paragraph variant='caption'>
-                {`Nombre: ${partner.company?.name}`}
+                {`Nombre: ${partner.company?.name ?? '-'}`}
                 <br />
-                {`País: ${partner.company?.country_code}`}
+                {`País: ${partner.company?.country_code ?? '-'}`}
                 <br />
-                {`Teléfono: ${partner.company?.phone_number}`}
+                {`Teléfono: ${partner.company?.phone_number ?? '-'}`}
                 <br />
                 {`RFC: ${partner.company?.tax_id ?? '-'}`}
                 <br />

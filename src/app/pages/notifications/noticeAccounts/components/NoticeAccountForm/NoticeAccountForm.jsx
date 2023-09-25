@@ -10,19 +10,46 @@ import { MainInput, SelectInput } from '../../../../../components/inputs'
 import { getNoticeAccountsConfig } from '../../../../../slices/noticeAccounts/noticeAccountsSlice'
 import NotificationFields from '../../../components/NotificationFields/NotificationFields'
 import { getEmailPattern } from '../../../../../utils/utilsValidations'
+import { getKeyTypes } from '../../../../../utils/utilsFormat'
 
-const NoticeAccountsForm = ({ noticeAccountUseForm }) => {
+const NoticeAccountsForm = ({ account, noticeAccountUseForm }) => {
   const dispatch = useDispatch()
   const { config } = useSelector((state) => state.noticeAccount)
-  const { control, watch } = noticeAccountUseForm
+  const { control, reset, watch } = noticeAccountUseForm
   const accountName = watch('accountName') || ''
   const providerName = watch('provider') || ''
   const providers = config[accountName]?.providers || {}
   const keyTypes = config[accountName]?.providers[providerName]?.key_types || {}
+  const allKeyTypes = getKeyTypes(config)
+
+  const getInfoKey = (keys) => {
+    let infoKeys = {}
+
+    Object.entries(keys).forEach(([key]) => {
+      infoKeys = {
+        ...infoKeys,
+        ...(account.keys[key] && { [key]: account.keys[key] }),
+      }
+    })
+
+    return infoKeys
+  }
 
   useEffect(() => {
     dispatch(getNoticeAccountsConfig())
   }, [])
+
+  useEffect(() => {
+    if (account) {
+      reset({
+        accountName: account?.notification_type,
+        isEnabled: account?.is_enabled,
+        name: account?.name,
+        provider: account?.provider,
+        ...getInfoKey(allKeyTypes),
+      })
+    }
+  }, [account])
 
   return (
     <Grid container marginTop='2rem' spacing='2rem'>
@@ -230,10 +257,22 @@ const NoticeAccountsForm = ({ noticeAccountUseForm }) => {
 }
 
 NoticeAccountsForm.propTypes = {
+  account: PropTypes.shape({
+    is_enabled: PropTypes.bool,
+    keys: PropTypes.shape({}),
+    name: PropTypes.string,
+    notification_type: PropTypes.string,
+    provider: PropTypes.string,
+  }),
   noticeAccountUseForm: PropTypes.shape({
     control: PropTypes.shape({}).isRequired,
+    reset: PropTypes.func.isRequired,
     watch: PropTypes.func.isRequired,
   }).isRequired,
+}
+
+NoticeAccountsForm.defaultProps = {
+  account: null,
 }
 
 export default NoticeAccountsForm

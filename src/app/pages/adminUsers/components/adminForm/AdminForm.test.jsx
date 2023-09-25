@@ -1,31 +1,24 @@
 import React from 'react'
 import { render, renderHook, screen } from '@testing-library/react'
 import { useForm } from 'react-hook-form'
-import ProductsForm from './ProductsForm'
+import AdminForm from './AdminForm'
 
 import '@testing-library/jest-dom/extend-expect'
 import { TestWrap } from '../../../../components/TestWrap'
 
-test('renders ProductsForm', () => {
+test('renders AdminForm', () => {
   const { result } = renderHook(() => useForm())
   const props = {
-    descriptionContent: [],
-    isCarrierEmpty: true,
-    metaContent: {},
-    productsForm: result.current,
-    setMetaContent: jest.fn(),
-    setDescriptionContent: jest.fn(),
-    assignedCarries: [],
-    setAssignedCarries: jest.fn(),
+    adminForm: result.current,
   }
 
   render(
     <TestWrap>
-      <ProductsForm {...props} />
+      <AdminForm {...props} />
     </TestWrap>,
   )
 
-  const textHeader = screen.getByText('Nombre*')
+  const textHeader = screen.getByText('Nombre(s)*')
 
   expect(textHeader).toBeInTheDocument()
 })

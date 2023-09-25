@@ -37,7 +37,7 @@ const NoticeAccount = () => {
       name: '',
     },
   })
-  const { handleSubmit, reset, watch } = noticeAccountUseForm
+  const { handleSubmit, watch } = noticeAccountUseForm
   const accountName = watch('accountName') || ''
   const providerName = watch('provider') || ''
   const keyTypes = config[accountName]?.providers[providerName]?.key_types || {}
@@ -52,23 +52,6 @@ const NoticeAccount = () => {
   useEffect(() => {
     dispatch(getNoticeAccounts())
   }, [])
-
-  useEffect(() => {
-    if (account) {
-      reset({
-        accountName: account?.notification_type,
-        account_id: account?.keys?.account_id,
-        from_email: account?.keys?.from_email,
-        from_name: account?.keys?.from_name,
-        isEnabled: account?.is_enabled,
-        name: account?.name,
-        phone_id: account?.keys?.phone_id,
-        phone_number: account?.keys?.phone_number,
-        provider: account?.provider,
-        token: account?.keys?.token,
-      })
-    }
-  }, [account])
 
   const handleCreateNoticeAccount = () => {
     navigate('/notice-account/create')
@@ -241,7 +224,10 @@ const NoticeAccount = () => {
           primaryButtonTextAlert='Actualizar'
           setActionsIsOpen={setIsShowDialogUpdate}
         >
-          <NoticeAccountsForm noticeAccountUseForm={noticeAccountUseForm} />
+          <NoticeAccountsForm
+            account={account}
+            noticeAccountUseForm={noticeAccountUseForm}
+          />
         </ActionAlert>
       )}
       {isShowConfirmDialogUpdate && (
