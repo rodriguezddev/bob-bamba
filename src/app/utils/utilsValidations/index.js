@@ -98,3 +98,12 @@ export const getUrlPattern = () => {
     value: urlRegex,
   }
 }
+
+export const getFilterPattern = () => {
+  const filterRegex = /^[a-zA-Z0-9_-]+$/;
+
+  return {
+    value: filterRegex,
+    message: 'El campo debe contener solo letras, números, guiones y guiones bajos',
+  }
+}

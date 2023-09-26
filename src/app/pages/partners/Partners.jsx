@@ -143,6 +143,7 @@ const Partners = () => {
 
   const onSubmit = (dataForm) => {
     const data = {
+      filter: dataForm.filter,
       notice_account_id: dataForm.accountId,
     }
 

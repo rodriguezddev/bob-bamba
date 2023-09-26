@@ -54,7 +54,7 @@ describe('Partner view', () => {
       'contain',
       'Productos disponibles',
     )
-    cy.get('[data-testid="card-CONSULTA-ESPECIALISTA-2"]').click()
+    cy.get('[data-testid="card-PRD-DES10K-1M"]').click()
     cy.get(
       ':nth-child(5) > .MuiDialog-container > .MuiPaper-root > #alert-dialog-title',
     ).should('contain', 'Precio del producto')
@@ -126,6 +126,15 @@ describe('Partner view', () => {
     cy.get('#alert-dialog-description').should(
       'contain',
       'Se actualizará el partner Agente Bamba',
+    )
+    cy.get('[data-testid="close-button-action-alert"]').click()
+  })
+
+  it('should show modal to add notice account ', () => {
+    cy.get(':nth-child(1) > .MuiTableCell-alignCenter > .MuiGrid-container > :nth-child(4) > .MuiButtonBase-root > [data-testid="AddAlertIcon"]').click()
+    cy.get('#alert-dialog-title').should(
+      'contain',
+      'Asignar cuenta a Agente Bamba',
     )
     cy.get('[data-testid="close-button-action-alert"]').click()
   })

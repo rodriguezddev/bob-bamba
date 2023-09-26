@@ -208,4 +208,20 @@ describe('Test function in utils', () => {
       ),
     ).toBe(false)
   })
+
+  it('should return a regular expression that validates correctly', () => {
+    expect(
+      new RegExp(utilsValidations.getFilterPattern(dummyTFunction).value).test(
+        'test_bamba',
+      ),
+    ).toBe(true)
+  })
+
+  it('should reject a string that does not conform to the pattern', () => {
+    expect(
+      new RegExp(utilsValidations.getFilterPattern(dummyTFunction).value).test(
+        'test bamba',
+      ),
+    ).toBe(false)
+  });
 })
