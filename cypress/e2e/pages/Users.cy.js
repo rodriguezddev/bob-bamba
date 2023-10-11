@@ -37,6 +37,10 @@ describe('List users view', () => {
     )
     cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(7)').should(
       'contain',
+      'Acepta',
+    )
+    cy.get('.MuiTableHead-root > .MuiTableRow-root > :nth-child(8)').should(
+      'contain',
       'Acciones',
     )
   })

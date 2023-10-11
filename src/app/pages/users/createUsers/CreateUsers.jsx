@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
-  Box, Grid, MenuItem, Typography,
+  Box, Grid, MenuItem, Switch, Typography,
 } from '@mui/material'
 import { Controller, useForm } from 'react-hook-form'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
@@ -42,6 +42,7 @@ const CreateUsers = () => {
 
   const onSubmit = (dataForm) => {
     const data = {
+      accepted_newsletter: dataForm.acceptedNewsletter,
       ...(dataForm.birthdate && {
         birthdate: format(dataForm.birthdate, 'yyyy-MM-dd'),
       }),
@@ -503,6 +504,42 @@ const CreateUsers = () => {
                 >
                   {errorInput?.message}
                 </Typography>
+              </Grid>
+            )}
+          />
+        </Grid>
+        <Grid item lg={4} md={6} xs={12}>
+          <GeneralTitle
+            fontSize='.75rem'
+            lineHeight='1rem'
+            text='Acepta notificaciones'
+          />
+          <Controller
+            control={control}
+            defaultValue
+            name='acceptedNewsletter'
+            render={({ field: { onChange, value } }) => (
+              <Grid container flexDirection='column' marginTop='.5rem'>
+                <Grid>
+                  <Typography
+                    data-testid='message-is-enabled-accepted-newsletter'
+                    variant='caption'
+                  >
+                    No
+                  </Typography>
+                  <Switch
+                    checked={value}
+                    id='acceptedNewsletter'
+                    onChange={onChange}
+                    value={value}
+                  />
+                  <Typography
+                    data-testid='message-accepted-newsletter'
+                    variant='caption'
+                  >
+                    Sí
+                  </Typography>
+                </Grid>
               </Grid>
             )}
           />

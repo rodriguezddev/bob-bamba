@@ -62,10 +62,10 @@ describe('authSlice redux', () => {
   it('should handle reset user', () => {
     const state = {
       user: { id: 1 },
-      loggedIn: false,
+      loggedIn: true,
     }
-    const actualState = authReducer(state, logout())
+    const currentState = authReducer(state, logout())
 
-    expect(actualState.user).toEqual({})
+    expect(currentState).toEqual({ user: {}, loggedIn: false })
   })
 })

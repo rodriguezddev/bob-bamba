@@ -36,6 +36,15 @@ export const filters = [
     type: 'text',
   },
   {
+    id: 'accepted_newsletter',
+    name: 'Acepta notificaciones',
+    selectDetails: [
+      { value: 'true', name: 'Si' },
+      { value: 'false', name: 'No' },
+    ],
+    type: 'select',
+  },
+  {
     id: 'partner_name',
     name: 'Partner',
     placeholder: 'Partner',

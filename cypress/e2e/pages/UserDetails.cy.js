@@ -20,6 +20,10 @@ describe('users details view', () => {
     cy.get(
       '.MuiGrid-direction-xs-column > [data-testid="subscriptions-title"]',
     ).should('contain', 'Suscripciones')
+    cy.get(':nth-child(11) > .MuiTypography-body1').should(
+      'contain',
+      'Acepta notificaciones',
+    )
   })
 
   it('show subscriptions details', () => {

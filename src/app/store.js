@@ -51,13 +51,23 @@ const reducers = combineReducers({
   user: userReducer,
 })
 
+const rootReducer = (state, action) => {
+  let rootState = state
+
+  if (action.type === 'auth/logout') {
+    rootState = undefined
+  }
+
+  return reducers(rootState, action)
+}
+
 const persistConfig = {
   key: 'root',
   storage,
   blacklist: ['loading'],
 }
 
-const persistedReducer = persistReducer(persistConfig, reducers)
+const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 const store = configureStore({
   reducer: persistedReducer,

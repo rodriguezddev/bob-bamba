@@ -31,6 +31,11 @@ export const columns = [
   },
   {
     align: 'center',
+    id: 'acceptedNewsletter',
+    label: 'Acepta notificaciones',
+  },
+  {
+    align: 'center',
     id: 'actions',
     label: 'Acciones',
   },

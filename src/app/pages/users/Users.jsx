@@ -93,6 +93,9 @@ const Users = () => {
             <TableCell align='center'>{user?.birthdate}</TableCell>
             <TableCell align='center'>{user?.partner?.name}</TableCell>
             <TableCell align='center'>
+              {user?.accepted_newsletter ? 'Sí' : 'No'}
+            </TableCell>
+            <TableCell align='center'>
               <Grid
                 alignItems='center'
                 container

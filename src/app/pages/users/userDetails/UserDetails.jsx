@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { Box, Grid, MenuItem } from '@mui/material'
+import {
+  Box, Grid, MenuItem, Switch, Typography,
+} from '@mui/material'
 import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import { Avatar } from '../../../components/avatar'
 import { BackButton, MainButton } from '../../../components/buttons'
@@ -203,6 +205,34 @@ const UserDetails = () => {
                 radius='.5rem'
                 value={user?.partner?.name || '-'}
               />
+            </Grid>
+          </Grid>
+          <Grid item lg={4} md={6} xs={12}>
+            <GeneralTitle
+              fontSize='.75rem'
+              lineHeight='1rem'
+              text='Acepta notificaciones'
+            />
+            <Grid marginTop='.5rem'>
+              <Grid>
+                <Typography
+                  data-testid='message-is-enabled-accepted-newsletter'
+                  variant='caption'
+                >
+                  No
+                </Typography>
+                <Switch
+                  checked={user?.accepted_newsletter || false}
+                  disabled
+                  id='acceptedNewsletter'
+                />
+                <Typography
+                  data-testid='message-accepted-newsletter'
+                  variant='caption'
+                >
+                  Sí
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>

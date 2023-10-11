@@ -33,5 +33,6 @@ describe('create user view', () => {
       'contain',
       'El numero de celular del usuario es requerido',
     )
+    cy.get('#acceptedNewsletter').should('be.checked')
   })
 })
