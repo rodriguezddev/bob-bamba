@@ -43,7 +43,7 @@ const CreateNoticeAccountTemplate = () => {
   }
 
   useEffect(() => {
-    dispatch(getNoticeAccounts())
+    dispatch(getNoticeAccounts('?limit=100'))
   }, [])
 
   return (

@@ -97,7 +97,7 @@ const CreateNotification = () => {
 
   useEffect(() => {
     if (providerName) {
-      dispatch(getNoticeAccounts(`?provider=${providerName}`))
+      dispatch(getNoticeAccounts(`?provider=${providerName}&limit=100`))
     }
   }, [providerName])
 

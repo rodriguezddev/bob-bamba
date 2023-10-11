@@ -18,7 +18,7 @@ const FormNoticeAccountTemplate = ({ templateForm }) => {
   const { control } = templateForm
 
   useEffect(() => {
-    dispatch(getNoticeAccounts())
+    dispatch(getNoticeAccounts('?limit=100'))
   }, [])
 
   return (

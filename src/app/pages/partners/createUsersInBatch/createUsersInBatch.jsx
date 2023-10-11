@@ -32,7 +32,7 @@ const CreateUsersInBatch = () => {
 
   useEffect(() => {
     if (provider) {
-      dispatch(getNoticeAccounts(`?provider=${provider}`))
+      dispatch(getNoticeAccounts(`?provider=${provider}&limit=100`))
     }
   }, [provider])
 
