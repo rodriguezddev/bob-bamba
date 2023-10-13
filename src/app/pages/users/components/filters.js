@@ -50,4 +50,13 @@ export const filters = [
     placeholder: 'Partner',
     type: 'text',
   },
+  {
+    id: 'soft_deleted',
+    name: 'Desactivados',
+    selectDetails: [
+      { value: 'true', name: 'Sí' },
+      { value: 'false', name: 'No' },
+    ],
+    type: 'select',
+  },
 ]

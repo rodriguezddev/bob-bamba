@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   Box, Grid, MenuItem, Switch, Typography,
 } from '@mui/material'
@@ -8,20 +8,24 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp'
 import { Avatar } from '../../../components/avatar'
 import { BackButton, MainButton } from '../../../components/buttons'
 import { GeneralTitle } from '../../../components/texts'
-import { getUser } from '../../../slices/user/userSlice'
+import { getUser, resetUserActive } from '../../../slices/user/userSlice'
 import { MainInput, SelectInput } from '../../../components/inputs'
 import ProductsNotActive from './components/ProductsNotActive'
 import Subscriptions from './components/Subscriptions'
 import RecoveryMessageForm from './components/RecoveryMessageForm'
 import { resetRecoveryMessage } from '../../../slices/recoveryMessage/recoveryMessageSlice'
 import { Alert } from '../../../components/modals'
+import DeactivateUserDialog from './components/DeactivateUserDialog'
+import theme from '../../../theme'
 
 const UserDetails = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
   const { id } = useParams()
   const { message } = useSelector((state) => state.recoveryMessage)
   const { user } = useSelector((state) => state.user)
   const [showFormMessage, setShowFormMessage] = useState(false)
+  const [showDeactivateUserDialog, setShowDeactivateUserDialog] = useState(false)
 
   useEffect(() => {
     dispatch(getUser(id))
@@ -41,13 +45,43 @@ const UserDetails = () => {
     }
   }, [message.isSuccess])
 
+  useEffect(() => {
+    if (!user.active && user.active !== undefined) {
+      navigate('/users')
+      dispatch(resetUserActive())
+    }
+  }, [user.active])
+
   return (
     <Box sx={{ width: '100%', marginBottom: '2rem' }}>
       <Grid>
         <BackButton />
         <GeneralTitle text='Detalles del usuario' />
-        <Grid marginTop='.25rem'>
+        <Grid
+          alignItems='center'
+          container
+          direction='row'
+          justifyContent='space-between'
+          marginTop='.25rem'
+        >
           <Avatar gender={user.gender} height='9.4rem' width='9.5rem' />
+          <Box display='flex' flexDirection='column'>
+            <Box mb={3}>
+              <MainButton
+                background={theme.palette.background.blueLight}
+                color='primary'
+                data-testid='delete-user-button'
+                fontSize='1rem'
+                height='3rem'
+                onClick={() => setShowDeactivateUserDialog(true)}
+                radius='0.62rem'
+                type='secondary'
+                width='16rem'
+              >
+                Desactivar
+              </MainButton>
+            </Box>
+          </Box>
         </Grid>
         {user.cellphone && (
           <Box mt={5}>
@@ -269,6 +303,12 @@ const UserDetails = () => {
           handleShowForm={handleShowFormMessage}
           open={showFormMessage}
           user={user}
+        />
+      )}
+      {showDeactivateUserDialog && (
+        <DeactivateUserDialog
+          setShowDeactivateUserDialog={setShowDeactivateUserDialog}
+          showDeactivateUserDialog={showDeactivateUserDialog}
         />
       )}
     </Box>

@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import {
-  Box, Grid, IconButton, Tooltip,
+  Box, Button, Grid, IconButton, Tooltip,
 } from '@mui/material'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import { Avatar } from '../../components/avatar'
@@ -14,11 +14,15 @@ import { MainFilter } from '../../components/filters'
 import { filters } from './components/filters'
 import useRowsPerPage from '../../hooks/useRowsPerPage'
 import { MainButton } from '../../components/buttons'
+import DeleteOrActiveUserDialog from './userDetails/components/DeleteOrActiveUserDialog'
 
 const Users = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const { users } = useSelector((state) => state.user)
+  const isDeletedSoft = users?.params?.includes('soft_deleted=true') || false
+  const [showActivateDialog, setShowActivateDialog] = useState(false)
+  const [userDetails, setUserDetails] = useState({})
   const {
     rowsPerPage,
     handleChangeRowsPerPage,
@@ -39,6 +43,11 @@ const Users = () => {
 
   const handleCreateUser = () => {
     navigate('/users/create')
+  }
+
+  const handleActiveUser = (user) => {
+    setShowActivateDialog(true)
+    setUserDetails(user)
   }
 
   return (
@@ -103,21 +112,38 @@ const Users = () => {
                 justifyContent='center'
                 spacing={4}
               >
-                <Grid item onClick={() => handleUserDetails(user?.id)}>
-                  <Tooltip title='Ver detalles'>
-                    <IconButton
-                      color='primary'
-                      data-testid={`icon-button-${user?.tax_id}`}
+                {!isDeletedSoft ? (
+                  <Grid item onClick={() => handleUserDetails(user?.id)}>
+                    <Tooltip title='Ver detalles'>
+                      <IconButton
+                        color='primary'
+                        data-testid={`icon-button-${user?.tax_id}`}
+                      >
+                        <VisibilityIcon />
+                      </IconButton>
+                    </Tooltip>
+                  </Grid>
+                ) : (
+                  <Grid item>
+                    <Button
+                      onClick={() => handleActiveUser(user)}
+                      size='small'
+                      variant='contained'
                     >
-                      <VisibilityIcon />
-                    </IconButton>
-                  </Tooltip>
-                </Grid>
+                      Activar
+                    </Button>
+                  </Grid>
+                )}
               </Grid>
             </TableCell>
           </TableRow>
         ))}
       </GeneralTable>
+      <DeleteOrActiveUserDialog
+        setShowActivateDialog={setShowActivateDialog}
+        showActivateDialog={showActivateDialog}
+        userDetails={userDetails}
+      />
     </Box>
   )
 }

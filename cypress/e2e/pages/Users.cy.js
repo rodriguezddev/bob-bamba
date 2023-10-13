@@ -69,4 +69,33 @@ describe('List users view', () => {
     cy.get('[aria-label="last page"]').should('be.disabled')
     cy.get('[aria-label="first page"]').click()
   })
+
+  it('active user', () => {
+    cy.get('[data-testid="drawer-item-Usuarios"]').should('contain', 'Usuarios')
+    cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.intercept('/admin/api/v1/users').as('getUsers')
+    cy.wait('@getUsers')
+    cy.get('[data-testid="FilterAltIcon"] > path').click()
+    cy.get(':nth-child(9) > .MuiTypography-root').should(
+      'contain',
+      'Desactivados',
+    )
+    cy.get(
+      ':nth-child(9) > .MuiGrid-root > .MuiBox-root > .MuiInputBase-root > #fieldFilter',
+    ).click()
+    cy.get('[data-testid="select-filter-value-true"]').click()
+    cy.get('[data-testid="button-filter-search"]').click()
+    cy.get(
+      ':nth-child(1) > :nth-child(8) > .MuiGrid-container > .MuiGrid-root > .MuiButtonBase-root',
+    )
+      .should('contain', 'Activar')
+      .click()
+    cy.get('[data-testid="title-alert-Activar usuario"]').should(
+      'contain',
+      'Activar usuario',
+    )
+    cy.get('[data-testid="close-button-alert"]')
+      .should('contain', 'Cancelar')
+      .click()
+  })
 })

@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import httpService from '../../services/api_services/HttpService'
 import { apiConstants } from '../constants/apiConstants'
 import { createSubscription } from '../subscriptions/subscriptionsSlice'
+import { handleSetSuccessMessage } from '../successMessage/successMessageSlice'
 
 const initialState = {
   users: {
@@ -88,8 +89,50 @@ export const createUser = createAsyncThunk(
   },
 )
 
+export const activateUser = createAsyncThunk(
+  'activate/user',
+  async (userId, thunkAPI) => {
+    try {
+      const messageSuccess = { title: '¡Usuario activado correctamente!' }
+
+      const response = await httpService.post(
+        `${apiConstants.ADMIN_URL}/user/${userId}/restore`,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
+export const deactivateUser = createAsyncThunk(
+  'deactivate/user',
+  async (userId, thunkAPI) => {
+    try {
+      const messageSuccess = { title: '¡Usuario desactivado correctamente!' }
+
+      const response = await httpService.delete(
+        `${apiConstants.ADMIN_URL}/user/${userId}`,
+      )
+
+      thunkAPI.dispatch(handleSetSuccessMessage(messageSuccess))
+
+      return response
+    } catch (error) {
+      const message = error
+
+      return thunkAPI.rejectWithValue(message)
+    }
+  },
+)
+
 export const userSlice = createSlice({
-  name: 'getUsers',
+  name: 'users',
   initialState,
   reducers: {
     resetCreateUsers(state) {
@@ -98,34 +141,58 @@ export const userSlice = createSlice({
     resetCreateUser(state) {
       state.user = initialState.user
     },
+    resetUserActive(state) {
+      state.user.active = true
+    },
   },
 
   extraReducers: (builder) => {
     builder.addCase(getUsers.fulfilled, (state, action) => {
       state.users = action.payload
     })
+
     builder.addCase(getUser.fulfilled, (state, action) => {
       state.user = action.payload.data
     })
+
     builder.addCase(createSubscription.fulfilled, (state, action) => {
       state.user.subscriptions = [
         ...state.user.subscriptions,
         action.payload.data,
       ]
     })
+
     builder.addCase(createUsers.fulfilled, (state, action) => {
       state.users.createUsers = { ...action.payload.data, isSuccess: true }
     })
+
     builder.addCase(createUser.fulfilled, (state, action) => {
       state.users.data = [...state.users.data, action.payload.data]
       state.user = action.payload.data
       state.user.createUser = { isSuccess: true }
+    })
+
+    builder.addCase(deactivateUser.fulfilled, (state, action) => {
+      state.user.active = false
+      state.users.data = state.users.data.filter(
+        (user) => user.id !== action.meta.arg,
+      )
+      state.users.meta.total -= 1
+    })
+
+    builder.addCase(activateUser.fulfilled, (state, action) => {
+      state.user.active = true
+      state.users.data = state.users.data.filter(
+        (user) => user.id !== action.payload.data.id,
+      )
+
+      state.users.meta.total += 1
     })
   },
 })
 
 export const user = (state) => state.users
 
-export const { resetCreateUsers, resetCreateUser } = userSlice.actions
+export const { resetCreateUsers, resetCreateUser, resetUserActive } = userSlice.actions
 
 export default userSlice.reducer

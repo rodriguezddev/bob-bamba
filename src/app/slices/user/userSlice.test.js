@@ -1,7 +1,9 @@
 import { configureStore } from '@reduxjs/toolkit'
 import userReducer, {
+  activateUser,
   createUser,
   createUsers,
+  deactivateUser,
   getUser,
   getUsers,
   resetCreateUser,
@@ -404,5 +406,103 @@ describe('UserSlice redux', () => {
     const actualState = userReducer(state, resetCreateUser())
 
     expect(actualState.user).toEqual(resetState)
+  })
+
+  it('should active user', async () => {
+    const formData = {
+      id: '7a504aa4-ef25-4642-a9af-7982189c34cc',
+    }
+
+    const responseMock = {
+      data: {
+        id: 'b3f382f5-16d5-4123-a5f8-85be702c80c1',
+        name: null,
+        lastname: null,
+        second_lastname: null,
+        photo: null,
+        birthdate: null,
+        gender: null,
+        email: null,
+        cellphone: null,
+        tax_id: null,
+        accepted_newsletter: true,
+        personal_id: null,
+        metadata: null,
+        subscriptions: [],
+      },
+      code: 0,
+    }
+
+    jest.spyOn(httpService, 'post').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: userSlice.reducer })
+
+    await store.dispatch(activateUser(formData))
+
+    const { user } = await store.getState()
+
+    expect(user.active).toEqual(true)
+  })
+
+  it('should active user thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      users: {
+        data: [],
+        meta: {},
+        createUsers: {},
+      },
+      user: {},
+    }
+
+    const thunk = activateUser()
+
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('activate/user/pending')
+    expect(calls[1][0].type).toEqual('activate/user/rejected')
+  })
+
+  it('should deactivate user', async () => {
+    const formData = {
+      id: '7a504aa4-ef25-4642-a9af-7982189c34cc',
+    }
+
+    const responseMock = {}
+
+    jest.spyOn(httpService, 'delete').mockResolvedValueOnce(responseMock)
+
+    const store = configureStore({ reducer: userSlice.reducer })
+
+    await store.dispatch(deactivateUser(formData))
+
+    const { user } = await store.getState()
+
+    expect(user.active).toEqual(false)
+  })
+
+  it('should active user thunk request', async () => {
+    const dispatch = jest.fn()
+    const state = {
+      users: {
+        data: [],
+        meta: {},
+        createUsers: {},
+      },
+      user: {},
+    }
+
+    const thunk = deactivateUser()
+
+    await thunk(dispatch, () => state, undefined)
+
+    const { calls } = dispatch.mock
+
+    expect(calls).toHaveLength(2)
+    expect(calls[0][0].type).toEqual('deactivate/user/pending')
+    expect(calls[1][0].type).toEqual('deactivate/user/rejected')
   })
 })

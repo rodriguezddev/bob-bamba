@@ -96,4 +96,29 @@ describe('users details view', () => {
     cy.get('[data-testid="close-button-action-alert"]').click()
     cy.get('[data-testid="navbar-logout"]').first().click()
   })
+
+  it('show subscriptions message', () => {
+    cy.login('admin@vivebamba.com', 'Password')
+    cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.intercept('/admin/api/v1/users').as('getUsers')
+    cy.wait('@getUsers')
+    cy.get('[data-testid="drawer-item-Usuarios"]').first().click()
+    cy.get('[data-testid="FilterAltIcon"] > path').click()
+    cy.get('#email').type('testcypress@hotmail.com')
+    cy.get('[data-testid="button-filter-search"]').click()
+    cy.wait(1500)
+    cy.get('[data-testid="VisibilityIcon"]').click()
+    cy.get('[data-testid="delete-user-button"]')
+      .should('contain', 'Desactivar')
+      .click()
+    cy.get('[data-testid="title-alert-Desactivar usuario"]').should(
+      'contain',
+      'Desactivar usuario',
+    )
+    cy.get('.MuiDialogContent-root > .MuiBox-root').should(
+      'contain',
+      '¿Estás seguro que deseas desactivar a Cypress Test?',
+    )
+    cy.get('[data-testid="close-button-alert"]').should('contain', 'Cancelar')
+  })
 })
